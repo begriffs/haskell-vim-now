@@ -1,7 +1,7 @@
 <img src="img/haskell.png" align="left" />
 <img src="img/vim.png" align="left" />
 
-<h2 align="right">I want to edit Haskell right now!</h2>
+<h2 align="right">Edit Haskell right now!</h2>
 
 <br />
 
