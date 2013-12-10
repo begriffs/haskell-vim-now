@@ -62,7 +62,7 @@ Bundle 'gmarik/vundle'
 " Support bundles
 Bundle 'jgdavey/tslime.vim'
 Bundle 'Shougo/vimproc.vim'
-Bundle 'Shougo/neocomplete'
+Bundle 'Shougo/neocomplcache.vim'
 Bundle 'scrooloose/syntastic'
 
 " Git
@@ -449,11 +449,12 @@ nnoremap <silent> <leader>g? :call CommittedFiles()<CR>:copen<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Haskell Interrogation
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" neocomplete stuff
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#sources#syntax#min_keyword_length = 3
+let g:acp_enableAtStartup = 0
+let g:neocomplcache_enable_at_startup = 1
 
-setlocal omnifunc=necoghc#omnifunc
+set completeopt+=longest
+let g:neocomplcache_enable_auto_select = 1
+let g:neocomplcache_disable_auto_complete = 1
 
 function! Smart_TabComplete()
   let line = getline('.')                         " current line
@@ -464,10 +465,14 @@ function! Smart_TabComplete()
   if (strlen(substr)==0)                          " nothing to match on empty string
     return "\<tab>"
   endif
-  return pumvisible() ? "\<C-X>\<C-O>" : "\<TAB>" " plugin matchin if popup not open
+  return pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>" " plugin matchin if popup not open
 endfunction
-
 inoremap <tab> <c-r>=Smart_TabComplete()<CR>
+
+function! s:my_cr_function()
+  return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+endfunction
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 
 
 " Type of expression under cursor
