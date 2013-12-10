@@ -1,20 +1,32 @@
-<img src="img/haskell.png" align="left" />
-<img src="img/vim.png" align="left" />
+<img src="img/haskell.png" align="right" />
+<img src="img/vim.png" align="right" />
 
-<h2 align="right">Edit Haskell right now!</h2>
+<h2 align="left">Pure elegance.</h2>
 
 <br />
 
-Fine, run this command and your Vim will be fully configured to do
-magical Haskell things.
+### Run one command...
+
+...and in less than **five minutes** your Vim will transform into a
+beautiful Haskell paradise.
 
 ```sh
 curl -o - https://raw.github.com/begriffs/haskell-vim-now/master/install.sh | sh
 ```
 
-Running this command will back up your existing Vim configuration and
-replace it with settings fully tuned to edit and evaluate Haskell. Sure,
-you could assemble it yourself from various plugins, but why bother?
+(Don't worry, it backs up your original configuration.)
+
+No more wading through plugins trying to make them all work together.
+In five minutes you will have a fully functional Vim that looks great
+and lets you
+
+* inspect types
+* evaluate Haskell
+* lint and check
+* autocomplete
+* unicode &lambda;'s
+* highlight DSLs
+* work with git
 
 ## Keybindings and commands
 
@@ -35,7 +47,7 @@ them.
     <td>,hc</td><td>Run Haskell compile check on file</td>
   </tr>
   <tr>
-    <td>,<enter></td><td>Clear type selection</td>
+    <td>,&lt;cr&gt;</td><td>Clear type selection</td>
   </tr>
 </tbody>
 </table>
