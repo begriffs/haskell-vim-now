@@ -45,7 +45,7 @@ export SHELL="/bin/sh"
 vim -u $endpath/.vimrc +BundleInstall! +BundleClean +qall
 export SHELL=$system_shell
 
-echo "Building C extension of ghcmod-vim"
-cd $endpoint/bundle/ghcmod-vim
+echo "Building C extension of vimproc.vim"
+cd $endpoint/bundle/vimproc.vim
 make
 cd -
