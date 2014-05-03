@@ -11,7 +11,7 @@
 beautiful Haskell paradise.
 
 ```sh
-curl -o - https://raw.github.com/begriffs/haskell-vim-now/master/install.sh | sh
+curl -o - https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh | sh
 ```
 
 (Don't worry, it backs up your original configuration.)
