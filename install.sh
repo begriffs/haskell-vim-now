@@ -45,11 +45,8 @@ if [ ! -e $HOME/.vim/bundle/vundle ]; then
   git clone http://github.com/gmarik/vundle.git $HOME/.vim/bundle/vundle
 fi
 
-msg "Installing plugins using Vundle"
-system_shell=$SHELL
-export SHELL="/bin/sh"
-vim -u $endpath/.vimrc +BundleInstall! +BundleClean! +qall
-export SHELL=$system_shell
+msg "Installing plugins using Vundle..."
+vim -T dumb -Es -u $endpath/.vimrc +BundleInstall! +BundleClean! +qall
 
 msg "Building vimproc.vim"
 make -C $endpath/.vim/bundle/vimproc.vim
