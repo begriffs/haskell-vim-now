@@ -72,6 +72,7 @@ Bundle 'int3/vim-extradite'
 " Bars, panels, and files
 Bundle 'scrooloose/nerdtree'
 Bundle 'bling/vim-airline'
+Bundle 'kien/ctrlp.vim'
 
 " Text manipulation
 Bundle 'vim-scripts/Align'
@@ -229,8 +230,8 @@ nmap <leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
 nmap <silent> <leader>u :GundoToggle<CR>
 
 " Fuzzy find files
-" TODO: automate CommandT install
-" nnoremap <silent> <Leader><space> :CommandT<CR>
+nnoremap <silent> <Leader><space> :CtrlP<CR>
+let g:ctrlp_max_files=0
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -297,6 +298,12 @@ augroup last_edit
 augroup END
 " Remember info about open buffers on close
 set viminfo^=%
+
+" Open window splits in various places
+nmap <leader>sh :leftabove  vnew<CR>
+nmap <leader>sl :rightbelow vnew<CR>
+nmap <leader>sk :leftabove  new<CR>
+nmap <leader>sj :rightbelow new<CR>
 
 
 """"""""""""""""""""""""""""""

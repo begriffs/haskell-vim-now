@@ -150,6 +150,28 @@ selections to it. This works well for evaluating things in GHCI.
 </tbody>
 </table>
 
+### Splits and find file
+
+<table>
+<tbody>
+  <tr>
+    <td>,&lt;space&gt;</td><td>Fuzzy file find (CtrlP)</td>
+  </tr>
+  <tr>
+    <td>,sj</td><td>Open split below</td>
+  </tr>
+  <tr>
+    <td>,sk</td><td>Open split above</td>
+  </tr>
+  <tr>
+    <td>,sh</td><td>Open split leftward</td>
+  </tr>
+  <tr>
+    <td>,sl</td><td>Open split rightward</td>
+  </tr>
+</tbody>
+</table>
+
 ### Misc
 
 <table>
