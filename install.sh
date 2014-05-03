@@ -50,3 +50,6 @@ vim -T dumb -Es -u $endpath/.vimrc +BundleInstall! +BundleClean! +qall
 
 msg "Building vimproc.vim"
 make -C $endpath/.vim/bundle/vimproc.vim
+
+msg "Installing ghc-mod globally"
+cabal install --global ghc-mod
