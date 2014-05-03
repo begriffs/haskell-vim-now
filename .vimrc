@@ -45,7 +45,7 @@ set tm=2000
 noremap ,, ,
 
 " Use par for prettier line formatting
-set formatprg=par\ -w72
+set formatprg="PARINIT='rTbgqR B=.,?_A_a Q=_s>|' par\ -w72"
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
