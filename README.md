@@ -192,7 +192,19 @@ selections to it. This works well for evaluating things in GHCI.
     <td>C-s</td><td>Toggle nerd tree, find file</td>
   </tr>
   <tr>
-    <td>,ff</td><td>Toggle MacVim fullscreen mode</td>
+    <td>,r</td><td>Redraw screen</td>
+  </tr>
+  <tr>
+    <td>C-h</td><td>Move cursor to leftward pane</td>
+  </tr>
+  <tr>
+    <td>C-k</td><td>Move cursor to upward pane</td>
+  </tr>
+  <tr>
+    <td>C-j</td><td>Move cursor to downward pane</td>
+  </tr>
+  <tr>
+    <td>C-l</td><td>Move cursor to rightward pane</td>
   </tr>
 </tbody>
 </table>

@@ -150,8 +150,18 @@ set mat=2
 set noerrorbells
 set vb t_vb=
 
+if &term =~ '256color'
+  " disable Background Color Erase (BCE) so that color schemes
+  " render properly when inside 256-color tmux and GNU screen.
+  " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
+  set t_ut=
+endif
+
 " Add a bit extra margin to the left
 set foldcolumn=1
+
+" Force redraw
+map <silent> <leader>r :redraw!<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -276,11 +286,6 @@ vnoremap <silent> # :call VisualSelection('b', '')<CR>
 nnoremap j gj
 nnoremap k gk
 
-noremap <c-h> <c-w>h
-noremap <c-k> <c-w>k
-noremap <c-j> <c-w>j
-noremap <c-l> <c-w>l
-
 " Disable highlight when <leader><cr> is pressed
 " but preserve cursor coloring
 map <silent> <leader><cr> :noh<cr>:hi Cursor guibg=red<cr>
@@ -304,6 +309,13 @@ nmap <leader>sh :leftabove  vnew<CR>
 nmap <leader>sl :rightbelow vnew<CR>
 nmap <leader>sk :leftabove  new<CR>
 nmap <leader>sj :rightbelow new<CR>
+
+if exists('$TMUX') == 0
+  map <C-h> <C-w>h
+  map <C-j> <C-w>j
+  map <C-k> <C-w>k
+  map <C-l> <C-w>l
+endif
 
 
 """"""""""""""""""""""""""""""
