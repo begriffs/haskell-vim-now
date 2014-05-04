@@ -475,6 +475,9 @@ set completeopt+=longest
 let g:neocomplcache_enable_auto_select = 1
 let g:neocomplcache_disable_auto_complete = 1
 
+" show types in suggestions
+let g:necoghc_enable_detailed_browse = 1
+
 function! Smart_TabComplete()
   let line = getline('.')                         " current line
   let substr = strpart(line, -1, col('.')+1)      " from the start of the current
@@ -484,7 +487,7 @@ function! Smart_TabComplete()
   if (strlen(substr)==0)                          " nothing to match on empty string
     return "\<tab>"
   endif
-  return pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>" " plugin matchin if popup not open
+  return pumvisible() ? "\<C-n>" : "\<C-x>\<C-o>" " plugin matchin if popup not open
 endfunction
 inoremap <tab> <c-r>=Smart_TabComplete()<CR>
 
@@ -492,6 +495,9 @@ function! s:my_cr_function()
   return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
 endfunction
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+
+" Now set it loose
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
 
 " Type of expression under cursor
