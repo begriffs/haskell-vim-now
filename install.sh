@@ -55,10 +55,10 @@ msg "Updating cabal package list"
 cabal update
 
 msg "Installing ghc-mod for local user"
-cabal install --user ghc-mod
+cabal install --user --reinstall ghc-mod
 
 msg "Installing hasktags for local user"
-cabal install --user hasktags
+cabal install --user --reinstall hasktags
 
 msg "Installing codex for local user"
-cabal install --user codex
+cabal install --user --reinstall codex
