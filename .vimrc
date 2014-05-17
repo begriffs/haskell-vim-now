@@ -65,7 +65,7 @@ Bundle 'gmarik/vundle'
 " Support bundles
 Bundle 'jgdavey/tslime.vim'
 Bundle 'Shougo/vimproc.vim'
-Bundle 'Valloric/YouCompleteMe'
+Bundle 'ervandew/supertab'
 Bundle 'scrooloose/syntastic'
 
 " Git
@@ -479,15 +479,11 @@ nnoremap <silent> <leader>g? :call CommittedFiles()<CR>:copen<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set completeopt+=longest
 
-" Disable preemptive completions
-let g:ycm_auto_trigger = 0
+" Choose onmicompletion for supertab
+let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
 
-" Tab completion
-let g:ycm_key_invoke_completion = '<Tab>'
-
-" Since we'll be mapping tab to complete do
-" not let it trigger on non-words
-let g:ycm_min_num_of_chars_for_completion = 1
+" But use whatever works best...
+let g:SuperTabDefaultCompletionType = "context"
 
 " Show types in completion suggestions
 let g:necoghc_enable_detailed_browse = 1
