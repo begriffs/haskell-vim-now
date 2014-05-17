@@ -3,7 +3,7 @@
 msg() { echo "--- $@" 1>&2; }
 detail() { echo "	$@" 1>&2; }
 
-for i in git cabal make vim; do
+for i in git ghc cabal make vim; do
   command -v $i >/dev/null
   if [ $? -ne 0 ] ; then
     msg "Installer requires ${i}. Please install $i and try again."
@@ -51,5 +51,14 @@ vim -T dumb -Es -u $endpath/.vimrc +BundleInstall! +BundleClean! +qall
 msg "Building vimproc.vim"
 make -C $endpath/.vim/bundle/vimproc.vim
 
-msg "Installing ghc-mod globally"
-cabal install --global ghc-mod
+msg "Updating cabal package list"
+cabal update
+
+msg "Installing ghc-mod for local user"
+cabal install --user ghc-mod
+
+msg "Installing hasktags for local user"
+cabal install --user hasktags
+
+msg "Installing codex for local user"
+cabal install --user codex
