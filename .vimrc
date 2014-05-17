@@ -289,6 +289,11 @@ vnoremap <silent> # :call VisualSelection('b', '')<CR>
 nnoremap j gj
 nnoremap k gk
 
+noremap <c-h> <c-w>h
+noremap <c-k> <c-w>k
+noremap <c-j> <c-w>j
+noremap <c-l> <c-w>l
+
 " Disable highlight when <leader><cr> is pressed
 " but preserve cursor coloring
 map <silent> <leader><cr> :noh<cr>:hi Cursor guibg=red<cr>
