@@ -51,6 +51,11 @@ vim -T dumb -Es -u $endpath/.vimrc +BundleInstall! +BundleClean! +qall
 msg "Building vimproc.vim"
 make -C $endpath/.vim/bundle/vimproc.vim
 
+msg "Building YouCompleteMe"
+cd $endpath/.vim/bundle/YouCompleteMe
+./install.sh
+cd -
+
 msg "Updating cabal package list"
 cabal update
 

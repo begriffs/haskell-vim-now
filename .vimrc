@@ -65,7 +65,7 @@ Bundle 'gmarik/vundle'
 " Support bundles
 Bundle 'jgdavey/tslime.vim'
 Bundle 'Shougo/vimproc.vim'
-Bundle 'Shougo/neocomplcache.vim'
+Bundle 'Valloric/YouCompleteMe'
 Bundle 'scrooloose/syntastic'
 
 " Git
@@ -299,6 +299,7 @@ noremap <c-l> <c-w>l
 map <silent> <leader><cr> :noh<cr>:hi Cursor guibg=red<cr>
 augroup haskell
   autocmd! FileType haskell map <silent> <leader><cr> :noh<cr>:GhcModTypeClear<cr>:hi Cursor guibg=red<cr>
+  autocmd! FileType haskell setlocal omnifunc=necoghc#omnifunc
 augroup END
 
 " Return to last edit position when opening files (You want this!)
@@ -476,37 +477,20 @@ nnoremap <silent> <leader>g? :call CommittedFiles()<CR>:copen<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Haskell Interrogation
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:acp_enableAtStartup = 0
-let g:neocomplcache_enable_at_startup = 1
-
 set completeopt+=longest
-let g:neocomplcache_enable_auto_select = 1
-let g:neocomplcache_disable_auto_complete = 1
 
-" show types in suggestions
+" Disable preemptive completions
+let g:ycm_auto_trigger = 0
+
+" Tab completion
+let g:ycm_key_invoke_completion = '<Tab>'
+
+" Since we'll be mapping tab to complete do
+" not let it trigger on non-words
+let g:ycm_min_num_of_chars_for_completion = 1
+
+" Show types in completion suggestions
 let g:necoghc_enable_detailed_browse = 1
-
-function! Smart_TabComplete()
-  let line = getline('.')                         " current line
-  let substr = strpart(line, -1, col('.')+1)      " from the start of the current
-                                                  " line to one character right
-                                                  " of the cursor
-  let substr = matchstr(substr, "[^ \t]*$")       " word till cursor
-  if (strlen(substr)==0)                          " nothing to match on empty string
-    return "\<tab>"
-  endif
-  return pumvisible() ? "\<C-n>" : "\<C-x>\<C-o>" " plugin matchin if popup not open
-endfunction
-inoremap <tab> <c-r>=Smart_TabComplete()<CR>
-
-function! s:my_cr_function()
-  return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-endfunction
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-
-" Now set it loose
-autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-
 
 " Type of expression under cursor
 nmap <silent> <leader>ht :GhcModType<CR>
