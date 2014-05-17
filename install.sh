@@ -46,7 +46,7 @@ if [ ! -e $HOME/.vim/bundle/vundle ]; then
 fi
 
 msg "Installing plugins using Vundle..."
-vim -T dumb -Es -u $endpath/.vimrc +BundleInstall! +BundleClean! +qall
+vim -T dumb -E -u $endpath/.vimrc +BundleInstall! +BundleClean! +qall
 
 msg "Building vimproc.vim"
 make -C $endpath/.vim/bundle/vimproc.vim
