@@ -172,6 +172,19 @@ selections to it. This works well for evaluating things in GHCI.
 </tbody>
 </table>
 
+### Tags
+
+<table>
+<tbody>
+  <tr>
+    <td>,tg</td><td>Generate tags with codex</td>
+  </tr>
+  <tr>
+    <td>,tt</td><td>Open/close the tag bar</td>
+  </tr>
+</tbody>
+</table>
+
 ### Misc
 
 <table>
