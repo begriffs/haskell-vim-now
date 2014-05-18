@@ -298,10 +298,11 @@ noremap <c-l> <c-w>l
 
 " Disable highlight when <leader><cr> is pressed
 " but preserve cursor coloring
-map <silent> <leader><cr> :noh<cr>:hi Cursor guibg=red<cr>
+nmap <silent> <leader><cr> :noh\|hi Cursor guibg=red<cr>
 augroup haskell
-  autocmd! FileType haskell map <silent> <leader><cr> :noh<cr>:GhcModTypeClear<cr>:hi Cursor guibg=red<cr>
-  autocmd! FileType haskell setlocal omnifunc=necoghc#omnifunc
+  autocmd!
+  autocmd FileType haskell map <silent> <leader><cr> :noh\|GhcModTypeClear<cr>
+  autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 augroup END
 
 " Return to last edit position when opening files (You want this!)
