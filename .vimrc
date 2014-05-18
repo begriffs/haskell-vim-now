@@ -535,6 +535,8 @@ let g:necoghc_enable_detailed_browse = 1
 
 " Type of expression under cursor
 nmap <silent> <leader>ht :GhcModType<CR>
+" Insert type of expression under cursor
+nmap <silent> <leader>hT :GhcModTypeInsert<CR>
 " GHC errors and warnings
 nmap <silent> <leader>hc :GhcModCheckAsync<CR>
 " Haskell Lint

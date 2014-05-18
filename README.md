@@ -47,6 +47,9 @@ them.
     <td>,ht</td><td>Show type of expression under cursor</td>
   </tr>
   <tr>
+    <td>,hT</td><td>Insert type of expression into previous line</td>
+  </tr>
+  <tr>
     <td>,hl</td><td>Run Haskell linter on file</td>
   </tr>
   <tr>
@@ -164,7 +167,8 @@ selections to it. This works well for evaluating things in GHCI.
 </table>
 
 ### Conversions
->
+
+<table>
 <tbody>
   <tr>
     <td>,h.</td><td>Transform visual selection to pointfree style</td>
