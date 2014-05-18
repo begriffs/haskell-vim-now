@@ -54,11 +54,25 @@ make -C $endpath/.vim/bundle/vimproc.vim
 msg "Updating cabal package list"
 cabal update
 
-msg "Installing ghc-mod for local user"
-cabal install --user --reinstall ghc-mod
+mkdir -p $endpath/bin
 
-msg "Installing hasktags for local user"
-cabal install --user --reinstall hasktags
+function sandbox_build {
+  pkg=$1
+  dir=`mktemp -d /tmp/build-XXXX`
 
-msg "Installing codex for local user"
-cabal install --user --reinstall codex
+  msg "Building $pkg (in $dir)"
+  cd $dir
+  cabal sandbox init
+  cabal install -j --reorder-goals --force-reinstalls $pkg
+
+  msg "Saving $pkg binaries"
+  cp .cabal-sandbox/bin/* $endpath/bin
+
+  msg "Cleaning up"
+  cd -
+  rm -fr $dir
+}
+
+sandbox_build "ghc-mod"
+sandbox_build "hasktags"
+sandbox_build "codex"

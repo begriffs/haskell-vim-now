@@ -47,8 +47,8 @@ noremap ,, ,
 " Use par for prettier line formatting
 set formatprg="PARINIT='rTbgqR B=.,?_A_a Q=_s>|' par\ -w72"
 
-" Find user cabal binaries
-let $PATH = $PATH . ':' . expand("~/.cabal/bin")
+" Find custom built ghc-mod, codex etc
+let $PATH = $PATH . ':' . expand("~/.haskell-vim-now/bin")
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
