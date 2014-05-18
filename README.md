@@ -1,19 +1,19 @@
 <img src="img/haskell.png" align="right" />
 <img src="img/vim.png" align="right" />
 
-<h2 align="left">Pure elegance.</h2>
+<h2 align="left">Haskell Vim IDE</h2>
 
 <br />
 
-### Run one command...
+### Installation
 
-...and in less than **five minutes** your Vim will transform into a
-beautiful Haskell paradise.
+One command does it all:
 
 ```sh
 curl -o - https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh | sh
 ```
 
+In less than **five minutes** your Vim will transform into a beautiful Haskell paradise.
 (Don't worry, it backs up your original configuration.)
 
 No more wading through plugins trying to make them all work together.
@@ -23,8 +23,11 @@ and lets you
 * inspect types
 * evaluate Haskell
 * lint and check
-* autocomplete
-* unicode &lambda;'s
+* manipulate tags
+* hoogle lookup
+* pointfree refactor
+* tab compelete
+* unicode symbols
 * highlight DSLs
 * work with git
 
@@ -37,6 +40,9 @@ them.
 
 <table>
 <tbody>
+  <tr>
+    <td>&lt;Tab&gt;</td><td>Autocomplete</td>
+  </tr>
   <tr>
     <td>,ht</td><td>Show type of expression under cursor</td>
   </tr>
@@ -122,34 +128,6 @@ selections to it. This works well for evaluating things in GHCI.
 </tbody>
 </table>
 
-### Conversion
-
-<table>
-<tbody>
-  <tr>
-    <td>,2s</td><td>Convert symbol under cursor from symbol to string</td>
-  </tr>
-  <tr>
-    <td>,2y</td><td>Convert string under cursor from string to symbol</td>
-  </tr>
-  <tr>
-    <td>,2_</td><td>Convert string under cursor to snake_case</td>
-  </tr>
-  <tr>
-    <td>,2c</td><td>Convert string under cursor to camelCase</td>
-  </tr>
-  <tr>
-    <td>,2m</td><td>Convert string under cursor to MixedCase</td>
-  </tr>
-  <tr>
-    <td>,2u</td><td>Convert string under cursor to SNAKE_UPPERCASE</td>
-  </tr>
-  <tr>
-    <td>,2-</td><td>Convert string under cursor to dash-case</td>
-  </tr>
-</tbody>
-</table>
-
 ### Splits and find file
 
 <table>
@@ -221,14 +199,6 @@ selections to it. This works well for evaluating things in GHCI.
   </tr>
 </tbody>
 </table>
-
-## Upgrading
-
-```sh
-cd ~/.haskell-vim-now
-git pull
-vim -u .vimrc +BundleUpdate +qall
-```
 
 ## Customizing
 
