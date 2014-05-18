@@ -544,22 +544,15 @@ nmap <silent> <leader>hl :GhcModLintAsync<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Conversion
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Convert symbol to string
-nnoremap <silent> <leader>2s F:r"Ea"<ESC>
-" Convert string to symbol
-nnoremap <silent> <leader>2y F"r:,x
+function! Pointfree()
+  call setline('.', split(system('pointfree '.shellescape(join(getline(a:firstline, a:lastline), "\n"))), "\n"))
+endfunction
+vnoremap <silent> <leader>h. :call Pointfree()<CR>
 
-" Convert name to snake_case
-nmap <leader>2_ cr_
-" Convert name to camelCase
-nmap <leader>2c crc
-" Convert name to MixedCase
-nmap <leader>2m crm
-" Convert name to SNAKE_UPPERCASE
-nmap <leader>2u cru
-" Convert name to dash-case
-nmap <leader>2- cr-
-
+function! Pointful()
+  call setline('.', split(system('pointful '.shellescape(join(getline(a:firstline, a:lastline), "\n"))), "\n"))
+endfunction
+vnoremap <silent> <leader>h> :call Pointful()<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Customization

@@ -83,3 +83,5 @@ function sandbox_build {
 sandbox_build "ghc-mod"
 sandbox_build "hasktags"
 sandbox_build "codex"
+sandbox_build "pointfree"
+sandbox_build "pointful"
