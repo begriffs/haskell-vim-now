@@ -58,6 +58,13 @@ mkdir -p $endpath/bin
 
 function sandbox_build {
   pkg=$1
+
+  if [ -e $endpath/bin/$pkg ]
+  then
+    msg "$pkg is already installed, skipping build"
+    return
+  fi
+
   dir=`mktemp -d /tmp/build-XXXX`
 
   msg "Building $pkg (in $dir)"
