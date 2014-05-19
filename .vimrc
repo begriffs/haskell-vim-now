@@ -89,7 +89,7 @@ Bundle 'travitch/hasksyn'
 Bundle 'Twinside/vim-haskellConceal'
 Bundle 'eagletmt/ghcmod-vim'
 Bundle 'eagletmt/neco-ghc'
-
+Bundle 'Twinside/vim-hoogle'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -543,6 +543,20 @@ nmap <silent> <leader>hc :GhcModCheckAsync<CR>
 " Haskell Lint
 nmap <silent> <leader>hl :GhcModLintAsync<CR>
 
+" Hoogle the word under the cursor
+nnoremap <silent> <leader>hh :Hoogle<CR>
+
+" Hoogle and prompt for input
+nnoremap <leader>hH :Hoogle
+
+" Hoogle for detailed documentation (e.g. "Functor")
+nnoremap <silent> <leader>hi :HoogleInfo<CR>
+
+" Hoogle for detailed documentation and prompt for input
+nnoremap <silent> <leader>hI :HoogleInfo
+
+" Hoogle, close the Hoogle window
+nnoremap <silent> <leader>hz :HoogleClose<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Conversion

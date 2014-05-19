@@ -61,6 +61,28 @@ them.
 </tbody>
 </table>
 
+### Hoogle
+
+<table>
+<tbody>
+  <tr>
+    <td>,hh</td><td>Run Hoogle on the word under the cursor</td>
+  </tr>
+  <tr>
+    <td>,hH</td><td>Run Hoogle and prompt for input</td>
+  </tr>
+  <tr>
+    <td>,hi</td><td>Run Hoogle for detailed information on word under cursor</td>
+  </tr>
+  <tr>
+    <td>,hI</td><td>Run Hoogle for detailed information and prompt for input</td>
+  </tr>
+  <tr>
+    <td>,hz</td><td>Close the Hoogle search window</td>
+  </tr>
+</tbody>
+</table>
+
 ### GHCI repl
 
 If you open a tmux terminal alongside MacVim then you can send Vim
