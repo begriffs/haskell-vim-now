@@ -11,6 +11,13 @@ for i in ctags git ghc cabal make vim; do
   fi
 done
 
+if vim --version | grep "7.4" ; then
+  msg "Vim 7.4 detected. Good!"
+else
+  msg "Vim 7.4 required. Aborting."
+  exit 1
+fi
+
 endpath="$HOME/.haskell-vim-now"
 
 if [ ! -e $endpath/.git ]; then
