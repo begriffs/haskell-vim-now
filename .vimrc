@@ -547,13 +547,13 @@ nmap <silent> <leader>hl :GhcModLintAsync<CR>
 nnoremap <silent> <leader>hh :Hoogle<CR>
 
 " Hoogle and prompt for input
-nnoremap <leader>hH :Hoogle
+nnoremap <leader>hH :Hoogle 
 
 " Hoogle for detailed documentation (e.g. "Functor")
 nnoremap <silent> <leader>hi :HoogleInfo<CR>
 
 " Hoogle for detailed documentation and prompt for input
-nnoremap <silent> <leader>hI :HoogleInfo
+nnoremap <leader>hI :HoogleInfo 
 
 " Hoogle, close the Hoogle window
 nnoremap <silent> <leader>hz :HoogleClose<CR>
