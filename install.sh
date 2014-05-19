@@ -77,7 +77,7 @@ function sandbox_build {
   msg "Building $pkg (in $dir)"
   cd $dir
   cabal sandbox init
-  cabal install -j --reorder-goals --force-reinstalls $pkg
+  cabal install -j --reorder-goals --datadir=$endpath/data --force-reinstalls $pkg
 
   msg "Saving $pkg binaries"
   cp .cabal-sandbox/bin/* $endpath/bin
@@ -93,3 +93,6 @@ sandbox_build "codex"
 sandbox_build "pointfree"
 sandbox_build "pointful"
 sandbox_build "hoogle"
+
+msg "Building Hoogle database..."
+$endpath/bin/hoogle data
