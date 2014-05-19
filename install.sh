@@ -3,7 +3,7 @@
 msg() { echo "--- $@" 1>&2; }
 detail() { echo "	$@" 1>&2; }
 
-for i in git ghc cabal make vim; do
+for i in ctags git ghc cabal make vim; do
   command -v $i >/dev/null
   if [ $? -ne 0 ] ; then
     msg "Installer requires ${i}. Please install $i and try again."
