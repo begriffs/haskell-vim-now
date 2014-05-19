@@ -63,7 +63,7 @@ cabal update
 
 mkdir -p $endpath/bin
 
-function sandbox_build {
+function build_shared_binary {
   pkg=$1
 
   if [ -e $endpath/bin/$pkg ]
@@ -87,12 +87,13 @@ function sandbox_build {
   rm -fr $dir
 }
 
-sandbox_build "ghc-mod"
-sandbox_build "hasktags"
-sandbox_build "codex"
-sandbox_build "pointfree"
-sandbox_build "pointful"
-sandbox_build "hoogle"
+build_shared_binary "ghc-mod"
+build_shared_binary "hasktags"
+build_shared_binary "codex"
+build_shared_binary "hscope"
+build_shared_binary "pointfree"
+build_shared_binary "pointful"
+build_shared_binary "hoogle"
 
 msg "Building Hoogle database..."
 $endpath/bin/hoogle data
