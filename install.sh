@@ -49,9 +49,7 @@ msg "Installing plugins using Vundle..."
 vim -T dumb -E -u $endpath/.vimrc +BundleInstall! +BundleClean! +qall
 
 msg "Building vimproc.vim"
-cd $endpath/.vim/bundle/vimproc.vim
-make
-cd -
+make -C ~/.vim/bundle/vimproc.vim
 
 msg "Updating cabal package list"
 cabal update
