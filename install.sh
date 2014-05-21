@@ -87,6 +87,9 @@ function build_shared_binary {
   rm -fr $dir
 }
 
+msg "Installing git-hscope"
+cp git-hscope bin
+
 build_shared_binary "ghc-mod"
 build_shared_binary "hasktags"
 build_shared_binary "codex"

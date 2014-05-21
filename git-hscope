@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+cd $(git rev-parse --show-toplevel)
+git ls-files | grep '\.l\?hs$' | xargs hscope -b
+cd -

@@ -476,10 +476,27 @@ let g:tagbar_type_haskell = {
     \ }
 \ }
 
-" Generate haskell tags with codex
-map <leader>tg :!codex update<CR>
+" Generate haskell tags with codex and hscope
+map <leader>tg :!codex update<CR>:call system("git hscope")<CR><CR>:call LoadHscope()<CR>
 
 map <leader>tt :TagbarToggle<CR>
+
+set csprg=~/.haskell-vim-now/bin/hscope
+set csto=1 " search codex tags first
+set cst
+set csverb
+nnoremap <silent> <C-\> :cs find c <C-R>=expand("<cword>")<CR><CR>
+" Automatically make cscope connections
+function! LoadHscope()
+  let db = findfile("hscope.out", ".;")
+  if (!empty(db))
+    let path = strpart(db, 0, match(db, "/hscope.out$"))
+    set nocscopeverbose " suppress 'duplicate connection' error
+    exe "cs add " . db . " " . path
+    set cscopeverbose
+  endif
+endfunction
+au BufEnter /*.hs call LoadHscope()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -500,8 +517,6 @@ nmap <leader>gg :copen<CR>:GGrep
 nmap <leader>gl :Extradite!<CR>
 nmap <leader>gd :Gdiff<CR>
 nmap <leader>gb :Gblame<CR>
-nnoremap <silent> <C-\> :call NonintrusiveGitGrep(expand("<cword>"))<CR>
-vnoremap <silent> <C-\> "*y:call NonintrusiveGitGrep(@*)<CR>
 
 function! CommittedFiles()
   " Clear quickfix list

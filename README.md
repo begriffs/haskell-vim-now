@@ -185,6 +185,12 @@ selections to it. This works well for evaluating things in GHCI.
   <tr>
     <td>,tt</td><td>Open/close the tag bar</td>
   </tr>
+  <tr>
+    <td>C-]</td><td>Jump to definition of symbol (codex + hasktags)</td>
+  </tr>
+  <tr>
+    <td>C-\</td><td>Show uses of symbol (hscope)</td>
+  </tr>
 </tbody>
 </table>
 
