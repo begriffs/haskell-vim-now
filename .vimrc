@@ -540,11 +540,8 @@ nnoremap <silent> <leader>g? :call CommittedFiles()<CR>:copen<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set completeopt+=longest
 
-" Choose onmicompletion for supertab
-let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
-
-" But use whatever works best...
-let g:SuperTabDefaultCompletionType = "context"
+" Choose (neco-ghc) omnicompletion as default
+let g:SuperTabDefaultCompletionType = "<C-x><C-o>"
 
 " Show types in completion suggestions
 let g:necoghc_enable_detailed_browse = 1
