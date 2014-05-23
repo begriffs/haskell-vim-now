@@ -13,11 +13,13 @@ One command does it all:
 curl -o - https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh | sh
 ```
 
-In less than **five minutes** your Vim will transform into a beautiful Haskell paradise.
-(Don't worry, it backs up your original configuration.)
+In less than **ten minutes** your Vim will transform into a beautiful
+Haskell paradise.  (Don't worry, it backs up your original
+configuration.) It also builds all necessary support binaries
+including `codex`, `hscope`, `ghc-mod`, `hasktags`, `hoogle` and more.
 
 No more wading through plugins trying to make them all work together.
-In five minutes you will have a fully functional Vim that looks great
+In ten minutes you will have a fully functional Vim that looks great
 and lets you
 
 * inspect types
