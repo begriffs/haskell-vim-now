@@ -41,7 +41,10 @@ them.
 <table>
 <tbody>
   <tr>
-    <td>&lt;Tab&gt;</td><td>Autocomplete</td>
+    <td>&lt;Tab&gt;</td><td>Autocomplete with words in file</td>
+  </tr>
+  <tr>
+    <td>&lt;C-space&gt;</td><td>Autocomplete with symbols in your Cabal sandbox</td>
   </tr>
   <tr>
     <td>,ht</td><td>Show type of expression under cursor</td>

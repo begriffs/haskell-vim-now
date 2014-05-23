@@ -540,8 +540,17 @@ nnoremap <silent> <leader>g? :call CommittedFiles()<CR>:copen<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set completeopt+=longest
 
-" Choose (neco-ghc) omnicompletion as default
-let g:SuperTabDefaultCompletionType = "<C-x><C-o>"
+" Use buffer words as default tab completion
+let g:SuperTabDefaultCompletionType = '<c-x><c-p>'
+
+" But provide (neco-ghc) omnicompletion
+if has("gui_running")
+  imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
+else " no gui
+  if has("unix")
+    inoremap <Nul> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
+  endif
+endif
 
 " Show types in completion suggestions
 let g:necoghc_enable_detailed_browse = 1
