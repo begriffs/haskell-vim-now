@@ -1,32 +1,8 @@
-" Sections:
-"    -> General
-"    -> Vundle
-"    -> VIM user interface
-"    -> Colors and Fonts
-"    -> Files and backups
-"    -> Text, tab and indent related
-"    -> Visual mode related
-"    -> Moving around, tabs and buffers
-"    -> Status line
-"    -> Editing mappings
-"    -> vimgrep searching and cope displaying
-"    -> Spell checking
-"    -> Misc
-"    -> Helper functions
-"    -> Slime
-"    -> Turbux
-"    -> NERDTree
-"    -> Alignment
-"    -> Tags
-"    -> Git
-"    -> Commenting
-"    -> Conversion
-"    -> Customization
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" General {{{
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => General
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Fold up this vimrc
+set foldmethod=marker
+
 " Sets how many lines of history VIM has to remember
 set history=700
 
@@ -50,10 +26,10 @@ set formatprg="PARINIT='rTbgqR B=.,?_A_a Q=_s>|' par\ -w72"
 " Find custom built ghc-mod, codex etc
 let $PATH = $PATH . ':' . expand("~/.haskell-vim-now/bin")
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vundle
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vundle {{{
+
 set nocompatible
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
@@ -91,9 +67,10 @@ Bundle 'eagletmt/ghcmod-vim'
 Bundle 'eagletmt/neco-ghc'
 Bundle 'Twinside/vim-hoogle'
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM user interface
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}
+
+" VIM user interface {{{
+
 " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
 
@@ -168,10 +145,10 @@ set foldcolumn=1
 " Force redraw
 map <silent> <leader>r :redraw!<CR>
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Colors and Fonts
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Colors and Fonts {{{
+
 Bundle 'vim-scripts/wombat256.vim'
 try
   colorscheme wombat256mod
@@ -224,9 +201,10 @@ set ffs=unix,dos,mac
 " Use large font by default in MacVim
 set gfn=Monaco:h19
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Files, backups and undo
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}
+
+" Files, backups and undo {{{
+
 " Turn backup off, since most stuff is in Git anyway...
 set nobackup
 set nowb
@@ -248,10 +226,10 @@ nmap <silent> <leader>u :GundoToggle<CR>
 nnoremap <silent> <Leader><space> :CtrlP<CR>
 let g:ctrlp_max_files=0
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Text, tab and indent related {{{
+
 " Use spaces instead of tabs
 set expandtab
 
@@ -274,19 +252,19 @@ set wrap "Wrap lines
 let g:haskell_conceal_wide = 1
 let g:haskell_conceal_enumerations = 1
 
+" }}}
 
-""""""""""""""""""""""""""""""
-" => Visual mode related
-""""""""""""""""""""""""""""""
+" Visual mode related {{{
+
 " Visual mode pressing * or # searches for the current selection
 " Super useful! From an idea by Michael Naumann
 vnoremap <silent> * :call VisualSelection('f', '')<CR>
 vnoremap <silent> # :call VisualSelection('b', '')<CR>
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Moving around, tabs, windows and buffers
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Moving around, tabs, windows and buffers {{{
+
 " Treat long lines as break lines (useful when moving around in them)
 nnoremap j gj
 nnoremap k gk
@@ -329,17 +307,17 @@ if exists('$TMUX') == 0
   map <C-l> <C-w>l
 endif
 
+" }}}
 
-""""""""""""""""""""""""""""""
-" => Status line
-""""""""""""""""""""""""""""""
+" Status line {{{
+
 " Always show the status line
 set laststatus=2
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Editing mappings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Editing mappings {{{
+
 " Delete trailing white space on save
 func! DeleteTrailingWS()
   exe "normal mz"
@@ -352,17 +330,17 @@ augroup whitespace
   autocmd BufWrite *.hs :call DeleteTrailingWS()
 augroup END
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Spell checking
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Spell checking {{{
+
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Helper functions
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Helper functions {{{
+
 function! CmdLine(str)
   exe "menu Foo.Bar :" . a:str
   emenu Foo.Bar
@@ -390,18 +368,18 @@ function! VisualSelection(direction, extra_filter) range
   let @" = l:saved_reg
 endfunction
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Slime
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Slime {{{
+
 vmap <silent> <Leader>rs <Plug>SendSelectionToTmux
 nmap <silent> <Leader>rs <Plug>NormalModeSendToTmux
 nmap <silent> <Leader>rv <Plug>SetTmuxVars
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => NERDTree
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NERDTree {{{
+
 " Close nerdtree after a file is selected
 let NERDTreeQuitOnOpen = 1
 
@@ -421,10 +399,10 @@ endfunction
 nmap <silent> <leader>f <ESC>:call ToggleFindNerd()<CR>
 nmap <silent> <C-s> <ESC>:call ToggleFindNerd()<CR>
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Alignment
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Alignment {{{
+
 " Stop Align plugin from forcing its mappings on us
 let g:loaded_AlignMapsPlugin=1
 " Align on equal signs
@@ -439,10 +417,10 @@ map <leader>ap :Align
 " Enable some tabular presets for Haskell
 let g:haskell_tabular = 1
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Tags
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tags {{{
+
 set tags=tags;/,codex.tags;/
 
 let g:tagbar_type_haskell = {
@@ -499,10 +477,10 @@ function! LoadHscope()
 endfunction
 au BufEnter /*.hs call LoadHscope()
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Git
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Git {{{
+
 let g:extradite_width = 60
 " Hide messy Ggrep output and copen automatically
 function! NonintrusiveGitGrep(term)
@@ -535,10 +513,10 @@ endfunction
 " Show list of last-committed files
 nnoremap <silent> <leader>g? :call CommittedFiles()<CR>:copen<CR>
 
+" }}}
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Haskell Interrogation
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Haskell Interrogation {{{
+
 set completeopt+=longest
 
 " Use buffer words as default tab completion
@@ -580,9 +558,10 @@ nnoremap <leader>hI :HoogleInfo
 " Hoogle, close the Hoogle window
 nnoremap <silent> <leader>hz :HoogleClose<CR>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Conversion
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}
+
+" Conversion {{{
+
 function! Pointfree()
   call setline('.', split(system('pointfree '.shellescape(join(getline(a:firstline, a:lastline), "\n"))), "\n"))
 endfunction
@@ -593,9 +572,12 @@ function! Pointful()
 endfunction
 vnoremap <silent> <leader>h> :call Pointful()<CR>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Customization
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}
+
+" Customization {{{
+
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
+
+" }}}
