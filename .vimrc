@@ -418,7 +418,8 @@ function! ToggleFindNerd()
 endfunction
 
 " If nerd tree is closed, find current file, if open, close it
-map <silent> <C-s> <ESC>:call ToggleFindNerd()<CR>
+nmap <silent> <leader>f <ESC>:call ToggleFindNerd()<CR>
+nmap <silent> <C-s> <ESC>:call ToggleFindNerd()<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

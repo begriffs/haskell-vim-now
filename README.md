@@ -166,6 +166,9 @@ selections to it. This works well for evaluating things in GHCI.
     <td>,&lt;space&gt;</td><td>Fuzzy file find (CtrlP)</td>
   </tr>
   <tr>
+    <td>,f</td><td>Toggle file browser (nerdtree)</td>
+  </tr>
+  <tr>
     <td>,sj</td><td>Open split below</td>
   </tr>
   <tr>
