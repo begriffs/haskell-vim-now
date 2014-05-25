@@ -2,6 +2,9 @@
 
 msg() { echo "--- $@" 1>&2; }
 detail() { echo "	$@" 1>&2; }
+verlte() {
+  [ "$1" = `echo -e "$1\n$2" | sort -g -t '.' | head -n1` ]
+}
 
 for i in ctags git ghc cabal make vim; do
   command -v $i >/dev/null
@@ -11,10 +14,16 @@ for i in ctags git ghc cabal make vim; do
   fi
 done
 
-if vim --version | grep "7.4" ; then
-  msg "Vim 7.4 detected. Good!"
-else
-  msg "Vim 7.4 required. Aborting."
+CABAL_VER=$(cabal --version | sed -n 's/cabal-install version \(.*$\)/\1/p')
+VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
+
+if ! verlte '7.4' $VIM_VER ; then
+  msg "Vim version 7.4 or later is required. Aborting."
+  exit 1
+fi
+
+if ! verlte '1.18' $CABAL_VER ; then
+  msg "Cabal version 1.18 or later is required. Aborting."
   exit 1
 fi
 
