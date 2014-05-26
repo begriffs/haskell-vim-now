@@ -10,7 +10,7 @@
 One command does it all:
 
 ```sh
-curl -o - https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh | sh
+curl -o - https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh | bash
 ```
 
 In less than **ten minutes** your Vim will transform into a beautiful
