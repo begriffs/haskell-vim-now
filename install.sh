@@ -70,7 +70,9 @@ make -C ~/.vim/bundle/vimproc.vim
 msg "Updating cabal package list"
 cabal update
 
+msg "Installing git-hscope"
 mkdir -p $endpath/bin
+cp $endpath/git-hscope $endpath/bin
 
 function build_shared_binary {
   pkg=$1
@@ -95,9 +97,6 @@ function build_shared_binary {
   cd -
   rm -fr $dir
 }
-
-msg "Installing git-hscope"
-cp git-hscope bin
 
 build_shared_binary "ghc-mod"
 build_shared_binary "hasktags"
