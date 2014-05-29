@@ -108,3 +108,6 @@ build_shared_binary "hoogle"
 
 msg "Building Hoogle database..."
 $endpath/bin/hoogle data
+
+msg "Setting git to use fully-pathed vim for messages..."
+git config --global core.editor $(which vim)
