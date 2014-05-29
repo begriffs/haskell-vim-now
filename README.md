@@ -33,6 +33,11 @@ and lets you
 * highlight DSLs
 * work with git
 
+### Installation Troubleshooting
+
+See this [wiki](https://github.com/begriffs/haskell-vim-now/wiki/Installation-Troubleshooting)
+page for tips on fixing installation problems.
+
 ## Keybindings and commands
 
 The commands are organized into logical groups to help you remember
