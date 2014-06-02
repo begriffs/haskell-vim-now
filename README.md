@@ -252,10 +252,13 @@ selections to it. This works well for evaluating things in GHCI.
     <td>C-j</td><td>Move cursor to downward pane</td>
   </tr>
   <tr>
-    <td>C-l</td><td>Move cursor to rightward pane</td>
+    <td>C-l</td><td>Move cursor to rightward pane (redraw is `,r` instead)</td>
   </tr>
 </tbody>
 </table>
+
+(If you prefer to restore the default screen redraw action of `C-l`
+then add `unmap <c-l>` to your .vimrc.local)
 
 ## Customizing
 
