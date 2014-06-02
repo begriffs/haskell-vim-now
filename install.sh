@@ -16,6 +16,7 @@ done
 
 CABAL_VER=$(cabal --version | sed -n 's/cabal-install version \(.*$\)/\1/p')
 VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
+GHC_VER=$(ghc --version | sed -n 's/^.*version \(.*$\)/\1/p')
 
 if ! verlte '7.4' $VIM_VER ; then
   msg "Vim version 7.4 or later is required. Aborting."
@@ -24,6 +25,11 @@ fi
 
 if ! verlte '1.18' $CABAL_VER ; then
   msg "Cabal version 1.18 or later is required. Aborting."
+  exit 1
+fi
+
+if ! verlte '7.8' $GHC_VER ; then
+  msg "GHC version 7.8 or later is required. Aborting."
   exit 1
 fi
 
