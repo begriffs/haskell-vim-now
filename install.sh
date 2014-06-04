@@ -94,7 +94,7 @@ function build_shared_binary {
   msg "Building $pkg (in $dir)"
   cd $dir
   cabal sandbox init
-  cabal install -j --reorder-goals --datadir=$endpath/data --force-reinstalls $pkg
+  cabal install -j --reorder-goals --disable-documentation --datadir=$endpath/data --force-reinstalls $pkg
 
   msg "Saving $pkg binaries"
   cp .cabal-sandbox/bin/* $endpath/bin
