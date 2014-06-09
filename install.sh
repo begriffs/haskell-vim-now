@@ -14,9 +14,9 @@ for i in ctags git ghc cabal make vim; do
   fi
 done
 
-CABAL_VER=$(cabal --version | sed -n 's/cabal-install version \(.*$\)/\1/p')
+CABAL_VER=$(cabal --numeric-version)
 VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
-GHC_VER=$(ghc --version | sed -n 's/^.*version \(.*$\)/\1/p')
+GHC_VER=$(ghc --numeric-version)
 
 if ! verlte '7.4' $VIM_VER ; then
   msg "Vim version 7.4 or later is required. Aborting."
