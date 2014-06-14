@@ -279,7 +279,7 @@ noremap <c-l> <c-w>l
 nmap <silent> <leader><cr> :noh\|hi Cursor guibg=red<cr>
 augroup haskell
   autocmd!
-  autocmd FileType haskell map <silent> <leader><cr> :noh\|GhcModTypeClear<cr>
+  autocmd FileType haskell map <silent> <leader><cr> :noh<cr>:GhcModTypeClear<cr>:SyntasticReset<cr>
   autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 augroup END
 
@@ -543,9 +543,10 @@ nmap <silent> <leader>ht :GhcModType<CR>
 " Insert type of expression under cursor
 nmap <silent> <leader>hT :GhcModTypeInsert<CR>
 " GHC errors and warnings
-nmap <silent> <leader>hc :GhcModCheckAsync<CR>
+nmap <silent> <leader>hc :SyntasticCheck ghc_mod<CR>
 " Haskell Lint
-nmap <silent> <leader>hl :GhcModLintAsync<CR>
+let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['haskell'] }
+nmap <silent> <leader>hl :SyntasticCheck hlint<CR>
 
 " Hoogle the word under the cursor
 nnoremap <silent> <leader>hh :Hoogle<CR>
