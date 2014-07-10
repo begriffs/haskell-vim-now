@@ -28,8 +28,8 @@ if ! verlte '1.18' $CABAL_VER ; then
   exit 1
 fi
 
-if ! verlte '7.8' $GHC_VER ; then
-  msg "GHC version 7.8 or later is required. Aborting."
+if ! verlte '7.6.3' $GHC_VER ; then
+  msg "GHC version 7.6.3 or later is required. Aborting."
   exit 1
 fi
 
