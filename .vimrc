@@ -61,11 +61,18 @@ Bundle 'tpope/vim-commentary'
 Bundle 'godlygeek/tabular'
 
 " Haskell
-Bundle 'travitch/hasksyn'
+Bundle 'raichoo/haskell-vim'
 Bundle 'begriffs/vim-haskellConceal'
 Bundle 'eagletmt/ghcmod-vim'
 Bundle 'eagletmt/neco-ghc'
 Bundle 'Twinside/vim-hoogle'
+
+" Coq
+Bundle 'def-lkb/vimbufsync'
+Bundle 'the-lambda-church/coquille'
+
+" To deal with hoi polloi (non-haskell)
+Bundle 'sheerun/vim-polyglot'
 
 " }}}
 
@@ -581,8 +588,35 @@ vnoremap <silent> <leader>h> :call Pointful()<CR>
 
 " Customization {{{
 
-if filereadable(expand("~/.vimrc.local"))
-  source ~/.vimrc.local
-endif
+" if filereadable(expand("~/.vimrc.local"))
+"   source ~/.vimrc.local
+" endif
+
+" }}}
+
+" Coq {{{
+
+augroup coqColors
+ autocmd!
+ autocmd BufReadPost *.v hi CheckedByCoq ctermbg=17 guibg=#111133
+ autocmd BufReadPost *.v hi SentToCoq ctermbg=60 guibg=#222244
+augroup END
+
+augroup coqInit
+  autocmd!
+  au FileType coq call coquille#CoqideMapping()
+augroup END
+
+map <silent> <leader>cs :CoqLaunch<cr>
+map <silent> <leader>cg :CoqToCursor<cr>
+map <silent> <leader>cn :CoqNext<cr>
+map <silent> <leader>cu :CoqUndo<cr>
+map <silent> <leader>cq :CoqKill<cr>
+
+map <silent> <leader>cx <C-w>l<C-w>L<C-w>t<C-w>K
+map <silent> <leader>cp :execute "Coq Print " . expand("<cword>") . "."<cr>
+
+map <S-Down> :cn<Enter>
+map <S-Up> :cp<Enter>
 
 " }}}
