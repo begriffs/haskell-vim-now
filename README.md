@@ -225,6 +225,12 @@ selections to it. This works well for evaluating things in GHCI.
 <table>
 <tbody>
   <tr>
+    <td>,ma</td><td>Enable mouse mode (default)</td>
+  </tr>
+  <tr>
+    <td>,mo</td><td>Disable mouse mode</td>
+  </tr>
+  <tr>
     <td>,u</td><td>Interactive undo tree</td>
   </tr>
   <tr>

@@ -145,6 +145,15 @@ set foldcolumn=1
 " Force redraw
 map <silent> <leader>r :redraw!<CR>
 
+" Turn mouse mode on
+nnoremap <leader>ma :set mouse=a<cr>
+
+" Turn mouse mode off
+nnoremap <leader>mo :set mouse=<cr>
+
+" Default to mouse mode on
+set mouse=a
+
 " }}}
 
 " Colors and Fonts {{{
