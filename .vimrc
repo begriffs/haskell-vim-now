@@ -61,7 +61,7 @@ Bundle 'tpope/vim-commentary'
 Bundle 'godlygeek/tabular'
 
 " Haskell
-Bundle 'travitch/hasksyn'
+Bundle 'raichoo/haskell-vim'
 Bundle 'begriffs/vim-haskellConceal'
 Bundle 'eagletmt/ghcmod-vim'
 Bundle 'eagletmt/neco-ghc'
