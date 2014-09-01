@@ -47,6 +47,7 @@ Bundle 'Shougo/vimproc.vim'
 Bundle 'ervandew/supertab'
 Bundle 'scrooloose/syntastic'
 Bundle 'moll/vim-bbye'
+Bundle 'vim-scripts/gitignore'
 
 " Git
 Bundle 'tpope/vim-fugitive'
@@ -85,14 +86,6 @@ set so=7
 set wildmenu
 " Tab-complete files up to longest unambiguous prefix
 set wildmode=list:longest,full
-
-" Ignore compiled files
-set wildignore=*.o,*~,*.pyc
-if has("win16") || has("win32")
-    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
-else
-    set wildignore+=.git\*,.hg\*,.svn\*
-endif
 
 " Always show current position
 set ruler
@@ -241,6 +234,8 @@ nmap <silent> <leader>u :GundoToggle<CR>
 " Fuzzy find files
 nnoremap <silent> <Leader><space> :CtrlP<CR>
 let g:ctrlp_max_files=0
+let g:ctrlp_show_hidden=1
+let g:ctrlp_custom_ignore = { 'dir': '\v[\/](.git)$' }
 
 " }}}
 
