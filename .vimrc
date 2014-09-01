@@ -154,6 +154,12 @@ nnoremap <leader>mo :set mouse=<cr>
 " Default to mouse mode on
 set mouse=a
 
+" paint column 80 in the active buffer
+augroup BgHighlight
+    autocmd!
+    autocmd WinEnter * set colorcolumn=80
+    autocmd WinLeave * set colorcolumn=0
+augroup END
 " }}}
 
 " Colors and Fonts {{{
