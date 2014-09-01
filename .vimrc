@@ -26,6 +26,9 @@ set formatprg="PARINIT='rTbgqR B=.,?_A_a Q=_s>|' par\ -w72"
 " Find custom built ghc-mod, codex etc
 let $PATH = $PATH . ':' . expand("~/.haskell-vim-now/bin")
 
+" Kill the damned Ex mode.
+nnoremap Q <nop>
+
 " }}}
 
 " Vundle {{{
@@ -43,6 +46,7 @@ Bundle 'jgdavey/tslime.vim'
 Bundle 'Shougo/vimproc.vim'
 Bundle 'ervandew/supertab'
 Bundle 'scrooloose/syntastic'
+Bundle 'moll/vim-bbye'
 
 " Git
 Bundle 'tpope/vim-fugitive'
@@ -59,6 +63,9 @@ Bundle 'vim-scripts/Align'
 Bundle 'vim-scripts/Gundo'
 Bundle 'tpope/vim-commentary'
 Bundle 'godlygeek/tabular'
+
+" Allow pane movement to jump out of vim into tmux
+Bundle 'christoomey/vim-tmux-navigator'
 
 " Haskell
 Bundle 'raichoo/haskell-vim'
@@ -155,7 +162,6 @@ nnoremap <leader>mo :set mouse=<cr>
 set mouse=a
 
 " }}}
-
 
 " Colors and Fonts {{{
 
@@ -310,9 +316,6 @@ nmap <leader>sl :rightbelow vnew<CR>
 nmap <leader>sk :leftabove  new<CR>
 nmap <leader>sj :rightbelow new<CR>
 
-" Allow pane movement to jump out of vim into tmux
-Bundle 'christoomey/vim-tmux-navigator'
-
 " Manually create key mappings (to avoid rebinding C-\)
 let g:tmux_navigator_no_mappings = 1
 
@@ -324,7 +327,6 @@ nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 " don't close buffers when you aren't displaying them
 set hidden
 
-Bundle 'moll/vim-bbye'
 " previous buffer, next buffer
 nnoremap <leader>bp :bp<cr>
 nnoremap <leader>bn :bn<cr>
