@@ -220,6 +220,25 @@ selections to it. This works well for evaluating things in GHCI.
 </tbody>
 </table>
 
+### Buffers
+
+<table>
+<tbody>
+  <tr>
+    <td>,bp</td><td>Previous buffer</td>
+  </tr>
+  <tr>
+    <td>,bn</td><td>Next buffer</td>
+  </tr>
+  <tr>
+    <td>,b&lt;space&gt;</td><td>Buffer fuzzy finder</td>
+  </tr>
+  <tr>
+    <td>,bd</td><td>Delete buffer, keep window open (bbye)</td>
+  </tr>
+</tbody>
+</table>
+
 ### Misc
 
 <table>

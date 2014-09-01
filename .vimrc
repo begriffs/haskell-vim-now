@@ -156,6 +156,7 @@ set mouse=a
 
 " }}}
 
+
 " Colors and Fonts {{{
 
 Bundle 'vim-scripts/wombat256.vim'
@@ -319,6 +320,20 @@ nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
+
+" don't close buffers when you aren't displaying them
+set hidden
+
+Bundle 'moll/vim-bbye'
+" previous buffer, next buffer
+nnoremap <leader>bp :bp<cr>
+nnoremap <leader>bn :bn<cr>
+
+" delete buffer without closing pane
+noremap <leader>bd :Bd<cr>
+
+" fuzzy find buffers
+noremap <leader>b<space> :CtrlPBuffer<cr>
 
 " }}}
 
