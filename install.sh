@@ -6,7 +6,7 @@ verlte() {
   [ "$1" = `echo -e "$1\n$2" | sort -g -t '.' | head -n1` ]
 }
 
-for i in ctags git ghc cabal make vim; do
+for i in ctags git ghc cabal make vim curl-config; do
   command -v $i >/dev/null
   if [ $? -ne 0 ] ; then
     msg "Installer requires ${i}. Please install $i and try again."
@@ -30,6 +30,11 @@ fi
 
 if ! verlte '7.6.3' $GHC_VER ; then
   msg "GHC version 7.6.3 or later is required. Aborting."
+  exit 1
+fi
+
+if ! ctags --version | grep -q "Exuberant" ; then
+  msg "Requires exuberant ctags, not just ctags. Aborting."
   exit 1
 fi
 
