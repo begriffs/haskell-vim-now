@@ -94,7 +94,7 @@ function build_shared_binary {
     return
   fi
 
-  dir=`mktemp -d /tmp/build-XXXX`
+  dir=`mktemp -d /$TMPDIR/build-XXXX`
 
   msg "Building $pkg (in $dir)"
   cd $dir
