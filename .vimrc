@@ -64,6 +64,7 @@ Bundle 'vim-scripts/Align'
 Bundle 'vim-scripts/Gundo'
 Bundle 'tpope/vim-commentary'
 Bundle 'godlygeek/tabular'
+Bundle 'michaeljsmith/vim-indent-object'
 
 " Allow pane movement to jump out of vim into tmux
 Bundle 'christoomey/vim-tmux-navigator'
