@@ -122,3 +122,11 @@ $endpath/bin/hoogle data
 
 msg "Setting git to use fully-pathed vim for messages..."
 git config --global core.editor $(which vim)
+
+msg "Configuring codex to search in sandboxes..."
+cat > $HOME/.codex <<EOF
+hackagePath: .cabal-sandbox/packages/
+tagsFileHeader: true
+tagsFileSorted: true
+tagsCmd: hasktags -x --ctags --output='$TAGS' '$SOURCES'
+EOF
