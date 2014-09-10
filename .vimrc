@@ -71,7 +71,7 @@ Bundle 'christoomey/vim-tmux-navigator'
 
 " Haskell
 Bundle 'raichoo/haskell-vim'
-Bundle 'begriffs/vim-haskellConceal'
+Bundle 'enomsg/vim-haskellConcealPlus'
 Bundle 'eagletmt/ghcmod-vim'
 Bundle 'eagletmt/neco-ghc'
 Bundle 'Twinside/vim-hoogle'
