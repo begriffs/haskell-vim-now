@@ -87,6 +87,7 @@ cp $endpath/git-hscope $endpath/bin
 
 function build_shared_binary {
   pkg=$1
+  constraint=$2
 
   if [ -e $endpath/bin/$pkg ]
   then
@@ -99,7 +100,7 @@ function build_shared_binary {
   msg "Building $pkg (in $dir)"
   cd $dir
   cabal sandbox init
-  cabal install -j --reorder-goals --disable-documentation --datadir=$endpath/data --force-reinstalls $pkg
+  cabal install -j --reorder-goals --disable-documentation --datadir=$endpath/data --force-reinstalls "${constraint:-$pkg}"
 
   msg "Saving $pkg binaries"
   cp .cabal-sandbox/bin/* $endpath/bin
@@ -109,7 +110,7 @@ function build_shared_binary {
   rm -fr $dir
 }
 
-build_shared_binary "ghc-mod"
+build_shared_binary "ghc-mod", "ghc-mod >= 4 && < 5"
 build_shared_binary "hasktags"
 build_shared_binary "codex"
 build_shared_binary "hscope"
