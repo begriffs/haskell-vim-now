@@ -128,5 +128,5 @@ cat > $HOME/.codex <<EOF
 hackagePath: .cabal-sandbox/packages/
 tagsFileHeader: false
 tagsFileSorted: false
-tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-absolute --output='$TAGS' '$SOURCES'
+tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-absolute --output='\$TAGS' '\$SOURCES'
 EOF
