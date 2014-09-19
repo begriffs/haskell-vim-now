@@ -1,7 +1,11 @@
 " General {{{
 
-" Fold up this vimrc
-set foldmethod=marker
+" use indentation for folds
+set foldmethod=indent
+set foldnestmax=5
+set foldlevelstart=99
+set foldcolumn=0
+
 
 " Sets how many lines of history VIM has to remember
 set history=700
@@ -139,9 +143,6 @@ if &term =~ '256color'
   " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
   set t_ut=
 endif
-
-" Add a bit extra margin to the left
-set foldcolumn=1
 
 " Force redraw
 map <silent> <leader>r :redraw!<CR>
