@@ -250,6 +250,9 @@ selections to it. This works well for evaluating things in GHCI.
     <td>,mo</td><td>Disable mouse mode</td>
   </tr>
   <tr>
+    <td>,ig</td><td>Toggle indentation guides</td>
+  </tr>
+  <tr>
     <td>,u</td><td>Interactive undo tree</td>
   </tr>
   <tr>

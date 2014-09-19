@@ -47,6 +47,7 @@ Bundle 'Shougo/vimproc.vim'
 Bundle 'ervandew/supertab'
 Bundle 'scrooloose/syntastic'
 Bundle 'moll/vim-bbye'
+Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'vim-scripts/gitignore'
 
 " Git
