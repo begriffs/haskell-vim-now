@@ -139,7 +139,7 @@ selections to it. This works well for evaluating things in GHCI.
 <table>
 <tbody>
   <tr>
-    <td>\\</td><td>Comment / Uncomment selection</td>
+    <td>gc</td><td>Comment / Uncomment selection</td>
   </tr>
 </tbody>
 </table>
