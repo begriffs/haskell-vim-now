@@ -515,6 +515,7 @@ function! NonintrusiveGitGrep(term)
   " Map 't' to open selected item in new tab
   execute "nnoremap <silent> <buffer> t <C-W><CR><C-W>T"
   execute "silent! Ggrep " . a:term
+  execute "redraw!"
 endfunction
 
 command! -nargs=1 GGrep call NonintrusiveGitGrep(<q-args>)
