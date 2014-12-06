@@ -81,6 +81,11 @@ Bundle 'eagletmt/ghcmod-vim'
 Bundle 'eagletmt/neco-ghc'
 Bundle 'Twinside/vim-hoogle'
 
+" Custom bundles
+if filereadable(expand("~/.vim.local/bundles.vim"))
+  source ~/.vim.local/bundles.vim
+endif
+
 " }}}
 
 " VIM user interface {{{
