@@ -291,5 +291,14 @@ then add `unmap <c-l>` to your .vimrc.local)
 ## Customizing
 
 After installing this configuration, your `.vimrc` and `.vim` will
-be under version control. Don't alter them, add your own settings to
-`~/.vimrc.local` instead and your additions will be loaded.
+be under version control. Don't alter these files. Instead, add your
+own settings to `~/.vimrc.local` and `~/.vim.local/bundles.vim`.
+
+## Adding Custom Bundles
+
+Vundle requires all Bundle statements to be given at once. To accommodate
+this restriction, `.vimrc` sources `~/.vim.local/bundles.vim` immediately
+after its own Bundle statements.
+
+Bundle statements made elsewhere are not recognized.
+
