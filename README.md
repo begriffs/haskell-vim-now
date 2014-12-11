@@ -282,6 +282,9 @@ selections to it. This works well for evaluating things in GHCI.
   <tr>
     <td>C-l</td><td>Move cursor to rightward pane (redraw is `,r` instead)</td>
   </tr>
+  <tr>
+    <td>jk</td><td>Exit Insert mode without straining your hand</td>
+  </tr>
 </tbody>
 </table>
 
