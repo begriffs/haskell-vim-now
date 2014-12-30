@@ -285,6 +285,9 @@ selections to it. This works well for evaluating things in GHCI.
   <tr>
     <td>jk</td><td>Exit Insert mode without straining your hand</td>
   </tr>
+  <tr>
+    <td>gq</td><td>Format selection using `stylish-haskell` for haskell buffers (`par` for others)</td>
+  </tr>
 </tbody>
 </table>
 
