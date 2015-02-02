@@ -3,7 +3,7 @@
 msg() { echo "--- $@" 1>&2; }
 detail() { echo "	$@" 1>&2; }
 verlte() {
-  [ "$1" = `echo -e "$1\n$2" | sort -g -t '.' | head -n1` ]
+  [ "$1" = `echo -e "$1\n$2" | sort -t '.' -k 1,1n -k 2,2n -k 3,3n -k 4,4n | head -n1` ]
 }
 
 for i in ctags git ghc cabal make vim curl-config; do
