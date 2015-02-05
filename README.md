@@ -171,7 +171,10 @@ selections to it. This works well for evaluating things in GHCI.
     <td>,&lt;space&gt;</td><td>Fuzzy file find (CtrlP)</td>
   </tr>
   <tr>
-    <td>,f</td><td>Toggle file browser (nerdtree)</td>
+    <td>,f</td><td>Toggle file browser, find file</td>
+  </tr>
+  <tr>
+    <td>,F</td><td>Toggle file browser</td>
   </tr>
   <tr>
     <td>,sj</td><td>Open split below</td>
@@ -263,9 +266,6 @@ selections to it. This works well for evaluating things in GHCI.
   </tr>
   <tr>
     <td>,&lt;cr&gt;</td><td>Clear search highlights</td>
-  </tr>
-  <tr>
-    <td>C-s</td><td>Toggle nerd tree, find file</td>
   </tr>
   <tr>
     <td>,r</td><td>Redraw screen</td>
