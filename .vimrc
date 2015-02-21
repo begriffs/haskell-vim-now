@@ -36,9 +36,6 @@ let $PATH = $PATH . ':' . expand("~/.haskell-vim-now/bin")
 " Kill the damned Ex mode.
 nnoremap Q <nop>
 
-" Exit Insert mode without getting Carpal Tunnel Syndrome.
-inoremap jk <esc>
-
 " }}}
 
 " Vundle {{{
