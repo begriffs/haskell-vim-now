@@ -6,7 +6,7 @@ verlte() {
   [ "$1" = `echo -e "$1\n$2" | sort -t '.' -k 1,1n -k 2,2n -k 3,3n -k 4,4n | head -n1` ]
 }
 
-for i in ctags git ghc cabal make vim curl-config; do
+for i in ctags git ghc cabal make vim curl-config happy; do
   command -v $i >/dev/null
   if [ $? -ne 0 ] ; then
     msg "Installer requires ${i}. Please install $i and try again."
