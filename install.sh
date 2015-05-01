@@ -85,9 +85,19 @@ msg "Installing git-hscope"
 mkdir -p $endpath/bin
 cp $endpath/git-hscope $endpath/bin
 
+function create_stackage_sandbox {
+  msg "Initializing stackage sandbox in $dir"
+  dir=$1
+  cd $dir
+  cabal sandbox init
+  curl https://www.stackage.org/lts/cabal.config > cabal.config
+  cd -
+}
+
 function build_shared_binary {
-  pkg=$1
-  constraint=$2
+  dir=$1
+  pkg=$2
+  constraint=$3
 
   if [ -e $endpath/bin/$pkg ]
   then
@@ -95,29 +105,23 @@ function build_shared_binary {
     return
   fi
 
-  dir=`mktemp -d /${TMPDIR:-/tmp}/build-XXXX`
-
   msg "Building $pkg (in $dir)"
   cd $dir
-  cabal sandbox init
   cabal install -j --reorder-goals --disable-documentation --datadir=$endpath/data --force-reinstalls "${constraint:-$pkg}"
 
   msg "Saving $pkg binaries"
-  cp .cabal-sandbox/bin/* $endpath/bin
-
-  msg "Cleaning up"
+  mv .cabal-sandbox/bin/* $endpath/bin
   cd -
-  rm -fr $dir
 }
 
-build_shared_binary "ghc-mod", "ghc-mod >= 4 && < 5"
-build_shared_binary "hasktags"
-build_shared_binary "codex"
-build_shared_binary "hscope"
-build_shared_binary "pointfree"
-build_shared_binary "pointful"
-build_shared_binary "hoogle"
-build_shared_binary "stylish-haskell"
+sb=`mktemp -d /${TMPDIR:-/tmp}/build-XXXX`
+create_stackage_sandbox $sb
+
+for i in ghc-mod hasktags codex hscope pointfree pointful hoogle stylish-haskell; do
+  build_shared_binary $sb $i
+done
+
+rm -fr $sb
 
 msg "Building Hoogle database..."
 $endpath/bin/hoogle data
