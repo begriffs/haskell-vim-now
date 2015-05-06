@@ -67,13 +67,13 @@ if [ ! -d $endpath/.vim/bundle ]; then
 fi
 ln -sf $endpath/.vim $HOME/.vim
 
-if [ ! -e $HOME/.vim/bundle/vundle ]; then
+if [ ! -e $HOME/.vim/bundle/Vundle.vim ]; then
   msg "Installing Vundle"
-  git clone http://github.com/gmarik/vundle.git $HOME/.vim/bundle/vundle
+  git clone https://github.com/gmarik/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
 fi
 
 msg "Installing plugins using Vundle..."
-vim -T dumb -E -u $endpath/.vimrc +BundleInstall! +BundleClean! +qall
+vim -T dumb -E -u $endpath/.vimrc +PluginInstall! +PluginClean! +qall
 
 msg "Building vimproc.vim"
 make -C ~/.vim/bundle/vimproc.vim
