@@ -28,7 +28,7 @@ and lets you
 * manipulate tags
 * hoogle lookup
 * pointfree refactor
-* tab compelete
+* tab complete
 * unicode symbols
 * highlight DSLs
 * work with git
