@@ -15,7 +15,7 @@ curl -o - https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/inst
 
 In less than **ten minutes** your Vim will transform into a beautiful
 Haskell paradise.  (Don't worry, it backs up your original
-configuration.) It also builds all necessary support binaries
+configuration to `~/.vimrc.yearmonthdate_time`.) It also builds all necessary support binaries
 including `codex`, `hscope`, `ghc-mod`, `hasktags`, `hoogle` and more.
 
 No more wading through plugins trying to make them all work together.
