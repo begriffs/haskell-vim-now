@@ -90,7 +90,13 @@ function create_stackage_sandbox {
   dir=$1
   cd $dir
   cabal sandbox init
-  curl https://www.stackage.org/lts/cabal.config > cabal.config
+
+  if verlte '7.10' $GHC_VER ; then
+    curl https://beta.stackage.org/nightly/cabal.config > cabal.config
+  else
+    curl https://www.stackage.org/lts/cabal.config > cabal.config
+  fi
+
   cd -
 }
 
