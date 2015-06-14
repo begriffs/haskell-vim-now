@@ -277,6 +277,7 @@ set wrap "Wrap lines
 " Pretty unicode haskell symbols
 let g:haskell_conceal_wide = 1
 let g:haskell_conceal_enumerations = 1
+let hscoptions="𝐒𝐓𝐄𝐌xRtB𝔻"
 
 " }}}
 
