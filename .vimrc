@@ -6,6 +6,12 @@ set foldnestmax=5
 set foldlevelstart=99
 set foldcolumn=0
 
+augroup vimrcFold
+  " fold vimrc itself by categories
+  autocmd!
+  autocmd FileType vim set foldmethod=marker
+  autocmd FileType vim set foldlevel=0
+augroup END
 
 " Sets how many lines of history VIM has to remember
 set history=700
