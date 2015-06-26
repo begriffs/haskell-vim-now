@@ -258,6 +258,9 @@ selections to it. This works well for evaluating things in GHCI.
   <tr>
     <td>,bd</td><td>Delete buffer, keep window open (bbye)</td>
   </tr>
+  <tr>
+    <td>,bo</td><td>Close all buffers except the current one</td>
+  </tr>
 </tbody>
 </table>
 
