@@ -120,7 +120,7 @@ function build_shared_binary {
   cd -
 }
 
-sb=`mktemp -d /${TMPDIR:-/tmp}/build-XXXX`
+sb=`mktemp -d ${TMPDIR:-/tmp}/build-XXXX`
 create_stackage_sandbox $sb
 
 for i in ghc-mod hasktags codex hscope pointfree pointful hoogle stylish-haskell; do
