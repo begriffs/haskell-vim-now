@@ -40,15 +40,6 @@ fi
 
 endpath="$HOME/.haskell-vim-now"
 
-if [ ! -e $endpath/.git ]; then
-  msg "Cloning begriffs/haskell-vim-now"
-  git clone https://github.com/begriffs/haskell-vim-now.git $endpath
-else
-  msg "Existing installation detected"
-  msg "Updating from begriffs/haskell-vim-now"
-  cd $endpath && git pull
-fi
-
 if [ -e ~/.vim/colors ]; then
   msg "Preserving color scheme files"
   cp -R ~/.vim/colors $endpath/colors

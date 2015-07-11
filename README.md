@@ -28,10 +28,8 @@ and lets you
 
 ## Installation
 
-One command does it all:
-
 ```sh
-curl -o - https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh | bash
+cd && git clone https://github.com/huiwang/haskell-vim-now.git .haskell-vim-now && .haskell-vim-now/install.sh
 ```
 
 ### Docker image
