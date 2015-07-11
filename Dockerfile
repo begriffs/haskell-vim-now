@@ -9,4 +9,5 @@ RUN apt-get update \
 
 # Haskell Vim setup
 ADD https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh /install.sh
+RUN chmod +x /install.sh
 RUN /install.sh && rm -r /root/.cabal
