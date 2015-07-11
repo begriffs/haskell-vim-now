@@ -1,5 +1,8 @@
 FROM haskell:7.8
 
+# set haskell vim now install package
+ENV hvn /root/.haskell-vim-now
+
 # install vim tooling
 RUN apt-get update \
  && apt-get install -y git vim curl build-essential \
@@ -8,5 +11,6 @@ RUN apt-get update \
  && apt-get clean
 
 # Haskell Vim setup
-ADD https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh /install.sh
-RUN /install.sh && rm -r /root/.cabal
+ADD . $hvn
+RUN chmod +x $hvn/install.sh
+RUN $hvn/install.sh && rm -r /root/.cabal
