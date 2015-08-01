@@ -591,6 +591,22 @@ nmap <silent> <leader>ht :GhcModType<CR>
 nmap <silent> <leader>hT :GhcModTypeInsert<CR>
 " GHC errors and warnings
 nmap <silent> <leader>hc :SyntasticCheck ghc_mod<CR>
+
+" Resolves ghcmod base directory
+au FileType haskell let g:ghcmod_use_basedir = getcwd()
+
+" Fix path issues from vim.wikia.com/wiki/Set_working_directory_to_the_current_file
+let s:default_path = escape(&path, '\ ') " store default value of 'path'
+" Always add the current file's directory to the path and tags list if not
+" already there. Add it to the beginning to speed up searches.
+autocmd BufRead *
+      \ let s:tempPath=escape(escape(expand("%:p:h"), ' '), '\ ') |
+      \ exec "set path-=".s:tempPath |
+      \ exec "set path-=".s:default_path |
+      \ exec "set path^=".s:tempPath |
+      \ exec "set path^=".s:default_path
+
+
 " Haskell Lint
 let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['haskell'] }
 nmap <silent> <leader>hl :SyntasticCheck hlint<CR>
