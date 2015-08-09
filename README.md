@@ -31,7 +31,7 @@ and lets you
 One command does it all:
 
 ```sh
-bash <(curl -s http://git.io/haskell-vim-now)
+curl -o - https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh | bash
 ```
 
 ### Docker image
