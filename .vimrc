@@ -80,6 +80,7 @@ Plugin 'vim-scripts/Gundo'
 Plugin 'tpope/vim-commentary'
 Plugin 'godlygeek/tabular'
 Plugin 'michaeljsmith/vim-indent-object'
+Plugin 'easymotion/vim-easymotion'
 
 " Allow pane movement to jump out of vim into tmux
 Plugin 'christoomey/vim-tmux-navigator'
