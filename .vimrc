@@ -86,7 +86,7 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'christoomey/vim-tmux-navigator'
 
 " Haskell
-Plugin 'raichoo/haskell-vim'
+Plugin 'neovimhaskell/haskell-vim'
 Plugin 'enomsg/vim-haskellConcealPlus'
 Plugin 'eagletmt/ghcmod-vim'
 Plugin 'eagletmt/neco-ghc'
