@@ -85,6 +85,12 @@ msg "Installing git-hscope"
 mkdir -p $endpath/bin
 cp $endpath/git-hscope $endpath/bin
 
+if [ ! -e $endpath/libexec/cabal-helper-wrapper ]
+then
+  msg "Missing cabal-helper-wrapper, must re-install ghc-mod"
+  rm $endpath/bin/ghc-mod*
+fi
+
 function create_stackage_sandbox {
   msg "Initializing stackage sandbox in $dir"
   dir=$1
@@ -111,9 +117,9 @@ function build_shared_binary {
     return
   fi
 
-  msg "Building $pkg (in $dir)"
+  msg "Building $pkg"
   cd $dir
-  cabal install -j --reorder-goals --disable-documentation --datadir=$endpath/data --force-reinstalls "${constraint:-$pkg}"
+  cabal install -j --reorder-goals --disable-documentation --datadir=$endpath/data --libexecdir=$endpath/libexec --force-reinstalls "${constraint:-$pkg}"
 
   msg "Saving $pkg binaries"
   mv .cabal-sandbox/bin/* $endpath/bin

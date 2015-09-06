@@ -1,7 +1,9 @@
-# This may be copied from user's original .vim folder.
-# Don't let it stop the cloned repo from updating.
-.vim/colors
+.DS_Store
+.vim
 
-# Custom binaries will be installed here
+# Goodies from building helper binaries
 bin
 data
+lib
+libexec
+share
