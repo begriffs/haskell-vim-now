@@ -307,6 +307,15 @@ selections to it. This works well for evaluating things in GHCI.
   <tr>
     <td>gq</td><td>Format selection using `stylish-haskell` for haskell buffers (`par` for others)</td>
   </tr>
+  <tr>
+    <td>,y</td><td>Yank to OS clipboard</td>
+  </tr>
+  <tr>
+    <td>,d</td><td>Delete to OS clipboard</td>
+  </tr>
+  <tr>
+    <td>,p</td><td>Paste from OS clipboard</td>
+  </tr>
 </tbody>
 </table>
 
