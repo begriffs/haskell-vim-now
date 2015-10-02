@@ -37,7 +37,7 @@ set formatprg="PARINIT='rTbgqR B=.,?_A_a Q=_s>|' par\ -w72"
 autocmd FileType haskell let &formatprg="stylish-haskell"
 
 " Find custom built ghc-mod, codex etc
-let $PATH = $PATH . ':' . expand("~/.haskell-vim-now/bin")
+let $PATH = $PATH . ':' . expand("~/.local/bin")
 
 " Kill the damned Ex mode.
 nnoremap Q <nop>
