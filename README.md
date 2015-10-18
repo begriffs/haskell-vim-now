@@ -34,29 +34,6 @@ One command does it all:
 bash <(curl -sL http://git.io/haskell-vim-now)
 ```
 
-### Docker image
-
-If you are into developing with Docker, you can use the image.
-
-    docker build -t haskell-vim .
-    docker run --rm -i -t haskell-vim /bin/bash
-
-If instead you want to extract the vim setup from the image that is easy enough
-
-    docker build -t haskell-vim .
-    mkdir ~/.haskell-vim-now
-    cd ~/.haskell-vim-now
-    docker run --rm haskell-vim tar -cz -C /root/.haskell-vim-now . > haskell-vim-now.tgz
-    tar -xzf haskell-vim-now.tgz
-
-However, some things (for example the hoogle database) use absolute paths and don't work correctly.
-
-
-### Troubleshooting
-
-See this [wiki](https://github.com/begriffs/haskell-vim-now/wiki/Installation-Troubleshooting)
-page for tips on fixing installation problems.
-
 ## Keybindings and commands
 
 The commands are organized into logical groups to help you remember
@@ -336,3 +313,24 @@ after its own Bundle statements.
 
 Bundle statements made elsewhere are not recognized.
 
+### Docker image
+
+If you are into developing with Docker, you can use the image.
+
+    docker build -t haskell-vim .
+    docker run --rm -i -t haskell-vim /bin/bash
+
+If instead you want to extract the vim setup from the image that is easy enough
+
+    docker build -t haskell-vim .
+    mkdir ~/.haskell-vim-now
+    cd ~/.haskell-vim-now
+    docker run --rm haskell-vim tar -cz -C /root/.haskell-vim-now . > haskell-vim-now.tgz
+    tar -xzf haskell-vim-now.tgz
+
+However, some things (for example the hoogle database) use absolute paths and don't work correctly.
+
+### Troubleshooting
+
+See this [wiki](https://github.com/begriffs/haskell-vim-now/wiki/Installation-Troubleshooting)
+page for tips on fixing installation problems.
