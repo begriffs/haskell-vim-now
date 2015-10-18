@@ -6,7 +6,15 @@ verlte() {
   [ "$1" = `echo -e "$1\n$2" | sort -t '.' -k 1,1n -k 2,2n -k 3,3n -k 4,4n | head -n1` ]
 }
 
-for i in ctags git ghc cabal make vim curl-config happy; do
+
+command -v stack >/dev/null
+if [ $? -ne 0 ] ; then
+  msg "Installer requires Stack. Installation instructions:"
+  msg "https://github.com/commercialhaskell/stack#how-to-install"
+  exit 1
+fi
+
+for i in ctags git make vim curl-config; do
   command -v $i >/dev/null
   if [ $? -ne 0 ] ; then
     msg "Installer requires ${i}. Please install $i and try again."
@@ -14,22 +22,10 @@ for i in ctags git ghc cabal make vim curl-config happy; do
   fi
 done
 
-CABAL_VER=$(cabal --numeric-version)
 VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
-GHC_VER=$(ghc --numeric-version)
 
 if ! verlte '7.4' $VIM_VER ; then
   msg "Vim version 7.4 or later is required. Aborting."
-  exit 1
-fi
-
-if ! verlte '1.18' $CABAL_VER ; then
-  msg "Cabal version 1.18 or later is required. Aborting."
-  exit 1
-fi
-
-if ! verlte '7.6.3' $GHC_VER ; then
-  msg "GHC version 7.6.3 or later is required. Aborting."
   exit 1
 fi
 
@@ -78,72 +74,24 @@ vim -T dumb -E -u $endpath/.vimrc +PluginInstall! +PluginClean! +qall
 msg "Building vimproc.vim"
 make -C ~/.vim/bundle/vimproc.vim
 
-msg "Updating cabal package list"
-cabal update
+msg "Adding extra stack deps if needed"
+sed -i .bak 's/extra-deps: \[\]/extra-deps: [cabal-helper-0.6.1.0, pure-cdb-0.1.1]/' ~/.stack/global/stack.yaml
+
+msg "Installing helper binaries"
+stack --resolver nightly install ghc-mod hasktags codex hscope pointfree pointful hoogle stylish-haskell
 
 msg "Installing git-hscope"
-mkdir -p $endpath/bin
-cp $endpath/git-hscope $endpath/bin
-
-if [ ! -e $endpath/libexec/cabal-helper-wrapper ]
-then
-  msg "Missing cabal-helper-wrapper, must re-install ghc-mod"
-  rm $endpath/bin/ghc-mod*
-fi
-
-function create_stackage_sandbox {
-  msg "Initializing stackage sandbox in $dir"
-  dir=$1
-  cd $dir
-  cabal sandbox init
-
-  if verlte '7.10' $GHC_VER ; then
-    curl -L https://beta.stackage.org/nightly/cabal.config > cabal.config
-  else
-    curl -L https://www.stackage.org/lts/cabal.config > cabal.config
-  fi
-
-  cd -
-}
-
-function build_shared_binary {
-  dir=$1
-  pkg=$2
-  constraint=$3
-
-  if [ -e $endpath/bin/$pkg ]
-  then
-    msg "$pkg is already installed, skipping build"
-    return
-  fi
-
-  msg "Building $pkg"
-  cd $dir
-  cabal install -j --reorder-goals --disable-documentation --datadir=$endpath/data --libexecdir=$endpath/libexec --force-reinstalls "${constraint:-$pkg}"
-
-  msg "Saving $pkg binaries"
-  mv .cabal-sandbox/bin/* $endpath/bin
-  cd -
-}
-
-sb=`mktemp -d ${TMPDIR:-/tmp}/build-XXXX`
-create_stackage_sandbox $sb
-
-for i in ghc-mod hasktags codex hscope pointfree pointful hoogle stylish-haskell; do
-  build_shared_binary $sb $i
-done
-
-rm -fr $sb
+cp $endpath/git-hscope ~/.local/bin
 
 msg "Building Hoogle database..."
-$endpath/bin/hoogle data
+~/.local/bin/hoogle data
 
 msg "Setting git to use fully-pathed vim for messages..."
 git config --global core.editor $(which vim)
 
-msg "Configuring codex to search in sandboxes..."
+msg "Configuring codex to search in stack..."
 cat > $HOME/.codex <<EOF
-hackagePath: .cabal-sandbox/packages/
+hackagePath: $HOME/.stack/indices/Hackage/
 tagsFileHeader: false
 tagsFileSorted: false
 tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-absolute --output='\$TAGS' '\$SOURCES'
