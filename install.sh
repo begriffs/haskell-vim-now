@@ -78,7 +78,7 @@ msg "Adding extra stack deps if needed"
 sed -i .bak 's/extra-deps: \[\]/extra-deps: [cabal-helper-0.6.0.0, pure-cdb-0.1.1]/' ~/.stack/global/stack.yaml
 
 msg "Installing helper binaries"
-stack install ghc-mod hasktags codex hscope pointfree pointful hoogle stylish-haskell
+stack --resolver nightly install ghc-mod hasktags codex hscope pointfree pointful hoogle stylish-haskell
 
 msg "Installing git-hscope"
 cp $endpath/git-hscope ~/.local/bin
@@ -89,9 +89,9 @@ msg "Building Hoogle database..."
 msg "Setting git to use fully-pathed vim for messages..."
 git config --global core.editor $(which vim)
 
-msg "Configuring codex to search in sandboxes..."
+msg "Configuring codex to search in stack..."
 cat > $HOME/.codex <<EOF
-hackagePath: .cabal-sandbox/packages/
+hackagePath: $HOME/.stack/indices/Hackage/
 tagsFileHeader: false
 tagsFileSorted: false
 tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-absolute --output='\$TAGS' '\$SOURCES'
