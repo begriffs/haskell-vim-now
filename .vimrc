@@ -519,7 +519,7 @@ map <leader>tg :!codex update --force<CR>:call system("git hscope -X TemplateHas
 
 map <leader>tt :TagbarToggle<CR>
 
-set csprg=~/.haskell-vim-now/bin/hscope
+set csprg=~/.local/bin/hscope
 set csto=1 " search codex tags first
 set cst
 set csverb
