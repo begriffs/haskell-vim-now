@@ -14,7 +14,25 @@ if [ $? -ne 0 ] ; then
   exit 1
 fi
 
-for i in ctags git make vim curl-config; do
+command -v ctags >/dev/null
+if [ $? -ne 0 ] || [ ! ctags --version | grep -q "Exuberant" ] ; then
+  msg "Installer requires exuberant ctags."
+  msg
+  msg "Ubuntu - apt-get install exuberant-ctags"
+  msg "OS X   - brew install ctags"
+  exit 1
+fi
+
+command -v curl-config >/dev/null
+if [ $? -ne 0 ] ; then
+  msg "Installer requires curl-config"
+  msg
+  msg "Ubuntu - apt-get install libcurl4-openssl-dev"
+  msg "OS X   - should have it already"
+  exit 1
+fi
+
+for i in git make vim; do
   command -v $i >/dev/null
   if [ $? -ne 0 ] ; then
     msg "Installer requires ${i}. Please install $i and try again."
@@ -26,11 +44,6 @@ VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
 
 if ! verlte '7.4' $VIM_VER ; then
   msg "Vim version 7.4 or later is required. Aborting."
-  exit 1
-fi
-
-if ! ctags --version | grep -q "Exuberant" ; then
-  msg "Requires exuberant ctags, not just ctags. Aborting."
   exit 1
 fi
 
