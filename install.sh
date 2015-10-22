@@ -75,7 +75,9 @@ msg "Building vimproc.vim"
 make -C ~/.vim/bundle/vimproc.vim
 
 msg "Adding extra stack deps if needed"
-sed -i .bak 's/extra-deps: \[\]/extra-deps: [cabal-helper-0.6.1.0, pure-cdb-0.1.1]/' ~/.stack/global/stack.yaml
+DEPS_REGEX='s/extra-deps: \[\]/extra-deps: [cabal-helper-0.6.1.0, pure-cdb-0.1.1]/'
+sed -i.bak "$DEPS_REGEX" ~/.stack/global/stack.yaml || sed -i.bak "$DEPS_REGEX" ~/.stack/global-project/stack.yaml
+rm -f ~/.stack/global/stack.yaml.bak ~/.stack/global-project/stack.yaml.bak
 
 msg "Installing helper binaries"
 stack --resolver nightly install ghc-mod hasktags codex hscope pointfree pointful hoogle stylish-haskell
