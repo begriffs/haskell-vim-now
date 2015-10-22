@@ -20,6 +20,7 @@ if [ $? -ne 0 ] || [ ! ctags --version | grep -q "Exuberant" ] ; then
   msg
   msg "Ubuntu - apt-get install exuberant-ctags"
   msg "OS X   - brew install ctags"
+  msg "RHEL   - yum install ctags"
   exit 1
 fi
 
@@ -29,6 +30,7 @@ if [ $? -ne 0 ] ; then
   msg
   msg "Ubuntu - apt-get install libcurl4-openssl-dev"
   msg "OS X   - should have it already"
+  msg "RHEL   - yum install libcurl-devel"
   exit 1
 fi
 
@@ -91,6 +93,9 @@ msg "Adding extra stack deps if needed"
 DEPS_REGEX='s/extra-deps: \[\]/extra-deps: [cabal-helper-0.6.1.0, pure-cdb-0.1.1]/'
 sed -i.bak "$DEPS_REGEX" ~/.stack/global/stack.yaml || sed -i.bak "$DEPS_REGEX" ~/.stack/global-project/stack.yaml
 rm -f ~/.stack/global/stack.yaml.bak ~/.stack/global-project/stack.yaml.bak
+
+msg "Setting up GHC if needed"
+stack setup
 
 msg "Installing helper binaries"
 stack --resolver nightly install ghc-mod hasktags codex hscope pointfree pointful hoogle stylish-haskell
