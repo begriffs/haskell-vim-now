@@ -21,6 +21,7 @@ if [ $? -ne 0 ] || [ ! ctags --version | grep -q "Exuberant" ] ; then
   msg "Ubuntu - apt-get install exuberant-ctags"
   msg "OS X   - brew install ctags"
   msg "RHEL   - yum install ctags"
+  msg "Fedora - dnf install ctags"
   exit 1
 fi
 
@@ -31,6 +32,7 @@ if [ $? -ne 0 ] ; then
   msg "Ubuntu - apt-get install libcurl4-openssl-dev"
   msg "OS X   - should have it already"
   msg "RHEL   - yum install libcurl-devel"
+  msg "Fedora - dnf install libcurl-devel"
   exit 1
 fi
 
