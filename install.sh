@@ -14,29 +14,29 @@ if [ $? -ne 0 ] ; then
   exit 1
 fi
 
-command -v ctags >/dev/null
-if [ $? -ne 0 ] || [ ! ctags --version | grep -q "Exuberant" ] ; then
-  msg "Installer requires exuberant ctags."
-  msg
-  msg "Ubuntu - apt-get install exuberant-ctags"
-  msg "OS X   - brew install ctags"
-  msg "RHEL   - yum install ctags"
-  msg "Fedora - dnf install ctags"
-  exit 1
+msg "Installing system package dependencies"
+command -v brew >/dev/null
+if [ $? -eq 0 ] ; then
+  msg "homebrew detected"
+  brew install git make vim ctags
+fi
+command -v apt-get >/dev/null
+if [ $? -eq 0 ] ; then
+  msg "apt-get detected"
+  sudo apt-get install -y git make vim libcurl4-openssl-dev exuberant-ctags
+fi
+command -v dnf >/dev/null
+if [ $? -eq 0 ] ; then
+  msg "dnf detected"
+  sudo dnf install -y git make vim ctags libcurl-devel zlib-devel
+fi
+command -v yum >/dev/null
+if [ $? -eq 0 ] ; then
+  msg "yum detected"
+  sudo yum install -y git make vim ctags libcurl-devel zlib-devel
 fi
 
-command -v curl-config >/dev/null
-if [ $? -ne 0 ] ; then
-  msg "Installer requires curl-config"
-  msg
-  msg "Ubuntu - apt-get install libcurl4-openssl-dev"
-  msg "OS X   - should have it already"
-  msg "RHEL   - yum install libcurl-devel"
-  msg "Fedora - dnf install libcurl-devel"
-  exit 1
-fi
-
-for i in git make vim; do
+for i in ctags curl-config git make vim; do
   command -v $i >/dev/null
   if [ $? -ne 0 ] ; then
     msg "Installer requires ${i}. Please install $i and try again."
