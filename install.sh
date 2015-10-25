@@ -95,12 +95,15 @@ msg "Setting up GHC if needed"
 stack setup
 
 msg "Adding extra stack deps if needed"
-DEPS_REGEX='s/extra-deps: \[\]/extra-deps: [cabal-helper-0.5.3.0, pure-cdb-0.1.1]/'
+DEPS_REGEX='s/extra-deps: \[\]/extra-deps: [cabal-helper-0.6.1.0, pure-cdb-0.1.1]/'
+# upgrade from a previous installation
+DEPS_UPGRADE_REGEX='s/cabal-helper-0.5.3.0/cabal-helper-0.6.1.0/g'
 sed -i.bak "$DEPS_REGEX" ~/.stack/global-project/stack.yaml || sed -i.bak "$DEPS_REGEX" ~/.stack/global/stack.yaml
+sed -i.bak "$DEPS_UPGRADE_REGEX" ~/.stack/global-project/stack.yaml || sed -i.bak "$DEPS_UPGRADE_REGEX" ~/.stack/global/stack.yam
 rm -f ~/.stack/global/stack.yaml.bak ~/.stack/global-project/stack.yaml.bak
 
 msg "Installing helper binaries"
-stack --resolver lts-3.10 install ghc-mod-5.3.0.0 hasktags codex hscope pointfree pointful hoogle stylish-haskell
+stack --resolver nightly install ghc-mod hasktags codex hscope pointfree pointful hoogle stylish-haskell
 
 msg "Installing git-hscope"
 cp $endpath/git-hscope ~/.local/bin
