@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-pushd $(git rev-parse --show-toplevel) &>/dev/null
+pushd $(git rev-parse --show-toplevel) >/dev/null
 git ls-files | grep '\.l\?hs$' | xargs hscope -b "$@"
-popd &>/dev/null
+popd >/dev/null
