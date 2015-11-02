@@ -47,7 +47,8 @@ done
 VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
 
 if ! verlte '7.4' $VIM_VER ; then
-  msg "Vim version 7.4 or later is required. Aborting."
+  msg "Detected vim version \"$VIM_VER\""
+  msg "However version 7.4 or later is required. Aborting."
   exit 1
 fi
 
