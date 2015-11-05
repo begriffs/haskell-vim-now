@@ -1,9 +1,2 @@
 .DS_Store
 .vim
-
-# Goodies from building helper binaries
-bin
-data
-lib
-libexec
-share

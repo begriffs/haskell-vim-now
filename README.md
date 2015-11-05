@@ -8,7 +8,7 @@
 In less than **ten minutes** your Vim will transform into a beautiful
 Haskell paradise.  (Don't worry, it backs up your original
 configuration to `~/.vimrc.yearmonthdate_time`.) It also builds all necessary support binaries
-including `codex`, `hscope`, `ghc-mod`, `hasktags`, `hoogle` and more.
+including `codex`, `hscope`, `hdevtools`, `hasktags`, `hoogle` and more.
 
 No more wading through plugins trying to make them all work together.
 In ten minutes you will have a fully functional Vim that looks great
@@ -51,9 +51,6 @@ them.
   </tr>
   <tr>
     <td>,ht</td><td>Show type of expression under cursor</td>
-  </tr>
-  <tr>
-    <td>,hT</td><td>Insert type of expression into previous line</td>
   </tr>
   <tr>
     <td>,hl</td><td>Run Haskell linter on file</td>

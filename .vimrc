@@ -36,7 +36,7 @@ set formatprg="PARINIT='rTbgqR B=.,?_A_a Q=_s>|' par\ -w72"
 " Use stylish haskell instead of par for haskell buffers
 autocmd FileType haskell let &formatprg="stylish-haskell"
 
-" Find custom built ghc-mod, codex etc
+" Find custom built hasktags, codex etc
 let $PATH = $PATH . ':' . expand("~/.local/bin")
 
 " Kill the damned Ex mode.
@@ -88,7 +88,7 @@ Plugin 'christoomey/vim-tmux-navigator'
 " Haskell
 Plugin 'neovimhaskell/haskell-vim'
 Plugin 'enomsg/vim-haskellConcealPlus'
-Plugin 'eagletmt/ghcmod-vim'
+Plugin 'bitc/vim-hdevtools'
 Plugin 'eagletmt/neco-ghc'
 Plugin 'Twinside/vim-hoogle'
 
@@ -321,7 +321,7 @@ noremap <c-l> <c-w>l
 nmap <silent> <leader><cr> :noh\|hi Cursor guibg=red<cr>
 augroup haskell
   autocmd!
-  autocmd FileType haskell map <silent> <leader><cr> :noh<cr>:GhcModTypeClear<cr>:SyntasticReset<cr>
+  autocmd FileType haskell map <silent> <leader><cr> :noh<cr>:HdevtoolsClear<cr>:SyntasticReset<cr>
   autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 augroup END
 
@@ -595,14 +595,9 @@ endif
 let g:necoghc_enable_detailed_browse = 1
 
 " Type of expression under cursor
-nmap <silent> <leader>ht :GhcModType<CR>
-" Insert type of expression under cursor
-nmap <silent> <leader>hT :GhcModTypeInsert<CR>
+nmap <silent> <leader>ht :HdevtoolsType<CR>
 " GHC errors and warnings
-nmap <silent> <leader>hc :SyntasticCheck ghc_mod<CR>
-
-" Resolves ghcmod base directory
-au FileType haskell let g:ghcmod_use_basedir = getcwd()
+nmap <silent> <leader>hc :SyntasticCheck hdevtools<CR>
 
 " Fix path issues from vim.wikia.com/wiki/Set_working_directory_to_the_current_file
 let s:default_path = escape(&path, '\ ') " store default value of 'path'
@@ -619,6 +614,9 @@ autocmd BufRead *
 " Haskell Lint
 let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['haskell'] }
 nmap <silent> <leader>hl :SyntasticCheck hlint<CR>
+
+" Options for Haskell Syntax Check
+let g:syntastic_haskell_hdevtools_args = '-g-Wall'
 
 " Hoogle the word under the cursor
 nnoremap <silent> <leader>hh :Hoogle<CR>
