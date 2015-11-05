@@ -103,7 +103,7 @@ sed -i.bak "$DEPS_UPGRADE_REGEX" ~/.stack/global-project/stack.yaml || sed -i.ba
 rm -f ~/.stack/global/stack.yaml.bak ~/.stack/global-project/stack.yaml.bak
 
 msg "Installing helper binaries"
-stack --resolver nightly install ghc-mod hasktags codex hscope pointfree pointful hoogle stylish-haskell
+stack --resolver nightly install hdevtools hasktags codex hscope pointfree pointful hoogle stylish-haskell
 
 msg "Installing git-hscope"
 cp $endpath/git-hscope ~/.local/bin
