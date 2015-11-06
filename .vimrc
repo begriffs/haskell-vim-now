@@ -88,6 +88,7 @@ Plugin 'christoomey/vim-tmux-navigator'
 " Haskell
 Plugin 'neovimhaskell/haskell-vim'
 Plugin 'enomsg/vim-haskellConcealPlus'
+Plugin 'eagletmt/ghcmod-vim'
 Plugin 'bitc/vim-hdevtools'
 Plugin 'eagletmt/neco-ghc'
 Plugin 'Twinside/vim-hoogle'
@@ -321,7 +322,7 @@ noremap <c-l> <c-w>l
 nmap <silent> <leader><cr> :noh\|hi Cursor guibg=red<cr>
 augroup haskell
   autocmd!
-  autocmd FileType haskell map <silent> <leader><cr> :noh<cr>:HdevtoolsClear<cr>:SyntasticReset<cr>
+  autocmd FileType haskell map <silent> <leader><cr> :noh<cr>:GhcModTypeClear<cr>:SyntasticReset<cr>
   autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 augroup END
 
@@ -593,9 +594,13 @@ endif
 
 " Show types in completion suggestions
 let g:necoghc_enable_detailed_browse = 1
+" Resolve ghcmod base directory
+au FileType haskell let g:ghcmod_use_basedir = getcwd()
 
 " Type of expression under cursor
-nmap <silent> <leader>ht :HdevtoolsType<CR>
+nmap <silent> <leader>ht :GhcModType<CR>
+" Insert type of expression under cursor
+nmap <silent> <leader>hT :GhcModTypeInsert<CR>
 " GHC errors and warnings
 nmap <silent> <leader>hc :SyntasticCheck hdevtools<CR>
 
