@@ -53,6 +53,9 @@ them.
     <td>,ht</td><td>Show type of expression under cursor</td>
   </tr>
   <tr>
+    <td>,hT</td><td>Insert type of expression into previous line</td>
+  </tr>
+  <tr>
     <td>,hl</td><td>Run Haskell linter on file</td>
   </tr>
   <tr>
