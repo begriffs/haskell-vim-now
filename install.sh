@@ -29,9 +29,10 @@ command -v dnf >/dev/null
 if [ $? -eq 0 ] ; then
   msg "dnf detected"
   sudo dnf install -y git make vim ctags libcurl-devel zlib-devel
+  DNF=1
 fi
 command -v yum >/dev/null
-if [ $? -eq 0 ] ; then
+if [ $? -eq 0 ] && [ $DNF -ne 1 ] ; then
   msg "yum detected"
   sudo yum install -y git make vim ctags libcurl-devel zlib-devel
 fi
