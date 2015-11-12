@@ -82,16 +82,14 @@ if [ ! -d $endpath/.vim/bundle ]; then
 fi
 ln -sf $endpath/.vim $HOME/.vim
 
-if [ ! -e $HOME/.vim/bundle/Vundle.vim ]; then
-  msg "Installing Vundle"
-  git clone https://github.com/gmarik/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
+if [ ! -e $HOME/.vim/autoload/plug.vim ]; then
+  msg "Installing vim-plug"
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
-msg "Installing plugins using Vundle..."
-vim -T dumb -E -u $endpath/.vimrc +PluginInstall! +PluginClean! +qall
-
-msg "Building vimproc.vim"
-make -C ~/.vim/bundle/vimproc.vim
+msg "Installing plugins using vim-plug..."
+vim -T dumb -E -u $endpath/.vimrc +PlugUpgrade +PlugUpdate +PlugClean! +qall
 
 msg "Setting up GHC if needed"
 stack setup
