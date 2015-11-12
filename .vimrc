@@ -233,6 +233,8 @@ set ffs=unix,dos,mac
 " Use large font by default in MacVim
 set gfn=Monaco:h19
 
+" Use powerline fonts for airline
+let g:airline_powerline_fonts = 1
 " }}}
 
 " Files, backups and undo {{{
