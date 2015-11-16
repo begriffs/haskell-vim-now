@@ -76,7 +76,7 @@ Plugin 'majutsushi/tagbar'
 
 " Text manipulation
 Plugin 'vim-scripts/Align'
-Plugin 'vim-scripts/Gundo'
+Plugin 'simnalamburt/vim-mundo'
 Plugin 'tpope/vim-commentary'
 Plugin 'godlygeek/tabular'
 Plugin 'michaeljsmith/vim-indent-object'
