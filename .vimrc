@@ -1,6 +1,13 @@
 " General {{{
 
-" use indentation for folds
+" Set XDG_CONFIG_HOME/haskell-vim-now to load user's config files
+if exists($XDG_CONFIG_HOME)
+  let local_config_dir = $XDG_CONFIG_HOME . "/haskell-vim-now"
+else
+  let local_config_dir = $HOME . "/.config/haskell-vim-now"
+endif
+
+" Use indentation for folds
 set foldmethod=indent
 set foldnestmax=5
 set foldlevelstart=99
@@ -93,8 +100,9 @@ Plug 'vim-scripts/wombat256.vim'
 
 " Custom bundles
 " Make it incompatible with prev versions using different file
-if filereadable(expand("~/.vim.local/plugins.vim"))
-  source ~/.vim.local/plugins.vim
+let user_plugins = expand(resolve(local_config_dir . "/plugins.local"))
+if filereadable(user_plugins)
+  execute 'source '. user_plugins
 endif
 
 call plug#end()
@@ -651,9 +659,9 @@ vnoremap <silent> <leader>h> :call Pointful()<CR>
 " }}}
 
 " Customization {{{
-
-if filereadable(expand("~/.vimrc.local"))
-  source ~/.vimrc.local
+let local_config_post = expand(resolve(local_config_dir . "/vimrc.local"))
+if filereadable(local_config_post)
+  execute 'source '. local_config_post
 endif
 
 " }}}

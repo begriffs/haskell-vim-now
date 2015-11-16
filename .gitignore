@@ -1,4 +1,5 @@
 .DS_Store
 .vim
-local
+*.local
+*.local.*
 backup
