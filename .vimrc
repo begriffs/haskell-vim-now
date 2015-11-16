@@ -7,6 +7,12 @@ else
   let local_config_dir = $HOME . "/.config/haskell-vim-now"
 endif
 
+" Precustomization
+let local_config_pre = expand(resolve(local_config_dir . "/vimrc.local.pre"))
+if filereadable(local_config_pre)
+  execute 'source '. local_config_pre
+endif
+
 " Use indentation for folds
 set foldmethod=indent
 set foldnestmax=5
