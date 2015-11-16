@@ -7,7 +7,7 @@
 
 In less than **ten minutes** your Vim will transform into a beautiful
 Haskell paradise.  (Don't worry, it backs up your original
-configuration to `~/.vimrc.yearmonthdate_time`.) It also builds all necessary support binaries
+configuration to `~/.config/haskell-vim-now/backup/.vimrc.yearmonthdate_time`.) It also builds all necessary support binaries
 including `codex`, `hscope`, `hdevtools`, `hasktags`, `hoogle` and more.
 
 No more wading through plugins trying to make them all work together.
@@ -297,21 +297,21 @@ selections to it. This works well for evaluating things in GHCI.
 </table>
 
 (If you prefer to restore the default screen redraw action of `C-l`
-then add `unmap <c-l>` to your .vimrc.local)
+then add `unmap <c-l>` to your vimrc.local)
 
 ## Customizing
 
 After installing this configuration, your `.vimrc` and `.vim` will
 be under version control. Don't alter these files. Instead, add your
-own settings to `~/.vimrc.local` and `~/.vim.local/bundles.vim`.
+own settings to `~/.config/haskell-vim-now/vimrc.local.pre`, `~/.config/haskell-vim-now/vimrc.local`  and `~/.config/haskell-vim-now/plugins.local`.
 
-## Adding Custom Bundles
+## Adding Custom Plugs
 
-Vundle requires all Bundle statements to be given at once. To accommodate
-this restriction, `.vimrc` sources `~/.vim.local/bundles.vim` immediately
-after its own Bundle statements.
+vim-plug requires all Plug statements to be given at once. To accommodate
+this restriction, `.vimrc` sources `~/.config/haskell-vim-now/plugins.local` immediately
+after its own Plug statements.
 
-Bundle statements made elsewhere are not recognized.
+Plug statements made elsewhere are not recognized.
 
 ### Docker image
 
@@ -334,3 +334,4 @@ However, some things (for example the hoogle database) use absolute paths and do
 
 See this [wiki](https://github.com/begriffs/haskell-vim-now/wiki/Installation-Troubleshooting)
 page for tips on fixing installation problems.
+
