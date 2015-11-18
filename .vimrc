@@ -71,7 +71,7 @@ Plugin 'int3/vim-extradite'
 " Bars, panels, and files
 Plugin 'scrooloose/nerdtree'
 Plugin 'bling/vim-airline'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 
 " Text manipulation
