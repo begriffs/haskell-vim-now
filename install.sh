@@ -116,6 +116,11 @@ EOF
 if [ -e $HOME/.haskell-vim-now ]; then
   msg "Migrating existing installation to $DESTINATION"
   mv -fu $HOME/.haskell-vim-now $DESTINATION
+  mv -fu $HOME/.vimrc.local $DESTINATION/vimrc.local
+  mv -fu $HOME/.vimrc.local.pre $DESTINATION/vimrc.local.pre
+  sed -i.bak "s/Plugin/Plug/g" $HOME/.vim.local/bundles.vim
+  mv -fu $HOME/.vim.local/bundles.vim $DESTINATION/plugins.local
+  rm -f $HOME/.vim.local/bundles.vim.bak
 fi
 
 if [ ! -e $DESTINATION/.git ]; then
