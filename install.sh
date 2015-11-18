@@ -121,6 +121,7 @@ if [ -e $HOME/.haskell-vim-now ]; then
   sed -i.bak "s/Plugin/Plug/g" $HOME/.vim.local/bundles.vim
   mv -fu $HOME/.vim.local/bundles.vim $DESTINATION/plugins.local
   rm -f $HOME/.vim.local/bundles.vim.bak
+  rmdir $HOME/.vim.local
 fi
 
 if [ ! -e $DESTINATION/.git ]; then
