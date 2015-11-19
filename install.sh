@@ -100,7 +100,7 @@ DEPS_REGEX='s/extra-deps: \[\]/extra-deps: [cabal-helper-0.6.1.0, pure-cdb-0.1.1
 # upgrade from a previous installation
 DEPS_UPGRADE_REGEX='s/cabal-helper-0.5.3.0/cabal-helper-0.6.1.0/g'
 sed -i.bak "$DEPS_REGEX" ~/.stack/global-project/stack.yaml || sed -i.bak "$DEPS_REGEX" ~/.stack/global/stack.yaml
-sed -i.bak "$DEPS_UPGRADE_REGEX" ~/.stack/global-project/stack.yaml || sed -i.bak "$DEPS_UPGRADE_REGEX" ~/.stack/global/stack.yam
+sed -i.bak "$DEPS_UPGRADE_REGEX" ~/.stack/global-project/stack.yaml || sed -i.bak "$DEPS_UPGRADE_REGEX" ~/.stack/global/stack.yaml
 rm -f ~/.stack/global/stack.yaml.bak ~/.stack/global-project/stack.yaml.bak
 
 msg "Installing helper binaries"
