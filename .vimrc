@@ -47,7 +47,6 @@ nnoremap Q <nop>
 " vim-plug {{{
 
 set nocompatible
-filetype off
 
 call plug#begin('~/.vim/bundle')
 
@@ -184,9 +183,6 @@ try
 catch
 endtry
 
-" Enable syntax highlighting
-syntax enable
-
 " Adjust signscolumn and syntastic to match wombat
 hi! link SignColumn LineNr
 hi! link SyntasticErrorSign ErrorMsg
@@ -195,10 +191,6 @@ hi! link SyntasticWarningSign WarningMsg
 " Use pleasant but very visible search hilighting
 hi Search ctermfg=white ctermbg=173 cterm=none guifg=#ffffff guibg=#e5786d gui=none
 hi! link Visual Search
-
-" Enable filetype plugins
-filetype plugin on
-filetype indent on
 
 " Match wombat colors in nerd tree
 hi Directory guifg=#8ac6f2
