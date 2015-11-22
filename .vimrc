@@ -1,3 +1,18 @@
+" Customization Before .vimrc {{{
+
+if exists($XDG_CONFIG_HOME)
+  let local_config = $XDG_CONFIG_HOME
+else
+  let local_config = "~/.config/"
+endif
+
+let local_config_pre = expand(resolve(local_config . "/haskell.vim.now/vimrc.local.pre"))
+if filereadable(local_config_pre)
+  execute 'source '. local_config_pre
+endif
+
+" }}}
+
 " General {{{
 
 " use indentation for folds
@@ -21,8 +36,13 @@ set autoread
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
-let mapleader = ","
-let g:mapleader = ","
+if ! exists("mapleader")
+  let mapleader = ","
+endif
+
+if ! exists("g:mapleader")
+  let g:mapleader = ","
+endif
 
 " Leader key timeout
 set tm=2000
@@ -654,6 +674,12 @@ vnoremap <silent> <leader>h> :call Pointful()<CR>
 
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
+endif
+
+
+let local_config_post = expand(resolve(local_config . "/haskell.vim.now/vimrc.local"))
+if filereadable(local_config_post)
+  execute 'source '. local_config_post
 endif
 
 " }}}
