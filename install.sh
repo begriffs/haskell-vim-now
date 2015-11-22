@@ -54,17 +54,20 @@ if ! verlte '7.4' $VIM_VER ; then
 fi
 
 msg "Testing for broken Ruby interface in vim"
-vim -T dumb --cmd "ruby puts RUBY_VERSION" --cmd qa!
-if [ $? -ne 0 ] ; then
-  msg "The Ruby interface is broken on your installation of vim."
-  msg "Reinstall or recompile vim."
-  msg ""
-  msg "If you're on OS X, try the following:"
-  detail "rvm use system"
-  detail "brew reinstall vim"
-  msg ""
-  msg "If nothing helped, please report at https://github.com/begriffs/haskell-vim-now/issues/new"
-  exit 1
+vim --version | grep -q +ruby
+if [ $? -eq 0 ] ; then
+  vim -T dumb --cmd "ruby puts RUBY_VERSION" --cmd qa!
+  if [ $? -ne 0 ] ; then
+    msg "The Ruby interface is broken on your installation of vim."
+    msg "Reinstall or recompile vim."
+    msg ""
+    msg "If you're on OS X, try the following:"
+    detail "rvm use system"
+    detail "brew reinstall vim"
+    msg ""
+    msg "If nothing helped, please report at https://github.com/begriffs/haskell-vim-now/issues/new"
+    exit 1
+  fi
 fi
 
 endpath="$HOME/.haskell-vim-now"
