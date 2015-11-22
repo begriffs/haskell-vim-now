@@ -141,6 +141,6 @@ EOF
 if [[ "$OSTYPE" =~ ^darwin ]]; then
   msg "NOTE FOR OS X USERS"
   msg ""
-  msg "Configure your terminal to use a font that supports Powerline symbols, such as"
-  msg "https://github.com/todylu/monaco.ttf"
+  msg "Configure your terminal to use a font that supports Powerline symbols:"
+  msg "https://github.com/powerline/fonts"
 fi
