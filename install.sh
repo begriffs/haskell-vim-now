@@ -23,18 +23,18 @@ fi
 command -v apt-get >/dev/null
 if [ $? -eq 0 ] ; then
   msg "apt-get detected"
-  sudo apt-get install -y git make vim libcurl4-openssl-dev exuberant-ctags
+  sudo apt-get install -y git make vim libcurl4-openssl-dev exuberant-ctags fonts-powerline
 fi
 command -v dnf >/dev/null
 if [ $? -eq 0 ] ; then
   msg "dnf detected"
-  sudo dnf install -y git make vim ctags libcurl-devel zlib-devel
+  sudo dnf install -y git make vim ctags libcurl-devel zlib-devel powerline
   DNF=1
 fi
 command -v yum >/dev/null
 if [ $? -eq 0 ] && [ $DNF -ne 1 ] ; then
   msg "yum detected"
-  sudo yum install -y git make vim ctags libcurl-devel zlib-devel
+  sudo yum install -y git make vim ctags libcurl-devel zlib-devel powerline
 fi
 
 for i in ctags curl-config git make vim; do
