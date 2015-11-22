@@ -44,64 +44,60 @@ nnoremap Q <nop>
 
 " }}}
 
-" Vundle {{{
+" vim-plug {{{
 
 set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
 
-" let Vundle manage Vundle
-" required!
-Plugin 'gmarik/Vundle.vim'
+call plug#begin('~/.vim/bundle')
 
 " Support bundles
-Plugin 'jgdavey/tslime.vim'
-Plugin 'Shougo/vimproc.vim'
-Plugin 'ervandew/supertab'
-Plugin 'scrooloose/syntastic'
-Plugin 'moll/vim-bbye'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'vim-scripts/gitignore'
+Plug 'jgdavey/tslime.vim'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+Plug 'ervandew/supertab'
+Plug 'scrooloose/syntastic'
+Plug 'moll/vim-bbye'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'vim-scripts/gitignore'
 
 " Git
-Plugin 'tpope/vim-fugitive'
-Plugin 'int3/vim-extradite'
+Plug 'tpope/vim-fugitive'
+Plug 'int3/vim-extradite'
 
 " Bars, panels, and files
-Plugin 'scrooloose/nerdtree'
-Plugin 'bling/vim-airline'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'majutsushi/tagbar'
+Plug 'scrooloose/nerdtree'
+Plug 'bling/vim-airline'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'majutsushi/tagbar'
 
 " Text manipulation
-Plugin 'vim-scripts/Align'
-Plugin 'simnalamburt/vim-mundo'
-Plugin 'tpope/vim-commentary'
-Plugin 'godlygeek/tabular'
-Plugin 'michaeljsmith/vim-indent-object'
-Plugin 'easymotion/vim-easymotion'
+Plug 'vim-scripts/Align'
+Plug 'simnalamburt/vim-mundo'
+Plug 'tpope/vim-commentary'
+Plug 'godlygeek/tabular'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'easymotion/vim-easymotion'
 
 " Allow pane movement to jump out of vim into tmux
-Plugin 'christoomey/vim-tmux-navigator'
+Plug 'christoomey/vim-tmux-navigator'
 
 " Haskell
-Plugin 'neovimhaskell/haskell-vim'
-Plugin 'enomsg/vim-haskellConcealPlus'
-Plugin 'eagletmt/ghcmod-vim'
-Plugin 'bitc/vim-hdevtools'
-Plugin 'eagletmt/neco-ghc'
-Plugin 'Twinside/vim-hoogle'
+Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
+Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
+Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
+Plug 'bitc/vim-hdevtools', { 'for': 'haskell' }
+Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
+Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
 
 " Colorscheme
-Plugin 'vim-scripts/wombat256.vim'
+Plug 'vim-scripts/wombat256.vim'
 
 " Custom bundles
-if filereadable(expand("~/.vim.local/bundles.vim"))
-  source ~/.vim.local/bundles.vim
+" Make it incompatible with prev versions using different file
+if filereadable(expand("~/.vim.local/plugins.vim"))
+  source ~/.vim.local/plugins.vim
 endif
 
-call vundle#end()
+call plug#end()
 
 " }}}
 
@@ -187,9 +183,6 @@ try
 catch
 endtry
 
-" Enable syntax highlighting
-syntax enable
-
 " Adjust signscolumn and syntastic to match wombat
 hi! link SignColumn LineNr
 hi! link SyntasticErrorSign ErrorMsg
@@ -198,10 +191,6 @@ hi! link SyntasticWarningSign WarningMsg
 " Use pleasant but very visible search hilighting
 hi Search ctermfg=white ctermbg=173 cterm=none guifg=#ffffff guibg=#e5786d gui=none
 hi! link Visual Search
-
-" Enable filetype plugins
-filetype plugin on
-filetype indent on
 
 " Match wombat colors in nerd tree
 hi Directory guifg=#8ac6f2

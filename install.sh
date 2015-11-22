@@ -53,6 +53,20 @@ if ! verlte '7.4' $VIM_VER ; then
   exit 1
 fi
 
+msg "Testing for broken Ruby interface in vim"
+vim -T dumb --cmd "ruby puts RUBY_VERSION" --cmd qa!
+if [ $? -ne 0 ] ; then
+  msg "The Ruby interface is broken on your installation of vim."
+  msg "Reinstall or recompile vim."
+  msg ""
+  msg "If you're on OS X, try the following:"
+  detail "rvm use system"
+  detail "brew reinstall vim"
+  msg ""
+  msg "If nothing helped, please report at https://github.com/begriffs/haskell-vim-now/issues/new"
+  exit 1
+fi
+
 endpath="$HOME/.haskell-vim-now"
 
 if [ ! -e $endpath/.git ]; then
@@ -82,16 +96,14 @@ if [ ! -d $endpath/.vim/bundle ]; then
 fi
 ln -sf $endpath/.vim $HOME/.vim
 
-if [ ! -e $HOME/.vim/bundle/Vundle.vim ]; then
-  msg "Installing Vundle"
-  git clone https://github.com/gmarik/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
+if [ ! -e $HOME/.vim/autoload/plug.vim ]; then
+  msg "Installing vim-plug"
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
-msg "Installing plugins using Vundle..."
-vim -T dumb -E -u $endpath/.vimrc +PluginInstall! +PluginClean! +qall
-
-msg "Building vimproc.vim"
-make -C ~/.vim/bundle/vimproc.vim
+msg "Installing plugins using vim-plug..."
+vim -T dumb -E -u $endpath/.vimrc +PlugUpgrade +PlugUpdate +PlugClean! +qall
 
 msg "Setting up GHC if needed"
 stack setup
