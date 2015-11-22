@@ -6,7 +6,6 @@ verlte() {
   [ "$1" = `echo -e "$1\n$2" | sort -t '.' -k 1,1n -k 2,2n -k 3,3n -k 4,4n | head -n1` ]
 }
 
-
 command -v stack >/dev/null
 if [ $? -ne 0 ] ; then
   msg "Installer requires Stack. Installation instructions:"
@@ -138,3 +137,10 @@ tagsFileHeader: false
 tagsFileSorted: false
 tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-absolute --output='\$TAGS' '\$SOURCES'
 EOF
+
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+  msg "NOTE FOR OS X USERS"
+  msg ""
+  msg "Configure your terminal to use a font that supports Powerline symbols, such as"
+  msg "https://github.com/todylu/monaco.ttf"
+fi
