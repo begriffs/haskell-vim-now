@@ -145,17 +145,17 @@ if [ ! -e $DESTINATION/backup ]; then
 fi
 for i in .vim .vimrc .gvimrc; do [ -e $HOME/$i ] && mv $HOME/$i $DESTINATION/backup/$i.$today && detail "$DESTINATION/backup/$i.$today"; done
 
-if [ ! -e $DESTINATION/.vim/autoload/plug.vim ]; then
-  msg "Installing vim-plug"
-  curl -fLo $DESTINATION/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-fi
-
 msg "Creating symlinks"
 detail "~/.vimrc -> $DESTINATION/.vimrc"
 detail "~/.vim   -> $DESTINATION/.vim"
 ln -sf $DESTINATION/.vimrc $HOME/.vimrc
 ln -sf $DESTINATION/.vim $HOME/.vim
+
+if [ ! -e $DESTINATION/.vim/autoload/plug.vim ]; then
+  msg "Installing vim-plug"
+  curl -fLo $DESTINATION/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+fi
 
 msg "Installing plugins using vim-plug..."
 vim -T dumb -E -u $DESTINATION/.vimrc +PlugUpgrade +PlugUpdate +PlugClean! +qall
