@@ -80,11 +80,11 @@ DESTINATION="$XDG_CONFIG_HOME/haskell-vim-now"
 
 if [ -e $HOME/.haskell-vim-now ]; then
   msg "Migrating existing installation to $DESTINATION"
-  mv -fu $HOME/.haskell-vim-now $DESTINATION
-  mv -fu $HOME/.vimrc.local $DESTINATION/vimrc.local
-  mv -fu $HOME/.vimrc.local.pre $DESTINATION/vimrc.local.pre
+  mv -f $HOME/.haskell-vim-now $DESTINATION
+  mv -f $HOME/.vimrc.local $DESTINATION/vimrc.local
+  mv -f $HOME/.vimrc.local.pre $DESTINATION/vimrc.local.pre
   sed -i.bak "s/Plugin '/Plug '/g" $HOME/.vim.local/bundles.vim
-  mv -fu $HOME/.vim.local/bundles.vim $DESTINATION/plugins.local
+  mv -f $HOME/.vim.local/bundles.vim $DESTINATION/plugins.local
   rm -f $HOME/.vim.local/bundles.vim.bak
   rmdir $HOME/.vim.local
 fi
