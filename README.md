@@ -303,12 +303,12 @@ then add `unmap <c-l>` to your vimrc.local)
 
 After installing this configuration, your `.vimrc` and `.vim` will
 be under version control. Don't alter these files. Instead, add your
-own settings to `~/.config/haskell-vim-now/vimrc.local.pre`, `~/.config/haskell-vim-now/vimrc.local`  and `~/.config/haskell-vim-now/plugins.local`.
+own settings to `~/.config/haskell-vim-now/vimrc.local.pre`, `~/.config/haskell-vim-now/vimrc.local`  and `~/.config/haskell-vim-now/plugins.vim`.
 
 ## Adding Custom Plugs
 
 vim-plug requires all Plug statements to be given at once. To accommodate
-this restriction, `.vimrc` sources `~/.config/haskell-vim-now/plugins.local` immediately
+this restriction, `.vimrc` sources `~/.config/haskell-vim-now/plugins.vim` immediately
 after its own Plug statements.
 
 Plug statements made elsewhere are not recognized.

@@ -106,7 +106,7 @@ Plug 'vim-scripts/wombat256.vim'
 
 " Custom bundles
 " Make it incompatible with prev versions using different file
-let user_plugins = expand(resolve(local_config_dir . "/plugins.local"))
+let user_plugins = expand(resolve(local_config_dir . "/plugins.vim"))
 if filereadable(user_plugins)
   execute 'source '. user_plugins
 endif

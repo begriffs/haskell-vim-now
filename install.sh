@@ -84,7 +84,7 @@ if [ -e $HOME/.haskell-vim-now ]; then
   mv -f $HOME/.vimrc.local $DESTINATION/vimrc.local
   mv -f $HOME/.vimrc.local.pre $DESTINATION/vimrc.local.pre
   sed -i.bak "s/Plugin '/Plug '/g" $HOME/.vim.local/bundles.vim
-  mv -f $HOME/.vim.local/bundles.vim $DESTINATION/plugins.local
+  mv -f $HOME/.vim.local/bundles.vim $DESTINATION/plugins.vim
   rm -f $HOME/.vim.local/bundles.vim.bak
   rmdir $HOME/.vim.local
 fi
