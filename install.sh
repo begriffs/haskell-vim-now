@@ -13,6 +13,7 @@ if [ $? -ne 0 ] ; then
   exit 1
 fi
 
+
 msg "Installing system package dependencies"
 command -v brew >/dev/null
 if [ $? -eq 0 ] ; then
@@ -69,74 +70,95 @@ if [ $? -eq 0 ] ; then
   fi
 fi
 
-endpath="$HOME/.haskell-vim-now"
+if [ -z ${XDG_CONFIG_HOME+x} ]; then
+  XDG_CONFIG_HOME="$HOME/.config"
+  msg "XDG_CONFIG_HOME is not set, using $XDG_CONFIG_HOME"
+else
+  msg "XDG_CONFIG_HOME is set to $XDG_CONFIG_HOME"
+fi
+DESTINATION="$XDG_CONFIG_HOME/haskell-vim-now"
 
-if [ ! -e $endpath/.git ]; then
+if [ -e $HOME/.haskell-vim-now ]; then
+  msg "Migrating existing installation to $DESTINATION"
+  mv -f $HOME/.haskell-vim-now $DESTINATION
+  mv -f $HOME/.vimrc.local $DESTINATION/vimrc.local
+  mv -f $HOME/.vimrc.local.pre $DESTINATION/vimrc.local.pre
+  sed -i.bak "s/Plugin '/Plug '/g" $HOME/.vim.local/bundles.vim
+  mv -f $HOME/.vim.local/bundles.vim $DESTINATION/plugins.vim
+  rm -f $HOME/.vim.local/bundles.vim.bak
+  rmdir $HOME/.vim.local
+fi
+
+if [ ! -e $DESTINATION/.git ]; then
   msg "Cloning begriffs/haskell-vim-now"
-  git clone https://github.com/begriffs/haskell-vim-now.git $endpath
+  git clone https://github.com/begriffs/haskell-vim-now.git $DESTINATION
 else
   msg "Existing installation detected"
   msg "Updating from begriffs/haskell-vim-now"
-  cd $endpath && git pull
+  cd $DESTINATION && git pull --rebase
 fi
-
-if [ -e ~/.vim/colors ]; then
-  msg "Preserving color scheme files"
-  cp -R ~/.vim/colors $endpath/colors
-fi
-
-today=`date +%Y%m%d_%H%M%S`
-msg "Backing up current vim config using timestamp $today"
-for i in $HOME/.vim $HOME/.vimrc $HOME/.gvimrc; do [ -e $i ] && mv $i $i.$today && detail "$i.$today"; done
-
-msg "Creating symlinks"
-detail "~/.vimrc -> $endpath/.vimrc"
-detail "~/.vim   -> $endpath/.vim"
-ln -sf $endpath/.vimrc $HOME/.vimrc
-if [ ! -d $endpath/.vim/bundle ]; then
-  mkdir -p $endpath/.vim/bundle
-fi
-ln -sf $endpath/.vim $HOME/.vim
-
-if [ ! -e $HOME/.vim/autoload/plug.vim ]; then
-  msg "Installing vim-plug"
-  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-fi
-
-msg "Installing plugins using vim-plug..."
-vim -T dumb -E -u $endpath/.vimrc +PlugUpgrade +PlugUpdate +PlugClean! +qall
 
 msg "Setting up GHC if needed"
-stack setup
+stack setup --verbosity warning
+STACK_BIN_PATH=$(stack --verbosity 0 path --local-bin-path)
+STACK_GLOBAL=$(stack --verbosity 0 path --global-stack-root)
 
 msg "Adding extra stack deps if needed"
 DEPS_REGEX='s/extra-deps: \[\]/extra-deps: [cabal-helper-0.6.1.0, pure-cdb-0.1.1]/'
 # upgrade from a previous installation
 DEPS_UPGRADE_REGEX='s/cabal-helper-0.5.3.0/cabal-helper-0.6.1.0/g'
-sed -i.bak "$DEPS_REGEX" ~/.stack/global-project/stack.yaml || sed -i.bak "$DEPS_REGEX" ~/.stack/global/stack.yaml
-sed -i.bak "$DEPS_UPGRADE_REGEX" ~/.stack/global-project/stack.yaml || sed -i.bak "$DEPS_UPGRADE_REGEX" ~/.stack/global/stack.yaml
-rm -f ~/.stack/global/stack.yaml.bak ~/.stack/global-project/stack.yaml.bak
+sed -i.bak "$DEPS_REGEX" $STACK_GLOBAL/global-project/stack.yaml || sed -i.bak "$DEPS_REGEX" $STACK_GLOBAL/global/stack.yaml
+sed -i.bak "$DEPS_UPGRADE_REGEX" $STACK_GLOBAL/global-project/stack.yaml || sed -i.bak "$DEPS_UPGRADE_REGEX" $STACK_GLOBAL/global/stack.yaml
+rm -f $STACK_GLOBAL/global/stack.yaml.bak $STACK_GLOBAL/global-project/stack.yaml.bak
 
 msg "Installing helper binaries"
-stack --resolver nightly install ghc-mod hdevtools hasktags codex hscope pointfree pointful hoogle stylish-haskell
+stack --resolver nightly install ghc-mod hdevtools hasktags codex hscope pointfree pointful hoogle stylish-haskell --verbosity warning
 
 msg "Installing git-hscope"
-cp $endpath/git-hscope ~/.local/bin
+cp $DESTINATION/git-hscope $STACK_BIN_PATH
 
 msg "Building Hoogle database..."
-~/.local/bin/hoogle data
+$STACK_BIN_PATH/hoogle data
 
 msg "Setting git to use fully-pathed vim for messages..."
 git config --global core.editor $(which vim)
 
 msg "Configuring codex to search in stack..."
 cat > $HOME/.codex <<EOF
-hackagePath: $HOME/.stack/indices/Hackage/
+hackagePath: $STACK_GLOBAL/indices/Hackage/
 tagsFileHeader: false
 tagsFileSorted: false
 tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-absolute --output='\$TAGS' '\$SOURCES'
 EOF
+
+## Vim configuration steps
+
+if [ -e ~/.vim/colors ]; then
+  msg "Preserving color scheme files"
+  cp -R ~/.vim/colors $DESTINATION/colors
+fi
+
+today=`date +%Y%m%d_%H%M%S`
+msg "Backing up current vim config using timestamp $today"
+if [ ! -e $DESTINATION/backup ]; then
+  mkdir $DESTINATION/backup
+fi
+for i in .vim .vimrc .gvimrc; do [ -e $HOME/$i ] && mv $HOME/$i $DESTINATION/backup/$i.$today && detail "$DESTINATION/backup/$i.$today"; done
+
+msg "Creating symlinks"
+detail "~/.vimrc -> $DESTINATION/.vimrc"
+detail "~/.vim   -> $DESTINATION/.vim"
+ln -sf $DESTINATION/.vimrc $HOME/.vimrc
+ln -sf $DESTINATION/.vim $HOME/.vim
+
+if [ ! -e $DESTINATION/.vim/autoload/plug.vim ]; then
+  msg "Installing vim-plug"
+  curl -fLo $DESTINATION/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+fi
+
+msg "Installing plugins using vim-plug..."
+vim -T dumb -E -u $DESTINATION/.vimrc +PlugUpgrade +PlugUpdate +PlugClean! +qall
 
 if [[ "$OSTYPE" =~ ^darwin ]]; then
   msg "NOTE FOR OS X USERS"
