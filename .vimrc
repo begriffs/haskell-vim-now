@@ -1,18 +1,32 @@
-" General {{{
-
+" HVN paths {{{
 " Set XDG_CONFIG_HOME/haskell-vim-now to load user's config files
 if exists($XDG_CONFIG_HOME)
-  let local_config_dir = $XDG_CONFIG_HOME . "/haskell-vim-now"
+  let hvn_config_dir = $XDG_CONFIG_HOME . "/haskell-vim-now"
 else
-  let local_config_dir = $HOME . "/.config/haskell-vim-now"
+  let hvn_config_dir = $HOME . "/.config/haskell-vim-now"
 endif
 
-" Precustomization
-let local_config_pre = expand(resolve(local_config_dir . "/vimrc.local.pre"))
-if filereadable(local_config_pre)
-  execute 'source '. local_config_pre
-endif
+" Haskell Vim Now paths
+" pre config path
+let hvn_config_pre = expand(resolve(hvn_config_dir . "/vimrc.local.pre"))
+" post config path
+let hvn_config_post = expand(resolve(hvn_config_dir . "/vimrc.local"))
+" user plugins config path
+let hvn_user_plugins = expand(resolve(hvn_config_dir . "/plugins.vim"))
 
+" stack bin path symlink
+let hvn_stack_bin = expand(resolve(hvn_config_dir . "/.stack-bin"))
+" stack global path symlink
+" let hvn_stack_global = expand(resolve(hvn_config_dir . "/.stack"))
+" }}}
+
+" Precustomization {{{
+if filereadable(hvn_config_pre)
+  execute 'source '. hvn_config_pre
+endif
+" }}}
+
+" General {{{
 " Use indentation for folds
 set foldmethod=indent
 set foldnestmax=5
@@ -50,7 +64,7 @@ set formatprg="PARINIT='rTbgqR B=.,?_A_a Q=_s>|' par\ -w72"
 autocmd FileType haskell let &formatprg="stylish-haskell"
 
 " Find custom built hasktags, codex etc
-let $PATH = $PATH . ':' . expand("~/.local/bin")
+let $PATH = $PATH . ':' . expand(hvn_stack_bin)
 
 " Kill the damned Ex mode.
 nnoremap Q <nop>
@@ -105,10 +119,9 @@ Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
 Plug 'vim-scripts/wombat256.vim'
 
 " Custom bundles
-" Make it incompatible with prev versions using different file
-let user_plugins = expand(resolve(local_config_dir . "/plugins.vim"))
-if filereadable(user_plugins)
-  execute 'source '. user_plugins
+
+if filereadable(hvn_user_plugins)
+  execute 'source '. hvn_user_plugins
 endif
 
 call plug#end()
@@ -146,7 +159,7 @@ set whichwrap+=<,>,h,l
 " Ignore case when searching
 set ignorecase
 
-" When searching try to be smart about cases 
+" When searching try to be smart about cases
 set smartcase
 
 " Highlight search results
@@ -415,7 +428,7 @@ function! CmdLine(str)
   exe "menu Foo.Bar :" . a:str
   emenu Foo.Bar
   unmenu Foo
-endfunction 
+endfunction
 
 function! VisualSelection(direction, extra_filter) range
   let l:saved_reg = @"
@@ -530,7 +543,7 @@ map <leader>tg :!codex update --force<CR>:call system("git-hscope -X TemplateHas
 
 map <leader>tt :TagbarToggle<CR>
 
-set csprg=~/.local/bin/hscope
+set csprg=hscope
 set csto=1 " search codex tags first
 set cst
 set csverb
@@ -563,7 +576,7 @@ endfunction
 
 command! -nargs=1 GGrep call NonintrusiveGitGrep(<q-args>)
 nmap <leader>gs :Gstatus<CR>
-nmap <leader>gg :copen<CR>:GGrep 
+nmap <leader>gg :copen<CR>:GGrep
 nmap <leader>gl :Extradite!<CR>
 nmap <leader>gd :Gdiff<CR>
 nmap <leader>gb :Gblame<CR>
@@ -637,13 +650,13 @@ let g:syntastic_haskell_hdevtools_args = '-g-Wall'
 nnoremap <silent> <leader>hh :Hoogle<CR>
 
 " Hoogle and prompt for input
-nnoremap <leader>hH :Hoogle 
+nnoremap <leader>hH :Hoogle
 
 " Hoogle for detailed documentation (e.g. "Functor")
 nnoremap <silent> <leader>hi :HoogleInfo<CR>
 
 " Hoogle for detailed documentation and prompt for input
-nnoremap <leader>hI :HoogleInfo 
+nnoremap <leader>hI :HoogleInfo
 
 " Hoogle, close the Hoogle window
 nnoremap <silent> <leader>hz :HoogleClose<CR>
@@ -665,9 +678,8 @@ vnoremap <silent> <leader>h> :call Pointful()<CR>
 " }}}
 
 " Customization {{{
-let local_config_post = expand(resolve(local_config_dir . "/vimrc.local"))
-if filereadable(local_config_post)
-  execute 'source '. local_config_post
+if filereadable(hvn_config_post)
+  execute 'source '. hvn_config_post
 endif
 
 " }}}

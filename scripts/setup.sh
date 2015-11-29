@@ -155,9 +155,11 @@ EOF
 
   msg "Creating symlinks"
   detail "~/.vimrc -> ${HVN_DEST}/.vimrc"
-  detail "~/.vim   -> ${HVN_DEST}/.vim"
   ln -sf ${HVN_DEST}/.vimrc ${HOME}/.vimrc
+  detail "~/.vim   -> ${HVN_DEST}/.vim"
   ln -sf ${HVN_DEST}/.vim ${HOME}/.vim
+  detail "${HVN_DEST}/.stack-bin -> ${STACK_BIN_PATH}"
+  ln -sf ${STACK_BIN_PATH} ${HVN_DEST}/.stack-bin
 
   if [ ! -e ${HVN_DEST}/.vim/autoload/plug.vim ]; then
     msg "Installing vim-plug"
