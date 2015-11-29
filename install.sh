@@ -40,6 +40,7 @@ update_pull() {
 
 install() {
   HVN_DEST="$(config_home)/haskell-vim-now"
+  mkdir -p $(config_home)
 
   if [ -e ${HVN_DEST} ]; then
     warn "Existing Haskell-Vim-Now installation detected at ${HVN_DEST}."
