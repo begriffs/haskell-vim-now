@@ -82,3 +82,8 @@ check_exist() {
   return ${#not_exist[@]}
 }
 
+exit_err() {
+  err ${1}
+  exit 1
+}
+

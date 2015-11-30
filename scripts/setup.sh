@@ -13,10 +13,7 @@ setup() {
   else
     HVN_DEST=$1
   fi
-  if [ ! -e ${HVN_DEST} ] ; then
-    err "${HVN_DEST} doesn't exist! Install Haskell-Vim-Now first!"
-    exit 1
-  fi
+  [ ! -e ${HVN_DEST} ] && exit_err "${HVN_DEST} doesn't exist! Install Haskell-Vim-Now first!"
 
   SYSTEM_TYPE=$(system_type)
   PACKAGE_MGR=$(package_manager)
@@ -60,10 +57,7 @@ setup() {
   esac
 
   NOT_INSTALLED=$(check_exist ctags curl-config git make vim)
-  if [ ! -z ${NOT_INSTALLED} ] ; then
-    err "Installer requires '${NOT_INSTALLED}'. Please install and try again."
-    exit 1
-  fi
+  [ ! -z ${NOT_INSTALLED} ] && exit_err "Installer requires '${NOT_INSTALLED}'. Please install and try again."
 
   VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
   if ! verlte '7.4' ${VIM_VER} ; then
@@ -90,10 +84,7 @@ setup() {
 
   msg "Setting up GHC if needed..."
   stack setup --verbosity warning ; RETCODE=$?
-  if [ ${RETCODE} -ne 0 ] ; then
-    err "Stack setup failed with error ${RETCODE}. Aborting..."
-    exit 1
-  fi
+  [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}. Aborting..."
 
   STACK_BIN_PATH=$(stack --verbosity 0 path --local-bin-path)
   STACK_GLOBAL_DIR=$(stack --verbosity 0 path --global-stack-root)
@@ -120,10 +111,7 @@ setup() {
 
   msg "Installing helper binaries..."
   stack --resolver nightly install ghc-mod hdevtools hasktags codex hscope pointfree pointful hoogle stylish-haskell --verbosity warning ; RETCODE=$?
-  if [ ${RETCODE} -ne 0 ] ; then
-    err "Binary installation failed with error ${RETCODE}. Aborting..."
-    exit 1
-  fi
+  [ ${RETCODE} -ne 0 ] && err "Binary installation failed with error ${RETCODE}. Aborting..."
 
   msg "Installing git-hscope..."
   cp ${HVN_DEST}/git-hscope ${STACK_BIN_PATH}
@@ -148,9 +136,8 @@ EOF
 
   today=`date +%Y%m%d_%H%M%S`
   msg "Backing up current vim config using timestamp ${today}..."
-  if [ ! -e ${HVN_DEST}/backup ]; then
-    mkdir ${HVN_DEST}/backup
-  fi
+  [ ! -e ${HVN_DEST}/backup ] && mkdir ${HVN_DEST}/backup
+
   for i in .vim .vimrc .gvimrc; do [ -e ${HOME}/${i} ] && mv ${HOME}/${i} ${HVN_DEST}/backup/${i}.${today} && detail "${HVN_DEST}/backup/${i}.${today}"; done
 
   msg "Creating symlinks"
