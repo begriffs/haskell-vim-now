@@ -89,9 +89,9 @@ setup() {
   fi
 
   msg "Setting up GHC if needed..."
-  stack setup --verbosity warning
-  if [ $? -ne 0 ] ; then
-    err "Stack setup failed with error $?. Aborting..."
+  stack setup --verbosity warning ; RETCODE=$?
+  if [ ${RETCODE} -ne 0 ] ; then
+    err "Stack setup failed with error ${RETCODE}. Aborting..."
     exit 1
   fi
 
@@ -119,9 +119,9 @@ setup() {
   rm -f ${STACK_GLOBAL_CONFIG}.bak
 
   msg "Installing helper binaries..."
-  stack --resolver nightly install ghc-mod hdevtools hasktags codex hscope pointfree pointful hoogle stylish-haskell --verbosity warning
-  if [ $? -ne 0 ] ; then
-    err "Binary installation failed with error $?. Aborting..."
+  stack --resolver nightly install ghc-mod hdevtools hasktags codex hscope pointfree pointful hoogle stylish-haskell --verbosity warning ; RETCODE=$?
+  if [ ${RETCODE} -ne 0 ] ; then
+    err "Binary installation failed with error ${RETCODE}. Aborting..."
     exit 1
   fi
 
