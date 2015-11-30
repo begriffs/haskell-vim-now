@@ -95,9 +95,9 @@ setup() {
     exit 1
   fi
 
-  STACK_BIN_PATH=$(stack --verbosity 0 path --local-bin-path)
-  STACK_GLOBAL_DIR=$(stack --verbosity 0 path --global-stack-root)
-  STACK_GLOBAL_CONFIG=$(stack --verbosity 0 path --config-location)
+  STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin-path))
+  STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --global-stack-root))
+  STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
 
   detail "Stack bin path: ${STACK_BIN_PATH}"
   detail "Stack global path: ${STACK_GLOBAL_DIR}"

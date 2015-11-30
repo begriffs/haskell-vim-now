@@ -71,6 +71,21 @@ package_manager() {
   return 0
 }
 
+fix_path() {
+  # $1 - path
+  local return_path
+  case $(system_type) in
+    CYGWIN )
+      return_path=$(cygpath -u "${1}")
+      ;;
+    * )
+      return_path=${1}
+  esac
+
+  echo ${return_path}
+  return 0
+}
+
 check_exist() {
   local not_exist=()
   for prg; do
