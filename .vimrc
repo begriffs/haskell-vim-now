@@ -48,8 +48,13 @@ set autoread
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
-let mapleader = ","
-let g:mapleader = ","
+if ! exists("mapleader")
+  let mapleader = ","
+endif
+
+if ! exists("g:mapleader")
+  let g:mapleader = ","
+endif
 
 " Leader key timeout
 set tm=2000
