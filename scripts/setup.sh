@@ -110,7 +110,7 @@ setup() {
   rm -f ${STACK_GLOBAL_CONFIG}.bak
 
   msg "Installing helper binaries..."
-  stack --resolver nightly install ghc-mod hdevtools hasktags codex hscope pointfree pointful hoogle stylish-haskell --verbosity warning ; RETCODE=$?
+  stack --resolver nightly-2015-12-08 install ghc-mod hdevtools hasktags codex hscope pointfree pointful hoogle stylish-haskell --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && err "Binary installation failed with error ${RETCODE}. Aborting..."
 
   msg "Installing git-hscope..."
