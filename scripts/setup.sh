@@ -29,7 +29,6 @@ setup() {
     msg "Installation instructions: https://github.com/commercialhaskell/stack#how-to-install"
     exit 1
   fi
-
   msg "Installing system package dependencies..."
   case ${PACKAGE_MGR} in
     BREW )
@@ -135,10 +134,10 @@ EOF
   fi
 
   today=`date +%Y%m%d_%H%M%S`
-  msg "Backing up current vim config using timestamp ${today}..."
+  msg "Backing up current vim/nvim config using timestamp ${today}..."
   [ ! -e ${HVN_DEST}/backup ] && mkdir ${HVN_DEST}/backup
 
-  for i in .vim .vimrc .gvimrc; do [ -e ${HOME}/${i} ] && mv ${HOME}/${i} ${HVN_DEST}/backup/${i}.${today} && detail "${HVN_DEST}/backup/${i}.${today}"; done
+  for i in .vim .vimrc .gvimrc .config/nvim; do [ -e ${HOME}/${i} ] && mv ${HOME}/${i} ${HVN_DEST}/backup/${i}.${today} && detail "${HVN_DEST}/backup/${i}.${today}"; done
 
   msg "Creating symlinks"
   detail "~/.vimrc -> ${HVN_DEST}/.vimrc"
@@ -156,6 +155,16 @@ EOF
 
   msg "Installing plugins using vim-plug..."
   vim -E -u ${HVN_DEST}/.vimrc +PlugUpgrade +PlugUpdate +PlugClean! +qall
+
+  msg "Creating folder for Neovim"
+  mkdir -p .config/nvim
+  msg "Creating Neovim symlinks"
+  detail "~/.config/nvim/init.vim -> ${HVN_DEST}/.vimrc"
+  ln -sf ${HVN_DEST}/.vimrc ${HOME}/.config/nvim/init.vim
+  detail "~/.config/nvim/bundle -> ${HVN_DEST}/.vim/bundle"
+  ln -sf ${HVN_DEST}/.vim/bundle ${HOME}/.config/nvim/bundle
+  detail "~/.config/nvim/autoload -> ${HVN_DEST}/.vim/autoload"
+  ln -sf ${HVN_DEST}/.vim/autoload ${HOME}/.config/nvim/autoload
 
   msg "Setting git to use fully-pathed vim for messages..."
   git config --global core.editor $(which vim)
