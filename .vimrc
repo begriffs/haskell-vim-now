@@ -74,13 +74,22 @@ let $PATH = $PATH . ':' . expand(hvn_stack_bin)
 " Kill the damned Ex mode.
 nnoremap Q <nop>
 
+" Make <c-h> work like <c-h> again (this is a problem with libterm)
+if has('nvim')
+  nnoremap <BS> <C-w>h
+endif
+
 " }}}
 
 " vim-plug {{{
 
 set nocompatible
 
-call plug#begin('~/.vim/bundle')
+if has('nvim')
+  call plug#begin('~/.config/nvim/bundle')
+else
+  call plug#begin('~/.vim/bundle')
+endif
 
 " Support bundles
 Plug 'jgdavey/tslime.vim'
@@ -246,7 +255,11 @@ endif
 set t_Co=256
 
 " Set utf8 as standard encoding and en_US as the standard language
-set encoding=utf8
+if !has('nvim')
+  " Only set this for vim, since neovim is utf8 as default and setting it
+  " causes problems when reloading the .vimrc configuration
+  set encoding=utf8
+endif
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
@@ -273,7 +286,11 @@ set noswapfile
 " Source the vimrc file after saving it
 augroup sourcing
   autocmd!
-  autocmd bufwritepost .vimrc source $MYVIMRC
+  if has('nvim')
+    autocmd bufwritepost init.vim source $MYVIMRC
+  else
+    autocmd bufwritepost .vimrc source $MYVIMRC
+  endif
 augroup END
 
 " Open file prompt with current path
@@ -394,6 +411,18 @@ noremap <leader>bd :Bd<cr>
 
 " fuzzy find buffers
 noremap <leader>b<space> :CtrlPBuffer<cr>
+
+" Neovim terminal configurations
+if has('nvim')
+  " Use <Esc> to escape terminal insert mode
+  tnoremap <Esc> <C-\><C-n>
+  " Make terminal split moving behave like normal neovim
+  tnoremap <c-h> <C-\><C-n><C-w>h
+  tnoremap <c-j> <C-\><C-n><C-w>j
+  tnoremap <c-k> <C-\><C-n><C-w>k
+  tnoremap <c-l> <C-\><C-n><C-w>l
+endif
+
 
 " }}}
 
@@ -655,13 +684,13 @@ let g:syntastic_haskell_hdevtools_args = '-g-Wall'
 nnoremap <silent> <leader>hh :Hoogle<CR>
 
 " Hoogle and prompt for input
-nnoremap <leader>hH :Hoogle 
+nnoremap <leader>hH :Hoogle
 
 " Hoogle for detailed documentation (e.g. "Functor")
 nnoremap <silent> <leader>hi :HoogleInfo<CR>
 
 " Hoogle for detailed documentation and prompt for input
-nnoremap <leader>hI :HoogleInfo 
+nnoremap <leader>hI :HoogleInfo
 
 " Hoogle, close the Hoogle window
 nnoremap <silent> <leader>hz :HoogleClose<CR>
