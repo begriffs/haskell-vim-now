@@ -29,7 +29,6 @@ setup() {
     msg "Installation instructions: https://github.com/commercialhaskell/stack#how-to-install"
     exit 1
   fi
-  r
   msg "Installing system package dependencies..."
   case ${PACKAGE_MGR} in
     BREW )
