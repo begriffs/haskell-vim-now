@@ -317,6 +317,7 @@ Plug statements made elsewhere are not recognized.
 
 If you are into developing with Docker, you can use the image.
 
+    docker pull haskell:7.8
     docker build -t haskell-vim .
     docker run --rm -i -t haskell-vim /bin/bash
 
