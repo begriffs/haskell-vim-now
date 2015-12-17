@@ -164,21 +164,7 @@ EOF
   msg "<---- HASKELL VIM NOW installation successfully finished ---->"
   echo -e "\n"
 
-  case ${SYSTEM_TYPE} in
-    OSX )
-      warn "Note for OS X users:"
-      detail "Configure your terminal to use a font with Powerline symbols."
-      detail "https://powerline.readthedocs.org/en/master/installation/osx.html#fonts-installation"
-      ;;
-    LINUX )
-      warn "Note for Linux users:"
-      detail "Configure your terminal to use a font with Powerline symbols."
-      detail "https://powerline.readthedocs.org/en/master/installation/linux.html#fonts-installation"
-      ;;
-    * )
-      warn "Note for users:"
-      detail "Configure your terminal to use a font with Powerline symbols."
-      detail "https://github.com/powerline/fonts"
-      ;;
-  esac
+  warn "Note for a good-looking vim experience:"
+  detail "Configure your terminal to use a font with Powerline symbols."
+  detail "https://powerline.readthedocs.org/en/master/installation.html#fonts-installation"
 }
