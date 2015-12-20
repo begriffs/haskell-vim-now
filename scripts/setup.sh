@@ -164,10 +164,11 @@ EOF
   msg "<---- HASKELL VIM NOW installation successfully finished ---->"
   echo -e "\n"
 
-  detail "If you want to use HASKELL VIM NOW with Neovim, you can run ${HOME}/${HVN_DEST}/scripts/neovim.sh to backup your existing configuration and symlink the new one."
+  warn "If you are using NeoVim"
+  detail "Run ${HOME}/${HVN_DEST}/scripts/neovim.sh to backup your existing"
+  detail "configuration and symlink the new one."
 
   warn "Note for a good-looking vim experience:"
   detail "Configure your terminal to use a font with Powerline symbols."
   detail "https://powerline.readthedocs.org/en/master/installation.html#fonts-installation"
-
 }
