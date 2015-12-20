@@ -303,7 +303,7 @@ then add `unmap <c-l>` to your vimrc.local)
 
 After installing this configuration, your `.vimrc` and `.vim` will
 be under version control. Don't alter these files. Instead, add your
-own settings to `~/.config/haskell-vim-now/vimrc.local.pre`, `~/.config/haskell-vim-now/vimrc.local`  and `~/.config/haskell-vim-now/plugins.vim`.
+own settings to `~/.config/haskell-vim-now/vimrc.local.pre`, `~/.config/haskell-vim-now/vimrc.local` and `~/.config/haskell-vim-now/plugins.vim`.
 
 ## Adding Custom Plugs
 
@@ -312,6 +312,21 @@ this restriction, `.vimrc` sources `~/.config/haskell-vim-now/plugins.vim` immed
 after its own Plug statements.
 
 Plug statements made elsewhere are not recognized.
+
+## Neovim support
+
+The `.vimrc` configuration is fully compatible with Neovim, and adds a few
+Neovim specific mappings for the terminal mode (terminal emulation is activated
+with `:terminal`). The mappings make `Esc` and `c-[hjkl]` function as one would
+expect them to from normal mode.
+
+The Neovim configuration is found at '.config/nvim`, and is symlinked just like
+regular vim, which means you should only add your own settings to
+`~/.config/haskell-vim-now/vimrc.local.pre`, `~/.config/haskell-vim-now/vimrc.local`
+and `~/.config/haskell-vim-now/plugins.vim`.
+
+You can quickly backup and replace your Neovim setup by running the `scripts/neovim.sh`
+script.
 
 ### Docker image
 
