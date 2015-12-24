@@ -76,7 +76,7 @@ fix_path() {
   local return_path
   case $(system_type) in
     CYGWIN )
-      return_path=$(cygpath -u "${1}")
+      return_path=$(cygpath -u "${1}" | tr -d '\r')
       ;;
     * )
       return_path=${1}
