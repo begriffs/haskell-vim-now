@@ -86,9 +86,9 @@ setup() {
   stack setup --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}. Aborting..."
 
-  STACK_BIN_PATH=$(stack --verbosity 0 path --local-bin-path)
-  STACK_GLOBAL_DIR=$(stack --verbosity 0 path --global-stack-root)
-  STACK_GLOBAL_CONFIG=$(stack --verbosity 0 path --config-location)
+  STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin-path))
+  STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --global-stack-root))
+  STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
 
   detail "Stack bin path: ${STACK_BIN_PATH}"
   detail "Stack global path: ${STACK_GLOBAL_DIR}"
