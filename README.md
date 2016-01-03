@@ -31,7 +31,7 @@ and lets you
 One command does it all:
 
 ```sh
-bash <(curl -sL http://git.io/haskell-vim-now)
+bash <(curl -sL https://git.io/haskell-vim-now)
 ```
 
 ## Keybindings and commands
