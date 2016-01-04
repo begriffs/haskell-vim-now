@@ -19,7 +19,7 @@ setup() {
   PACKAGE_MGR=$(package_manager)
   CONFIG_HOME=$(config_home)
 
-  BREW_LIST="git make vim ctags"
+  BREW_LIST="git homebrew/dupes/make vim ctags"
   APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags fonts-powerline"
   YUM_LIST="git make vim ctags libcurl-devel zlib-devel powerline"
 
@@ -114,7 +114,7 @@ setup() {
   rm -f ${STACK_GLOBAL_CONFIG}.bak
 
   msg "Installing helper binaries..."
-  stack --resolver nightly-2015-12-08 install ghc-mod hdevtools hasktags codex hscope pointfree pointful-1.0.6 hoogle stylish-haskell --verbosity warning ; RETCODE=$?
+  stack --resolver nightly-2015-12-08 install ghc-mod hdevtools hasktags codex hscope pointfree-1.1 pointful-1.0.6 hoogle stylish-haskell --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && err "Binary installation failed with error ${RETCODE}. Aborting..."
 
   msg "Installing git-hscope..."
