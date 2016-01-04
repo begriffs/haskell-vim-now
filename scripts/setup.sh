@@ -19,7 +19,7 @@ setup() {
   PACKAGE_MGR=$(package_manager)
   CONFIG_HOME=$(config_home)
 
-  BREW_LIST="git make vim ctags"
+  BREW_LIST="git homebrew/dupes/make vim ctags"
   APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags fonts-powerline"
   YUM_LIST="git make vim ctags libcurl-devel zlib-devel powerline"
 
