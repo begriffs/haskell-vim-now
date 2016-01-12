@@ -87,7 +87,7 @@ setup() {
   [ ${RETCODE} -ne 0 ] && exit_err "Requires exuberant-ctags, not just ctags."
 
   msg "Setting up GHC if needed..."
-  stack setup --verbosity warning ; RETCODE=$?
+  stack setup --resolver nightly-2015-12-08 --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}. Aborting..."
 
   STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin-path))
