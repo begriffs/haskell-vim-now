@@ -72,7 +72,7 @@ autocmd FileType haskell let &formatprg="stylish-haskell"
 let $PATH = $PATH . ':' . expand(hvn_stack_bin)
 
 " Include correct GHC binaries in path
-let $PATH=system('stack path --bin-path')
+let $PATH= $PATH . ':' . system('stack path --bin-path')
 
 " Kill the damned Ex mode.
 nnoremap Q <nop>
