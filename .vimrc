@@ -13,11 +13,8 @@ let hvn_config_pre = expand(resolve(hvn_config_dir . "/vimrc.local.pre"))
 let hvn_config_post = expand(resolve(hvn_config_dir . "/vimrc.local"))
 " user plugins config path
 let hvn_user_plugins = expand(resolve(hvn_config_dir . "/plugins.vim"))
-
 " stack bin path symlink
 let hvn_stack_bin = expand(resolve(hvn_config_dir . "/.stack-bin"))
-" stack global path symlink
-" let hvn_stack_global = expand(resolve(hvn_config_dir . "/.stack"))
 " }}}
 
 " Precustomization {{{
@@ -69,7 +66,7 @@ set formatprg="PARINIT='rTbgqR B=.,?_A_a Q=_s>|' par\ -w72"
 autocmd FileType haskell let &formatprg="stylish-haskell"
 
 " Find custom built hasktags, codex etc
-let $PATH = $PATH . ':' . expand(hvn_stack_bin)
+let $PATH = expand(hvn_stack_bin) . ':' . $PATH
 
 " Include correct GHC binaries in path
 let $PATH=system('stack path --bin-path')
