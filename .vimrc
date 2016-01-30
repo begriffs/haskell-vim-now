@@ -95,7 +95,7 @@ endif
 Plug 'jgdavey/tslime.vim'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'ervandew/supertab'
-Plug 'scrooloose/syntastic'
+Plug 'benekastah/neomake'
 Plug 'moll/vim-bbye'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'vim-scripts/gitignore'
@@ -125,7 +125,6 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
 Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
-Plug 'bitc/vim-hdevtools', { 'for': 'haskell' }
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
 Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }
@@ -225,10 +224,8 @@ try
 catch
 endtry
 
-" Adjust signscolumn and syntastic to match wombat
+" Adjust signscolumn to match wombat
 hi! link SignColumn LineNr
-hi! link SyntasticErrorSign ErrorMsg
-hi! link SyntasticWarningSign WarningMsg
 
 " Use pleasant but very visible search hilighting
 hi Search ctermfg=white ctermbg=173 cterm=none guifg=#ffffff guibg=#e5786d gui=none
@@ -368,7 +365,7 @@ noremap <c-l> <c-w>l
 nmap <silent> <leader><cr> :noh\|hi Cursor guibg=red<cr>
 augroup haskell
   autocmd!
-  autocmd FileType haskell map <silent> <leader><cr> :noh<cr>:GhcModTypeClear<cr>:SyntasticReset<cr>
+  autocmd FileType haskell map <silent> <leader><cr> :noh<cr>:GhcModTypeClear<cr>
   autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 augroup END
 
@@ -667,7 +664,7 @@ nmap <silent> <leader>ht :GhcModType<CR>
 " Insert type of expression under cursor
 nmap <silent> <leader>hT :GhcModTypeInsert<CR>
 " GHC errors and warnings
-nmap <silent> <leader>hc :SyntasticCheck hdevtools<CR>
+nmap <silent> <leader>hc :Neomake ghcmod<CR>
 
 " Fix path issues from vim.wikia.com/wiki/Set_working_directory_to_the_current_file
 let s:default_path = escape(&path, '\ ') " store default value of 'path'
@@ -680,13 +677,11 @@ autocmd BufRead *
       \ exec "set path^=".s:tempPath |
       \ exec "set path^=".s:default_path
 
-
 " Haskell Lint
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['haskell'] }
-nmap <silent> <leader>hl :SyntasticCheck hlint<CR>
+nmap <silent> <leader>hl :Neomake hlint<CR>
 
 " Options for Haskell Syntax Check
-let g:syntastic_haskell_hdevtools_args = '-g-Wall'
+let g:neomake_haskell_ghc_mod_args = '-g-Wall'
 
 " Hoogle the word under the cursor
 nnoremap <silent> <leader>hh :Hoogle<CR>
