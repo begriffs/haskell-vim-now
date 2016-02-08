@@ -107,7 +107,7 @@ setup() {
 
   msg "Installing helper binaries..."
   stack --resolver lts-5.2 install ghc-mod hdevtools hlint hasktags codex hscope pointfree pointful hoogle stylish-haskell apply-refact --verbosity warning ; RETCODE=$?
-  [ ${RETCODE} -ne 0 ] && err "Binary installation failed with error ${RETCODE}. Aborting..."
+  [ ${RETCODE} -ne 0 ] && exit_err "Binary installation failed with error ${RETCODE}. Aborting..."
 
   msg "Installing git-hscope..."
   cp ${HVN_DEST}/git-hscope ${STACK_BIN_PATH}
