@@ -105,16 +105,8 @@ setup() {
     exit 1
   fi
 
-  msg "Adding extra stack deps if needed..."
-  DEPS_REGEX='s/extra-deps: \[\]/extra-deps: [cabal-helper-0.6.1.0, pure-cdb-0.1.1]/'
-  # upgrade from a previous installation
-  DEPS_UPGRADE_REGEX='s/cabal-helper-0.5.3.0/cabal-helper-0.6.1.0/g'
-  sed -i.bak "${DEPS_REGEX}" ${STACK_GLOBAL_CONFIG}
-  sed -i.bak "${DEPS_UPGRADE_REGEX}" ${STACK_GLOBAL_CONFIG}
-  rm -f ${STACK_GLOBAL_CONFIG}.bak
-
   msg "Installing helper binaries..."
-  stack --resolver lts-4.2 install ghc-mod hdevtools hlint hasktags codex hscope pointfree pointful hoogle stylish-haskell --verbosity warning ; RETCODE=$?
+  stack --resolver lts-5.2 install ghc-mod hdevtools hlint hasktags codex hscope pointfree pointful hoogle stylish-haskell --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && err "Binary installation failed with error ${RETCODE}. Aborting..."
 
   msg "Installing git-hscope..."
@@ -169,7 +161,7 @@ EOF
   echo -e "\n"
 
   warn "If you are using NeoVim"
-  detail "Run ${HOME}/${HVN_DEST}/scripts/neovim.sh to backup your existing"
+  detail "Run ${HVN_DEST}/scripts/neovim.sh to backup your existing"
   detail "configuration and symlink the new one."
 
   warn "Note for a good-looking vim experience:"
