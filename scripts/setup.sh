@@ -161,7 +161,7 @@ EOF
   echo -e "\n"
 
   warn "If you are using NeoVim"
-  detail "Run ${HOME}/${HVN_DEST}/scripts/neovim.sh to backup your existing"
+  detail "Run ${HVN_DEST}/scripts/neovim.sh to backup your existing"
   detail "configuration and symlink the new one."
 
   warn "Note for a good-looking vim experience:"
