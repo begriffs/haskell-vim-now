@@ -39,7 +39,7 @@ bash <(curl -sL https://git.io/haskell-vim-now)
 The commands are organized into logical groups to help you remember
 them.
 
-### Types, autocomplete, and linting
+### Types, autocomplete, refactoring, and linting
 
 <table>
 <tbody>
@@ -54,6 +54,12 @@ them.
   </tr>
   <tr>
     <td>,hT</td><td>Insert type of expression into previous line</td>
+  </tr>
+  <tr>
+    <td>,hr</td><td>Apply one refactoring hint at cursor position</td>
+  </tr>
+  <tr>
+    <td>,hR</td><td>Apply all refactoring suggestions in the file</td>
   </tr>
   <tr>
     <td>,hl</td><td>Run Haskell linter on file</td>
