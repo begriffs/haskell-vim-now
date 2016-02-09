@@ -87,7 +87,8 @@ setup() {
   [ ${RETCODE} -ne 0 ] && exit_err "Requires exuberant-ctags, not just ctags."
 
   msg "Setting up GHC if needed..."
-  stack setup --resolver lts-4.2 --verbosity warning ; RETCODE=$?
+  local STACK_SNAPSHOT=lts-5.2
+  stack setup --resolver ${STACK_SNAPSHOT} --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}. Aborting..."
 
   STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin-path))
@@ -106,7 +107,7 @@ setup() {
   fi
 
   msg "Installing helper binaries..."
-  stack --resolver lts-5.2 install ghc-mod hdevtools hlint hasktags codex hscope pointfree pointful hoogle stylish-haskell apply-refact --verbosity warning ; RETCODE=$?
+  stack --resolver ${STACK_SNAPSHOT} install ghc-mod hdevtools hlint hasktags codex hscope pointfree pointful hoogle stylish-haskell apply-refact --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Binary installation failed with error ${RETCODE}. Aborting..."
 
   msg "Installing git-hscope..."
