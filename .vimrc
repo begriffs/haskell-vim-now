@@ -663,6 +663,9 @@ nmap <silent> <leader>hT :GhcModTypeInsert<CR>
 " GHC errors and warnings
 nmap <silent> <leader>hc :Neomake ghcmod<CR>
 
+" open the neomake error window automatically when an error is found
+let g:neomake_open_list = 2
+
 " Fix path issues from vim.wikia.com/wiki/Set_working_directory_to_the_current_file
 let s:default_path = escape(&path, '\ ') " store default value of 'path'
 " Always add the current file's directory to the path and tags list if not
