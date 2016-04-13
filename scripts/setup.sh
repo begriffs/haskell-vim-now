@@ -3,6 +3,19 @@
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 . ${SCRIPT_DIR}/func.sh
 
+stack-resolver() {
+  local DEFAULT_RESOLVER=lts-5.12
+  local CONFIGURED=$( sed -rn 's/^resolver:\s*(\S+).*$/\1/p' "$1" 2>/dev/null )
+  if [ -z $CONFIGURED ]; then
+    detail "Using the default resolver: ${DEFAULT_RESOLVER}"
+    echo $DEFAULT_RESOLVER
+  else
+    detail "Using configured resolver: ${CONFIGURED}"
+    echo $CONFIGURED
+  fi
+  return 0
+}
+
 setup() {
   # $1 - optional - path to haskell-vim-now installation
   #      If not set, script will use default location.
@@ -86,14 +99,14 @@ setup() {
   ctags --version | grep -q Exuberant ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Requires exuberant-ctags, not just ctags."
 
-  msg "Setting up GHC if needed..."
-  local STACK_SNAPSHOT=lts-5.2
-  stack setup --resolver ${STACK_SNAPSHOT} --verbosity warning ; RETCODE=$?
-  [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}. Aborting..."
-
   STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin-path))
   STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --global-stack-root))
   STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
+
+  msg "Setting up GHC if needed..."
+  local STACK_RESOLVER=$(stack-resolver $STACK_GLOBAL_CONFIG)
+  stack setup --resolver ${STACK_RESOLVER} --verbosity warning ; RETCODE=$?
+  [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}. Aborting..."
 
   detail "Stack bin path: ${STACK_BIN_PATH}"
   detail "Stack global path: ${STACK_GLOBAL_DIR}"
@@ -107,7 +120,7 @@ setup() {
   fi
 
   msg "Installing helper binaries..."
-  stack --resolver ${STACK_SNAPSHOT} install ghc-mod hdevtools hlint hasktags codex hscope pointfree pointful hoogle stylish-haskell apply-refact --verbosity warning ; RETCODE=$?
+  stack --resolver ${STACK_RESOLVER} install ghc-mod hdevtools hlint hasktags codex hscope pointfree pointful hoogle stylish-haskell apply-refact --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Binary installation failed with error ${RETCODE}. Aborting..."
 
   msg "Installing git-hscope..."
