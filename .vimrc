@@ -292,7 +292,7 @@ augroup END
 nmap <leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
 
 " Show undo tree
-nmap <silent> <leader>u :GundoToggle<CR>
+nmap <silent> <leader>u :MundoToggle<CR>
 
 " Fuzzy find files
 nnoremap <silent> <Leader><space> :CtrlP<CR>
