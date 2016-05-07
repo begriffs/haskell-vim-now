@@ -326,7 +326,7 @@ Neovim specific mappings for the terminal mode (terminal emulation is activated
 with `:terminal`). The mappings make `Esc` and `c-[hjkl]` function as one would
 expect them to from normal mode.
 
-The Neovim configuration is found at '.config/nvim`, and is symlinked just like
+The Neovim configuration is found at `.config/nvim`, and is symlinked just like
 regular vim, which means you should only add your own settings to
 `~/.config/haskell-vim-now/vimrc.local.pre`, `~/.config/haskell-vim-now/vimrc.local`
 and `~/.config/haskell-vim-now/plugins.vim`.
