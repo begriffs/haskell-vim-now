@@ -99,14 +99,14 @@ setup() {
   ctags --version | grep -q Exuberant ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Requires exuberant-ctags, not just ctags."
 
-  STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin-path))
-  STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --global-stack-root))
-  STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
-
   msg "Setting up GHC if needed..."
   local STACK_RESOLVER=$(stack-resolver $STACK_GLOBAL_CONFIG)
   stack setup --resolver ${STACK_RESOLVER} --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}. Aborting..."
+
+  STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin-path))
+  STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --global-stack-root))
+  STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
 
   detail "Stack bin path: ${STACK_BIN_PATH}"
   detail "Stack global path: ${STACK_GLOBAL_DIR}"
