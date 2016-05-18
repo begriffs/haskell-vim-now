@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/begriffs/haskell-vim-now.svg)](https://travis-ci.org/begriffs/haskell-vim-now)
 <img src="img/haskell.png" align="right" />
 <img src="img/vim.png" align="right" />
 
