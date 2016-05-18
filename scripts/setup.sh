@@ -3,7 +3,7 @@
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 . ${SCRIPT_DIR}/func.sh
 
-stack-resolver() {
+stack_resolver() {
   local DEFAULT_RESOLVER=lts-5.12
   local CONFIGURED=$( sed -rn 's/^resolver:\s*(\S+).*$/\1/p' "$1" 2>/dev/null )
   if [ -z $CONFIGURED ]; then
@@ -100,7 +100,7 @@ setup() {
   [ ${RETCODE} -ne 0 ] && exit_err "Requires exuberant-ctags, not just ctags."
 
   msg "Setting up GHC if needed..."
-  local STACK_RESOLVER=$(stack-resolver $STACK_GLOBAL_CONFIG)
+  local STACK_RESOLVER=$(stack_resolver $STACK_GLOBAL_CONFIG)
   stack setup --resolver ${STACK_RESOLVER} --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}. Aborting..."
 
