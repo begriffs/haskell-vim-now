@@ -103,17 +103,18 @@ setup() {
   [ ${RETCODE} -ne 0 ] && exit_err "Requires exuberant-ctags, not just ctags."
 
   msg "Setting up GHC if needed..."
-  local STACK_RESOLVER=$(stack_resolver $STACK_GLOBAL_CONFIG)
-  stack setup --resolver ${STACK_RESOLVER} --verbosity warning ; RETCODE=$?
+  stack setup --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}. Aborting..."
 
   local STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin))
   local STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --stack-root))
   local STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
+  local STACK_RESOLVER=$(stack_resolver $STACK_GLOBAL_CONFIG)
 
   detail "Stack bin path: ${STACK_BIN_PATH}"
   detail "Stack global path: ${STACK_GLOBAL_DIR}"
   detail "Stack global config location: ${STACK_GLOBAL_CONFIG}"
+  detail "Stack resolver: ${STACK_RESOLVER}"
 
   if [ -z ${STACK_BIN_PATH} ] || [ -z ${STACK_GLOBAL_DIR} ] || [ -z ${STACK_GLOBAL_CONFIG} ] ; then
     err "Incorrect stack paths."
