@@ -20,6 +20,7 @@ setup() {
   # $1 - optional - path to haskell-vim-now installation
   #      If not set, script will use default location.
   unset HVN_DEST
+  local HVN_DEST
   if [ -z $1 ] ; then
     # No argument provided, using default path
     HVN_DEST="$(config_home)/haskell-vim-now"
@@ -28,13 +29,13 @@ setup() {
   fi
   [ ! -e ${HVN_DEST} ] && exit_err "${HVN_DEST} doesn't exist! Install Haskell-Vim-Now first!"
 
-  SYSTEM_TYPE=$(system_type)
-  PACKAGE_MGR=$(package_manager)
-  CONFIG_HOME=$(config_home)
+  local SYSTEM_TYPE=$(system_type)
+  local PACKAGE_MGR=$(package_manager)
+  local CONFIG_HOME=$(config_home)
 
-  BREW_LIST="git homebrew/dupes/make vim ctags"
-  APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags fonts-powerline"
-  YUM_LIST="git make vim ctags libcurl-devel zlib-devel powerline"
+  local BREW_LIST="git homebrew/dupes/make vim ctags"
+  local APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags fonts-powerline"
+  local YUM_LIST="git make vim ctags libcurl-devel zlib-devel powerline"
 
 
   if ! check_exist stack >/dev/null ; then
@@ -69,10 +70,10 @@ setup() {
       exit 1
   esac
 
-  NOT_INSTALLED=$(check_exist ctags curl-config git make vim)
+  local NOT_INSTALLED=$(check_exist ctags curl-config git make vim)
   [ ! -z ${NOT_INSTALLED} ] && exit_err "Installer requires '${NOT_INSTALLED}'. Please install and try again."
 
-  VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
+  local VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
   if ! verlte '7.4' ${VIM_VER} ; then
     warn "Detected vim version \"${VIM_VER}\""
     err "However version 7.4 or later is required. Aborting."
@@ -95,6 +96,7 @@ setup() {
     fi
   fi
 
+  local RETCODE
   msg "Checking ctags' exuberance..."
   ctags --version | grep -q Exuberant ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Requires exuberant-ctags, not just ctags."
@@ -104,9 +106,9 @@ setup() {
   stack setup --resolver ${STACK_RESOLVER} --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}. Aborting..."
 
-  STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin))
-  STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --stack-root))
-  STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
+  local STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin))
+  local STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --stack-root))
+  local STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
 
   detail "Stack bin path: ${STACK_BIN_PATH}"
   detail "Stack global path: ${STACK_GLOBAL_DIR}"
