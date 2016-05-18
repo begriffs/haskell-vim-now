@@ -65,8 +65,7 @@ setup() {
       warn "No package manager detected. You may need to install required packages manually."
       ;;
     * )
-      err "setup.sh is not configured to handle ${PACKAGE_MGR} manager! Aborting..."
-      exit 1
+      exit_err_report "setup.sh is not configured to handle ${PACKAGE_MGR} manager."
   esac
 
   local NOT_INSTALLED=$(check_exist ctags curl-config git make vim)
@@ -74,9 +73,7 @@ setup() {
 
   local VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
   if ! verlte '7.4' ${VIM_VER} ; then
-    warn "Detected vim version \"${VIM_VER}\""
-    err "However version 7.4 or later is required. Aborting."
-    exit 1
+    exit_err "Detected vim version \"${VIM_VER}\", however version 7.4 or later is required."
   fi
 
   if vim --version | grep -q +ruby 2>&1 ; then
@@ -102,7 +99,7 @@ setup() {
 
   msg "Setting up GHC if needed..."
   stack setup --verbosity warning ; RETCODE=$?
-  [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}. Aborting..."
+  [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}."
 
   local STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin))
   local STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --stack-root))
@@ -115,15 +112,12 @@ setup() {
   detail "Stack resolver: ${STACK_RESOLVER}"
 
   if [ -z ${STACK_BIN_PATH} ] || [ -z ${STACK_GLOBAL_DIR} ] || [ -z ${STACK_GLOBAL_CONFIG} ] ; then
-    err "Incorrect stack paths."
-    err "Please report at https://github.com/begriffs/haskell-vim-now/issues"
-    err "Aborting..."
-    exit 1
+    exit_err_report "Incorrect stack paths."
   fi
 
   msg "Installing helper binaries..."
   stack --resolver ${STACK_RESOLVER} install ${STACK_LIST} --verbosity warning ; RETCODE=$?
-  [ ${RETCODE} -ne 0 ] && exit_err "Binary installation failed with error ${RETCODE}. Aborting..."
+  [ ${RETCODE} -ne 0 ] && exit_err "Binary installation failed with error ${RETCODE}."
 
   msg "Installing git-hscope..."
   cp ${HVN_DEST}/git-hscope ${STACK_BIN_PATH}

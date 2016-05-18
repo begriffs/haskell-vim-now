@@ -99,6 +99,14 @@ check_exist() {
 
 exit_err() {
   err ${1}
+  err "Aborting..."
+  exit 1
+}
+
+exit_err_report() {
+  err ${1}
+  err "Please report at https://github.com/begriffs/haskell-vim-now/issues"
+  err "Aborting..."
   exit 1
 }
 
