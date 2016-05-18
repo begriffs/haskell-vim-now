@@ -7,10 +7,8 @@ stack_resolver() {
   local DEFAULT_RESOLVER=lts-5
   local CONFIGURED=$( sed -rn 's/^resolver:\s*(\S+).*$/\1/p' "$1" 2>/dev/null )
   if [ -z $CONFIGURED ]; then
-    detail "Using the default resolver: ${DEFAULT_RESOLVER}"
     echo $DEFAULT_RESOLVER
   else
-    detail "Using configured resolver: ${CONFIGURED}"
     echo $CONFIGURED
   fi
   return 0
