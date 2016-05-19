@@ -1,0 +1,33 @@
+# Use new container infrastructure to enable caching
+sudo: true
+dist: trusty
+language: bash
+
+addons:
+  apt:
+    packages:
+    - bash
+    - vim
+    - exuberant-ctags
+
+env:
+- XDG_CONFIG_HOME=$HOME/.config
+
+before_install:
+# Download and unpack the stack executable
+- mkdir -p $HOME/.local/bin
+- mkdir -p $HOME/.config/haskell-vim-now
+- export PATH=$HOME/.local/bin:$PATH
+- travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
+# emulating upgrade procedure (due to install.sh cloning from begriffs/master)
+- cp -r $TRAVIS_BUILD_DIR $XDG_CONFIG_HOME/
+
+script:
+- bash install.sh
+
+# Caching so the next build will be fast too.
+cache:
+  directories:
+  - $HOME/.stack
+  - $HOME/.local/bin
+
