@@ -4,13 +4,11 @@ SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 . ${SCRIPT_DIR}/func.sh
 
 stack_resolver() {
-  local DEFAULT_RESOLVER=lts-5.12
+  local DEFAULT_RESOLVER=lts-5
   local CONFIGURED=$( sed -rn 's/^resolver:\s*(\S+).*$/\1/p' "$1" 2>/dev/null )
   if [ -z $CONFIGURED ]; then
-    detail "Using the default resolver: ${DEFAULT_RESOLVER}"
     echo $DEFAULT_RESOLVER
   else
-    detail "Using configured resolver: ${CONFIGURED}"
     echo $CONFIGURED
   fi
   return 0
@@ -20,6 +18,7 @@ setup() {
   # $1 - optional - path to haskell-vim-now installation
   #      If not set, script will use default location.
   unset HVN_DEST
+  local HVN_DEST
   if [ -z $1 ] ; then
     # No argument provided, using default path
     HVN_DEST="$(config_home)/haskell-vim-now"
@@ -28,13 +27,14 @@ setup() {
   fi
   [ ! -e ${HVN_DEST} ] && exit_err "${HVN_DEST} doesn't exist! Install Haskell-Vim-Now first!"
 
-  SYSTEM_TYPE=$(system_type)
-  PACKAGE_MGR=$(package_manager)
-  CONFIG_HOME=$(config_home)
+  local SYSTEM_TYPE=$(system_type)
+  local PACKAGE_MGR=$(package_manager)
+  local CONFIG_HOME=$(config_home)
 
-  BREW_LIST="git homebrew/dupes/make vim ctags"
-  APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags fonts-powerline"
-  YUM_LIST="git make vim ctags libcurl-devel zlib-devel powerline"
+  local BREW_LIST="git homebrew/dupes/make vim ctags"
+  local APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags fonts-powerline"
+  local YUM_LIST="git make vim ctags libcurl-devel zlib-devel powerline"
+  local STACK_LIST="ghc-mod hlint hasktags codex hscope pointfree pointful hoogle stylish-haskell apply-refact"
 
 
   if ! check_exist stack >/dev/null ; then
@@ -65,18 +65,15 @@ setup() {
       warn "No package manager detected. You may need to install required packages manually."
       ;;
     * )
-      err "setup.sh is not configured to handle ${PACKAGE_MGR} manager! Aborting..."
-      exit 1
+      exit_err_report "setup.sh is not configured to handle ${PACKAGE_MGR} manager."
   esac
 
-  NOT_INSTALLED=$(check_exist ctags curl-config git make vim)
+  local NOT_INSTALLED=$(check_exist ctags curl-config git make vim)
   [ ! -z ${NOT_INSTALLED} ] && exit_err "Installer requires '${NOT_INSTALLED}'. Please install and try again."
 
-  VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
+  local VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
   if ! verlte '7.4' ${VIM_VER} ; then
-    warn "Detected vim version \"${VIM_VER}\""
-    err "However version 7.4 or later is required. Aborting."
-    exit 1
+    exit_err "Detected vim version \"${VIM_VER}\", however version 7.4 or later is required."
   fi
 
   if vim --version | grep -q +ruby 2>&1 ; then
@@ -95,33 +92,32 @@ setup() {
     fi
   fi
 
+  local RETCODE
   msg "Checking ctags' exuberance..."
   ctags --version | grep -q Exuberant ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Requires exuberant-ctags, not just ctags."
 
   msg "Setting up GHC if needed..."
-  local STACK_RESOLVER=$(stack_resolver $STACK_GLOBAL_CONFIG)
-  stack setup --resolver ${STACK_RESOLVER} --verbosity warning ; RETCODE=$?
-  [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}. Aborting..."
+  stack setup --verbosity warning ; RETCODE=$?
+  [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}."
 
-  STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin))
-  STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --stack-root))
-  STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
+  local STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin))
+  local STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --stack-root))
+  local STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
+  local STACK_RESOLVER=$(stack_resolver $STACK_GLOBAL_CONFIG)
 
   detail "Stack bin path: ${STACK_BIN_PATH}"
   detail "Stack global path: ${STACK_GLOBAL_DIR}"
   detail "Stack global config location: ${STACK_GLOBAL_CONFIG}"
+  detail "Stack resolver: ${STACK_RESOLVER}"
 
   if [ -z ${STACK_BIN_PATH} ] || [ -z ${STACK_GLOBAL_DIR} ] || [ -z ${STACK_GLOBAL_CONFIG} ] ; then
-    err "Incorrect stack paths."
-    err "Please report at https://github.com/begriffs/haskell-vim-now/issues"
-    err "Aborting..."
-    exit 1
+    exit_err_report "Incorrect stack paths."
   fi
 
   msg "Installing helper binaries..."
-  stack --resolver ${STACK_RESOLVER} install ghc-mod hdevtools hlint hasktags codex hscope pointfree pointful hoogle stylish-haskell apply-refact --verbosity warning ; RETCODE=$?
-  [ ${RETCODE} -ne 0 ] && exit_err "Binary installation failed with error ${RETCODE}. Aborting..."
+  stack --resolver ${STACK_RESOLVER} install ${STACK_LIST} --verbosity warning ; RETCODE=$?
+  [ ${RETCODE} -ne 0 ] && exit_err "Binary installation failed with error ${RETCODE}."
 
   msg "Installing git-hscope..."
   cp ${HVN_DEST}/git-hscope ${STACK_BIN_PATH}
