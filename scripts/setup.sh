@@ -32,7 +32,7 @@ setup() {
   local CONFIG_HOME=$(config_home)
 
   local BREW_LIST="git homebrew/dupes/make vim ctags par"
-  local APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags fonts-powerline par"
+  local APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags par"
   local YUM_LIST="git make vim ctags libcurl-devel zlib-devel powerline"
   local STACK_LIST="ghc-mod hlint hasktags codex hscope pointfree pointful hoogle stylish-haskell apply-refact"
 
