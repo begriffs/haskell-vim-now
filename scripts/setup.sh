@@ -31,8 +31,8 @@ setup() {
   local PACKAGE_MGR=$(package_manager)
   local CONFIG_HOME=$(config_home)
 
-  local BREW_LIST="git homebrew/dupes/make vim ctags"
-  local APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags fonts-powerline"
+  local BREW_LIST="git homebrew/dupes/make vim ctags par"
+  local APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags fonts-powerline par"
   local YUM_LIST="git make vim ctags libcurl-devel zlib-devel powerline"
   local STACK_LIST="ghc-mod hlint hasktags codex hscope pointfree pointful hoogle stylish-haskell apply-refact"
 
@@ -68,7 +68,7 @@ setup() {
       exit_err_report "setup.sh is not configured to handle ${PACKAGE_MGR} manager."
   esac
 
-  local NOT_INSTALLED=$(check_exist ctags curl-config git make vim)
+  local NOT_INSTALLED=$(check_exist ctags curl-config git make vim par)
   [ ! -z ${NOT_INSTALLED} ] && exit_err "Installer requires '${NOT_INSTALLED}'. Please install and try again."
 
   local VIM_VER=$(vim --version | sed -n 's/^.*IMproved \([^ ]*\).*$/\1/p')
