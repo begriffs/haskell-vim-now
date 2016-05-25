@@ -290,7 +290,7 @@ selections to it. This works well for evaluating things in GHCI.
     <td>C-l</td><td>Move cursor to rightward pane (redraw is `,r` instead)</td>
   </tr>
   <tr>
-    <td>gq</td><td>Format selection using `stylish-haskell` for haskell buffers (`par` for others)</td>
+    <td>gq</td><td>Format selection using `hindent` for haskell buffers (`par` for others)</td>
   </tr>
   <tr>
     <td>,y</td><td>Yank to OS clipboard</td>

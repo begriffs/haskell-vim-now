@@ -62,7 +62,7 @@ noremap ,, ,
 " Use par for prettier line formatting
 set formatprg="PARINIT='rTbgqR B=.,?_A_a Q=_s>|' par\ -w72"
 
-" Use stylish haskell instead of par for haskell buffers
+" Use hindent instead of par for haskell buffers
 autocmd FileType haskell let &formatprg="hindent --style johan-tibell -XQuasiQuotes"
 
 " Find custom built hasktags, codex etc
