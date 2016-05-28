@@ -359,3 +359,6 @@ However, some things (for example the hoogle database) use absolute paths and do
 See this [wiki](https://github.com/begriffs/haskell-vim-now/wiki/Installation-Troubleshooting)
 page for tips on fixing installation problems.
 
+### Thank you!
+
+Big thanks to [contributors](https://github.com/begriffs/haskell-vim-now/graphs/contributors). I'd especially like to thank [@SX91](https://github.com/SX91) for rewriting the installer and for other major improvements.
