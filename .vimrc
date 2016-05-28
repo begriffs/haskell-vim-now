@@ -620,7 +620,7 @@ function! CommittedFiles()
     call add(qf_list, qf_item)
   endfor
   " Fill quickfix list with them
-  call setqflist(qf_list, '')
+  call setqflist(qf_list)
 endfunction
 
 " Show list of last-committed files
