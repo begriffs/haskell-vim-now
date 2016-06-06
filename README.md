@@ -34,7 +34,7 @@ One command does it all:
 ```sh
 bash <(curl -sL https://git.io/haskell-vim-now)
 ```
-**WARNING**: this command, once succeed, will _make backups and **remove**_ your existing VIM configurations (`.vim`, plugins etc). You can later [customize](#customizing) HVN configurations.
+**WARNING**: this command, once successful, will _make backups and **remove**_ your existing VIM configurations (`.vim`, plugins etc). You can later [customize](#customizing) HVN configurations.
 
 ## Keybindings and commands
 
