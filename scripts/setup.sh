@@ -101,9 +101,17 @@ setup() {
   stack setup --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Stack setup failed with error ${RETCODE}."
 
-  local STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin))
-  local STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --stack-root))
-  local STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
+  if [ $(stack --verbosity 0 path --local-bin 2> /dev/null) ]
+  then
+    local STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin))
+    local STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --stack-root))
+    local STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
+  else
+    local STACK_BIN_PATH=$(fix_path $(stack --verbosity 0 path --local-bin-path))
+    local STACK_GLOBAL_DIR=$(fix_path $(stack --verbosity 0 path --global-stack-root))
+    local STACK_GLOBAL_CONFIG=$(fix_path $(stack --verbosity 0 path --config-location))
+  fi
+
   local STACK_RESOLVER=$(stack_resolver $STACK_GLOBAL_CONFIG)
 
   detail "Stack bin path: ${STACK_BIN_PATH}"
