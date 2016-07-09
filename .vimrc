@@ -60,7 +60,8 @@ set tm=2000
 noremap ,, ,
 
 " Use par for prettier line formatting
-set formatprg="PARINIT='rTbgqR B=.,?_A_a Q=_s>|' par\ -w72"
+set formatprg=par
+let $PARINIT = 'rTbgqR B=.,?_A_a Q=_s>|'
 
 " Use stylish haskell instead of par for haskell buffers
 autocmd FileType haskell let &formatprg="stylish-haskell"
