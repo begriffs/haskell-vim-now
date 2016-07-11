@@ -34,7 +34,7 @@ setup() {
   local BREW_LIST="git homebrew/dupes/make vim ctags par"
   local APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags par"
   local YUM_LIST="git make vim ctags libcurl-devel zlib-devel powerline"
-  local STACK_LIST="ghc-mod hlint hasktags codex hscope pointfree pointful hoogle stylish-haskell apply-refact"
+  local STACK_LIST="ghc-mod hlint hasktags codex hscope pointfree pointful hoogle hindent apply-refact"
 
 
   if ! check_exist stack >/dev/null ; then

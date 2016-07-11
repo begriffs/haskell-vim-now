@@ -63,8 +63,8 @@ noremap ,, ,
 set formatprg=par
 let $PARINIT = 'rTbgqR B=.,?_A_a Q=_s>|'
 
-" Use stylish haskell instead of par for haskell buffers
-autocmd FileType haskell let &formatprg="stylish-haskell"
+" Use hindent instead of par for haskell buffers
+autocmd FileType haskell let &formatprg="hindent --style johan-tibell -XQuasiQuotes"
 
 " Find custom built hasktags, codex etc
 let $PATH = expand(hvn_stack_bin) . ':' . $PATH
