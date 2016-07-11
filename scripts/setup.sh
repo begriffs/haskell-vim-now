@@ -4,7 +4,7 @@ SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 . ${SCRIPT_DIR}/func.sh
 
 stack_resolver() {
-  local DEFAULT_RESOLVER=lts-5
+  local DEFAULT_RESOLVER=lts
   local CONFIGURED=$( sed -rn 's/^resolver:\s*(\S+).*$/\1/p' "$1" 2>/dev/null )
   if [ -z $CONFIGURED ]; then
     echo $DEFAULT_RESOLVER
@@ -173,7 +173,8 @@ vim_install_plugins() {
   if [ ! -e ${HVN_DEST}/.vim/autoload/plug.vim ]; then
     msg "Installing vim-plug"
     curl -fLo ${HVN_DEST}/.vim/autoload/plug.vim --create-dirs \
-      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
+      || exit_err_report "Failed to install vim-plug."
   fi
 
   msg "Installing plugins using vim-plug..."
@@ -184,9 +185,12 @@ setup_vim() {
   local HVN_DEST=$1
 
   vim_check_version
+  vim_install_plugins $HVN_DEST
+
+  # Point of no return; we cannot fail after this.
+  # Backup old config and switch to new config
   vim_backup          $HVN_DEST
   vim_setup_links     $HVN_DEST
-  vim_install_plugins $HVN_DEST
 }
 
 setup_done() {
