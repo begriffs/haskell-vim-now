@@ -20,7 +20,7 @@ setup_haskell() {
 
   if ! check_exist stack >/dev/null ; then
     err "Installer requires Stack."
-    msg "Installation instructions: https://github.com/commercialhaskell/stack#how-to-install"
+    msg "Installation instructions: http://docs.haskellstack.org/en/stable/README/#how-to-install"
     exit 1
   fi
 
