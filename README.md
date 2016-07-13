@@ -206,7 +206,7 @@ selections to it. This works well for evaluating things in GHCI.
     <td>,tt</td><td>Open/close the tag bar</td>
   </tr>
   <tr>
-    <td>C-]</td><td>Jump to definition of symbol (codex + hasktags)</td>
+    <td>C-]</td><td>Jump to definition of symbol (codex + hasktags)</td><td>Note: You must generate the tags for your project (with <code>,tg</code>) prior to using the jump command.</td> 
   </tr>
   <tr>
     <td>C-\</td><td>Show uses of symbol (hscope)</td>
