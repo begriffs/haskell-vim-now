@@ -336,7 +336,7 @@ and `~/.config/haskell-vim-now/plugins.vim`.
 You can quickly backup and replace your Neovim setup by running the `scripts/neovim.sh`
 script.
 
-### Docker image
+## Docker image
 
 If you are into developing with Docker, you can use the image.
 
@@ -354,11 +354,39 @@ If instead you want to extract the vim setup from the image that is easy enough
 
 However, some things (for example the hoogle database) use absolute paths and don't work correctly.
 
-### Troubleshooting
+## Advanced install methods
+
+### Basic install
+In case you want to skip the haskell specific components and want to install
+just the common vim config you can use:
+```sh
+bash <(curl -sL https://git.io/haskell-vim-now) --basic
+```
+
+### Installing from a fork or clone
+If you have a modified fork you can use the `--repo` option to tell the install
+script the location of your repository:
+```sh
+bash <(curl -sL INSTALL-SCRIPT-URL) --repo FORK-URL
+```
+
+For example:
+
+```sh
+bash <(curl -sL https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh) --repo https://github.com/begriffs/haskell-vim-now
+```
+
+If you have a local git clone you can use `install.sh` directly
+to install from your clone:
+```sh
+install.sh --repo CLONE-PATH
+```
+
+## Troubleshooting
 
 See this [wiki](https://github.com/begriffs/haskell-vim-now/wiki/Installation-Troubleshooting)
 page for tips on fixing installation problems.
 
-### Thank you!
+## Thank you!
 
 Big thanks to [contributors](https://github.com/begriffs/haskell-vim-now/graphs/contributors). I'd especially like to thank [@SX91](https://github.com/SX91) for rewriting the installer and for other major improvements.

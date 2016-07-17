@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+
+PROGNAME=$(basename $0)
+DEFAULT_REPO="https://github.com/begriffs/haskell-vim-now.git"
+
 if which tput >/dev/null 2>&1; then
     ncolors=$(tput colors)
 fi
@@ -38,9 +42,24 @@ update_pull() {
   return $?
 }
 
+check_repo_change() {
+  local REPO_PATH=$1
+  local HVN_DEST=$2
+  local orig_repo
+
+  orig_repo=$(cd $HVN_DEST && git config --get remote.origin.url) || exit 1
+  if test -z "$orig_repo" -o "$orig_repo" != $REPO_PATH
+  then
+    err "The source repository path [$REPO_PATH] does not match the"
+    err "origin repository of the existing installation [$orig_repo]."
+    err "Please remove the existing installation [$HVN_DEST] and try again."
+    exit 1
+  fi
+}
+
 install() {
-  HVN_DEST="$(config_home)/haskell-vim-now"
-  mkdir -p $(config_home)
+  local REPO_PATH=$1
+  local HVN_DEST=$2
 
   if [ -e ${HVN_DEST} ]; then
     warn "Existing Haskell-Vim-Now installation detected at ${HVN_DEST}."
@@ -56,12 +75,14 @@ install() {
     rmdir ${HOME}/.vim.local >/dev/null
   else
     warn "No previous installations detected."
-    msg "Installing Haskell-Vim-Now..."
-    git clone https://github.com/begriffs/haskell-vim-now.git ${HVN_DEST}
+    msg "Installing Haskell-Vim-Now from ${REPO_PATH} ..."
+    mkdir -p $(config_home)
+    git clone ${REPO_PATH} ${HVN_DEST} || exit 1
 
     return 0
   fi
 
+  check_repo_change ${REPO_PATH} ${HVN_DEST}
   # Quick update to make sure we execute correct update procedure
   msg "Syncing Haskell-Vim-Now with upstream..."
   if ! update_pull ${HVN_DEST} ; then
@@ -70,10 +91,57 @@ install() {
   fi
 }
 
-main() {
-  install
-  . ${HVN_DEST}/scripts/setup.sh
-  setup ${HVN_DEST}
+do_setup() {
+  local HVN_DEST=$1
+  local BASIC_ONLY=$2
+  local setup_path=${HVN_DEST}/scripts/setup.sh
+
+  . $setup_path || { \
+    err "Failed to source ${setup_path}."
+    err "Have you cloned from the correct repository?"
+    exit 1
+  }
+
+  setup_tools
+  setup_vim $HVN_DEST
+
+  if test -z "$BASIC_ONLY"
+  then
+    setup_haskell $HVN_DEST
+  fi
+
+  setup_done $HVN_DEST
 }
 
-main
+main() {
+  local REPO_PATH=$1
+  local BASIC_ONLY=$2
+  local HVN_DEST="$(config_home)/haskell-vim-now"
+
+  install $REPO_PATH $HVN_DEST
+  do_setup $HVN_DEST $BASIC_ONLY
+}
+
+function usage() {
+  echo "Usage: $PROGNAME [--basic] [--repo <path>]"
+  echo ""
+  echo "OPTIONS"
+  echo "       --basic"
+  echo "           Install only vim and plugins without haskell components."
+  echo "       --repo <path>"
+  echo "           Git repository to install from. The default is $DEFAULT_REPO."
+  exit 1
+}
+
+REPO_PATH=$DEFAULT_REPO
+while test -n "$1"
+do
+  case $1 in
+    --basic) shift; BASIC=1; continue;;
+    --repo) shift; REPO_PATH=$1; shift; continue;;
+    *) usage;;
+  esac
+done
+
+test -n "$REPO_PATH" || usage
+main $REPO_PATH $BASIC
