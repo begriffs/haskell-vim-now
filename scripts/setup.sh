@@ -167,7 +167,7 @@ vim_setup_links() {
   ln -sf ${HVN_DEST}/.vim ${HOME}/.vim
 }
 
-vim_install_plugins() {
+vim_install_plug() {
   local HVN_DEST=$1
 
   if [ ! -e ${HVN_DEST}/.vim/autoload/plug.vim ]; then
@@ -176,7 +176,9 @@ vim_install_plugins() {
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
       || exit_err_report "Failed to install vim-plug."
   fi
+}
 
+vim_install_plugins() {
   msg "Installing plugins using vim-plug..."
   vim -E -u ${HVN_DEST}/.vimrc +PlugUpgrade +PlugUpdate +PlugClean! +qall
 }
@@ -185,12 +187,13 @@ setup_vim() {
   local HVN_DEST=$1
 
   vim_check_version
-  vim_install_plugins $HVN_DEST
+  vim_install_plug $HVN_DEST
 
   # Point of no return; we cannot fail after this.
   # Backup old config and switch to new config
   vim_backup          $HVN_DEST
   vim_setup_links     $HVN_DEST
+  vim_install_plugins $HVN_DEST
 }
 
 setup_done() {
