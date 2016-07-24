@@ -310,16 +310,30 @@ then add `unmap <c-l>` to your vimrc.local)
 ## Customizing
 
 After installing this configuration, your `.vimrc` and `.vim` will
-be under version control. Don't alter these files. Instead, add your
-own settings to `~/.config/haskell-vim-now/vimrc.local.pre`, `~/.config/haskell-vim-now/vimrc.local` and `~/.config/haskell-vim-now/plugins.vim`.
+be under version control. Don't alter these files. Instead, add
+your own settings to `~/.config/haskell-vim-now/vimrc.local.pre`,
+`~/.config/haskell-vim-now/vimrc.local`.
 
-## Adding Custom Plugs
+## Adding Vim Plugins
 
-vim-plug requires all Plug statements to be given at once. To accommodate
-this restriction, `.vimrc` sources `~/.config/haskell-vim-now/plugins.vim` immediately
-after its own Plug statements.
+Haskell-Vim-Now uses [vim-plug](https://github.com/junegunn/vim-plug)
+to install plugins. It uses the following vim configuration structure
+to determine what to install:
 
-Plug statements made elsewhere are not recognized.
+```viml
+call plug#begin('~/.vim/plugged')
+
+" The plugins are named in github short form, for example:
+Plug 'junegunn/vim-easy-align'
+
+" All plug statements must be between plug#begin and plug#end
+call plug#end()
+```
+
+However the `.vimrc` file in Haskell-Vim-Now is under version control
+so you shouldn't edit it directly. To add a plugin what you should
+do is add `Plug` statements to `~/.config/haskell-vim-now/plugins.vim`.
+When ready reload `.vimrc` and run `:PlugInstall` to install plugins.
 
 ## Neovim support
 
