@@ -29,10 +29,11 @@ and lets you
 
 ## Installation
 
-One command does it all:
+Just download and run the installer:
 
 ```sh
-bash <(curl -sL https://git.io/haskell-vim-now)
+curl -L https://git.io/haskell-vim-now > /tmp/haskell-vim-now.sh
+bash /tmp/haskell-vim-now.sh
 ```
 **WARNING**: this command, once successful, will _make backups and **remove**_ your existing VIM configurations (`.vim`, plugins etc). You can later [customize](#customizing) HVN configurations.
 
