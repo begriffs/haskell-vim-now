@@ -89,7 +89,7 @@ setup_tools() {
       ;;
     APT )
       msg "Installing with apt-get..."
-      sudo apt-get install -y ${APT_LIST}
+      sudo apt-get install --no-upgrade -y ${APT_LIST}
       ;;
     DNF )
       msg "Installing with DNF..."
