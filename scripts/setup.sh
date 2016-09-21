@@ -75,39 +75,18 @@ tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-ab
 EOF
 }
 
-setup_tools() {
-  local SYSTEM_TYPE=$(system_type)
-  local PACKAGE_MGR=$(package_manager)
-  local CONFIG_HOME=$(config_home)
-
-  local BREW_LIST="git homebrew/dupes/make vim ctags par"
-  local APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags par"
-  local YUM_LIST="git make vim ctags libcurl-devel zlib-devel powerline"
-
-  msg "Installing system package dependencies..."
-  case ${PACKAGE_MGR} in
-    BREW )
-      msg "Installing with homebrew..."
-      brew install ${BREW_LIST}
-      ;;
-    APT )
-      msg "Installing with apt-get..."
-      sudo apt-get install --no-upgrade -y ${APT_LIST}
-      ;;
-    DNF )
-      msg "Installing with DNF..."
-      sudo dnf install -yq ${YUM_LIST} # yum and dnf use same repos
-      ;;
-    YUM )
-      msg "Installing with YUM..."
-      sudo yum install -yq ${YUM_LIST}
-      ;;
-    OTHER )
-      warn "No package manager detected. You may need to install required packages manually."
-      ;;
-    * )
-      exit_err_report "setup.sh is not configured to handle ${PACKAGE_MGR} manager."
+# $1: package manager
+package_list() {
+  case $1 in
+    BREW) echo "git homebrew/dupes/make vim ctags par" ;;
+    APT) echo "git make vim libcurl4-openssl-dev exuberant-ctags par" ;;
+    YUM|DNF) echo "git make vim ctags libcurl-devel zlib-devel powerline" ;;
   esac
+}
+
+setup_tools() {
+  local PACKAGE_MGR=$(package_manager)
+  package_install ${PACKAGE_MGR} $(package_list ${PACKAGE_MGR})
 
   local NOT_INSTALLED=$(check_exist ctags curl-config git make vim par)
   [ ! -z ${NOT_INSTALLED} ] && exit_err "Installer requires '${NOT_INSTALLED}'. Please install and try again."

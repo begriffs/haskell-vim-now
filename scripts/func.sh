@@ -71,6 +71,35 @@ package_manager() {
   return 0
 }
 
+# $1: package manager
+# $2: list of packages
+package_install() {
+  msg "Installing system package dependencies..."
+  case ${1} in
+    BREW )
+      msg "Installing with homebrew..."
+      brew install ${2}
+      ;;
+    APT )
+      msg "Installing with apt-get..."
+      sudo apt-get install --no-upgrade -y ${2}
+      ;;
+    DNF )
+      msg "Installing with DNF..."
+      sudo dnf install -yq ${2} # yum and dnf use same repos
+      ;;
+    YUM )
+      msg "Installing with YUM..."
+      sudo yum install -yq ${2}
+      ;;
+    OTHER )
+      warn "No package manager detected. You may need to install required packages manually."
+      ;;
+    * )
+      exit_err_report "setup.sh is not configured to handle ${1} manager."
+  esac
+}
+
 fix_path() {
   # $1 - path
   local return_path
