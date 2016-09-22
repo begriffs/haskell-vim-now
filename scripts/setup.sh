@@ -5,7 +5,10 @@ SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 stack_resolver() {
   local DEFAULT_RESOLVER=lts
-  local CONFIGURED=$( sed -rn 's/^resolver:\s*(\S+).*$/\1/p' "$1" 2>/dev/null )
+  local CONFIGURED
+
+  CONFIGURED=$(awk '{if ($1 == "resolver:") {print $2}}' "$1") \
+    || err "Failed to determine stack resolver"
   if [ -z $CONFIGURED ]; then
     echo $DEFAULT_RESOLVER
   else
