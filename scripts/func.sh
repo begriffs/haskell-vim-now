@@ -74,35 +74,36 @@ package_manager() {
 }
 
 # $1: package manager
-# $2: list of packages
+# $2-: list of packages
 package_install() {
-  msg "Installing system package dependencies..."
-  case ${1} in
+  local pkgmgr=$1; shift
+  msg "Installing system packages [$*] using [$pkgmgr]..."
+  case ${pkgmgr} in
     BREW )
       msg "Installing with homebrew..."
-      brew install ${2}
+      brew install $*
       ;;
     PORT )
       msg "Installing with port..."
-      port install ${2}
+      port install $*
       ;;
     APT )
       msg "Installing with apt-get..."
-      sudo apt-get install --no-upgrade -y ${2}
+      sudo apt-get install --no-upgrade -y $*
       ;;
     DNF )
       msg "Installing with DNF..."
-      sudo dnf install -yq ${2} # yum and dnf use same repos
+      sudo dnf install -yq $* # yum and dnf use same repos
       ;;
     YUM )
       msg "Installing with YUM..."
-      sudo yum install -yq ${2}
+      sudo yum install -yq $*
       ;;
     OTHER )
       warn "No package manager detected. You may need to install required packages manually."
       ;;
     * )
-      exit_err_report "setup.sh is not configured to handle ${1} manager."
+      exit_err_report "setup.sh is not configured to handle ${pkgmgr} manager."
   esac
 }
 
