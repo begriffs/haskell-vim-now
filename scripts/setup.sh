@@ -75,16 +75,41 @@ tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-ab
 EOF
 }
 
+# Print package name to install if command is not found
+# $1: command name
+# $2: package name
+cmdpkg() {
+  test -n "$(which $1)" || echo "$2"
+}
+
 # $1: package manager
 package_list() {
+  cmdpkg git git
+  cmdpkg vim vim
+
   case $1 in
-    BREW) echo "git homebrew/dupes/make vim ctags par" ;;
-    APT) echo "git make vim libcurl4-openssl-dev exuberant-ctags par" ;;
-    YUM|DNF) echo "git make vim ctags libcurl-devel zlib-devel powerline" ;;
+    BREW)
+      cmdpkg make homebrew/dupes/make
+      cmdpkg ctags ctags
+      cmdpkg par par ;;
+    PORT)
+      cmdpkg make gmake
+      cmdpkg ctags ctags
+      cmdpkg par par ;;
+    APT)
+      cmdpkg make make
+      cmdpkg ctags exuberant-ctags
+      cmdpkg par par
+      echo libcurl4-openssl-dev ;;
+    YUM|DNF)
+      cmdpkg make make
+      cmdpkg ctags ctags
+      echo "libcurl-devel zlib-devel powerline" ;;
   esac
 }
 
 setup_tools() {
+  # Installs _only if_ the command is not available
   local PACKAGE_MGR=$(package_manager)
   package_install ${PACKAGE_MGR} $(package_list ${PACKAGE_MGR})
 
@@ -94,7 +119,7 @@ setup_tools() {
   msg "Checking ctags' exuberance..."
   local RETCODE
   ctags --version | grep -q Exuberant ; RETCODE=$?
-  [ ${RETCODE} -ne 0 ] && exit_err "Requires exuberant-ctags, not just ctags."
+  [ ${RETCODE} -ne 0 ] && exit_err "Requires exuberant-ctags, not just ctags. Please install and put it in your PATH."
 
   msg "Setting git to use fully-pathed vim for messages..."
   git config --global core.editor $(which vim)

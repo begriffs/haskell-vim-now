@@ -63,6 +63,8 @@ package_manager() {
     package_manager="YUM"
   elif command -v apt-get >/dev/null 2>&1 ; then
     package_manager="APT"
+  elif command -v port >/dev/null 2>&1 ; then
+    package_manager="PORT"
   else
     package_manager="OTHER"
   fi
@@ -79,6 +81,10 @@ package_install() {
     BREW )
       msg "Installing with homebrew..."
       brew install ${2}
+      ;;
+    PORT )
+      msg "Installing with port..."
+      port install ${2}
       ;;
     APT )
       msg "Installing with apt-get..."
