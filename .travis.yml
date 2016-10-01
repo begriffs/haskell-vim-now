@@ -1,26 +1,35 @@
-# Use new container infrastructure to enable caching
-sudo: true
-dist: trusty
-language: bash
+sudo: required
+language: generic
 
-addons:
-  apt:
-    packages:
-    - bash
-    - vim
-    - exuberant-ctags
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+    - os: osx
+      osx_image: xcode8
+
+before_install:
+  - mkdir -p $HOME/.local/bin
+  - mkdir -p $HOME/.config/haskell-vim-now
+  - export PATH=$HOME/.local/bin:$PATH
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      brew update
+      brew install haskell-stack
+    fi
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      echo 'deb http://download.fpcomplete.com/ubuntu xenial main'|sudo tee /etc/apt/sources.list.d/fpco.list
+      sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 575159689BEFB442
+      sudo add-apt-repository ppa:nmi/vim-snapshots -y
+      sudo apt-get -qq update -y
+      sudo apt-get install vim stack -y
+    fi
+  # emulating upgrade procedure (due to install.sh cloning from begriffs/master)
+  - cp -r $TRAVIS_BUILD_DIR $XDG_CONFIG_HOME/
 
 env:
 - XDG_CONFIG_HOME=$HOME/.config
-
-before_install:
-# Download and unpack the stack executable
-- mkdir -p $HOME/.local/bin
-- mkdir -p $HOME/.config/haskell-vim-now
-- export PATH=$HOME/.local/bin:$PATH
-- travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
-# emulating upgrade procedure (due to install.sh cloning from begriffs/master)
-- cp -r $TRAVIS_BUILD_DIR $XDG_CONFIG_HOME/
 
 script:
 - bash install.sh
