@@ -57,7 +57,7 @@ setup_haskell() {
 
   msg "Installing helper binaries..."
   local STACK_LIST="ghc-mod hlint hasktags codex-0.5.0.2 hscope pointfree pointful hoogle hindent apply-refact"
-  stack --resolver ${STACK_RESOLVER} install ${STACK_LIST} --verbosity warning ; RETCODE=$?
+  stack --resolver ${STACK_RESOLVER} install ${STACK_LIST} --verbosity info ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Binary installation failed with error ${RETCODE}."
 
   msg "Installing git-hscope..."
