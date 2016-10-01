@@ -56,7 +56,7 @@ setup_haskell() {
   ln -sf ${STACK_BIN_PATH} ${HVN_DEST}/.stack-bin
 
   msg "Installing helper binaries..."
-  local STACK_LIST="ghc-mod hlint hasktags codex hscope pointfree pointful hoogle hindent apply-refact"
+  local STACK_LIST="ghc-mod hlint hasktags codex-0.5.0.2 hscope pointfree pointful hoogle hindent apply-refact"
   stack --resolver ${STACK_RESOLVER} install ${STACK_LIST} --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Binary installation failed with error ${RETCODE}."
 
