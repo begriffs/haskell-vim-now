@@ -188,7 +188,7 @@ vim_install_plug() {
 
 vim_install_plugins() {
   msg "Installing plugins using vim-plug..."
-  vim -E -u ${HVN_DEST}/.vimrc +PlugUpgrade +PlugUpdate +PlugClean! +qall
+  vim -V -E -u ${HVN_DEST}/.vimrc +PlugUpgrade +PlugUpdate +PlugClean! +qall
 }
 
 setup_vim() {
