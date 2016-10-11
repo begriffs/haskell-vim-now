@@ -100,6 +100,7 @@ package_list() {
       cmdpkg make make
       cmdpkg ctags exuberant-ctags
       cmdpkg par par
+      cmdpkg curl curl
       echo libcurl4-openssl-dev ;;
     YUM|DNF)
       cmdpkg make make
@@ -113,7 +114,7 @@ setup_tools() {
   local PACKAGE_MGR=$(package_manager)
   package_install ${PACKAGE_MGR} $(package_list ${PACKAGE_MGR})
 
-  local NOT_INSTALLED=$(check_exist ctags curl-config git make vim par)
+  local NOT_INSTALLED=$(check_exist ctags curl curl-config git make vim par)
   [ ! -z "${NOT_INSTALLED}" ] && exit_err "Installer requires '${NOT_INSTALLED}'. Please install and try again."
 
   msg "Checking ctags' exuberance..."
