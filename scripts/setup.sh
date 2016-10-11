@@ -114,7 +114,7 @@ setup_tools() {
   package_install ${PACKAGE_MGR} $(package_list ${PACKAGE_MGR})
 
   local NOT_INSTALLED=$(check_exist ctags curl-config git make vim par)
-  [ ! -z ${NOT_INSTALLED} ] && exit_err "Installer requires '${NOT_INSTALLED}'. Please install and try again."
+  [ ! -z "${NOT_INSTALLED}" ] && exit_err "Installer requires '${NOT_INSTALLED}'. Please install and try again."
 
   msg "Checking ctags' exuberance..."
   local RETCODE
