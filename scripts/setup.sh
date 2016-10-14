@@ -75,47 +75,52 @@ tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-ab
 EOF
 }
 
-setup_tools() {
-  local SYSTEM_TYPE=$(system_type)
-  local PACKAGE_MGR=$(package_manager)
-  local CONFIG_HOME=$(config_home)
+# Print package name to install if command is not found
+# $1: command name
+# $2: package name
+cmdpkg() {
+  test -n "$(which $1)" || echo "$2"
+}
 
-  local BREW_LIST="git homebrew/dupes/make vim ctags par"
-  local APT_LIST="git make vim libcurl4-openssl-dev exuberant-ctags par"
-  local YUM_LIST="git make vim ctags libcurl-devel zlib-devel powerline"
+# $1: package manager
+package_list() {
+  cmdpkg git git
+  cmdpkg vim vim
 
-  msg "Installing system package dependencies..."
-  case ${PACKAGE_MGR} in
-    BREW )
-      msg "Installing with homebrew..."
-      brew install ${BREW_LIST}
-      ;;
-    APT )
-      msg "Installing with apt-get..."
-      sudo apt-get install --no-upgrade -y ${APT_LIST}
-      ;;
-    DNF )
-      msg "Installing with DNF..."
-      sudo dnf install -yq ${YUM_LIST} # yum and dnf use same repos
-      ;;
-    YUM )
-      msg "Installing with YUM..."
-      sudo yum install -yq ${YUM_LIST}
-      ;;
-    OTHER )
-      warn "No package manager detected. You may need to install required packages manually."
-      ;;
-    * )
-      exit_err_report "setup.sh is not configured to handle ${PACKAGE_MGR} manager."
+  case $1 in
+    BREW)
+      cmdpkg make homebrew/dupes/make
+      cmdpkg ctags ctags
+      cmdpkg par par ;;
+    PORT)
+      cmdpkg make gmake
+      cmdpkg ctags ctags
+      cmdpkg par par ;;
+    APT)
+      cmdpkg make make
+      cmdpkg ctags exuberant-ctags
+      cmdpkg par par
+      cmdpkg curl curl
+      echo libcurl4-openssl-dev ;;
+    YUM|DNF)
+      cmdpkg make make
+      cmdpkg ctags ctags
+      echo "libcurl-devel zlib-devel powerline" ;;
   esac
+}
 
-  local NOT_INSTALLED=$(check_exist ctags curl-config git make vim par)
-  [ ! -z ${NOT_INSTALLED} ] && exit_err "Installer requires '${NOT_INSTALLED}'. Please install and try again."
+setup_tools() {
+  # Installs _only if_ the command is not available
+  local PACKAGE_MGR=$(package_manager)
+  package_install ${PACKAGE_MGR} $(package_list ${PACKAGE_MGR})
+
+  local NOT_INSTALLED=$(check_exist ctags curl curl-config git make vim par)
+  [ ! -z "${NOT_INSTALLED}" ] && exit_err "Installer requires '${NOT_INSTALLED}'. Please install and try again."
 
   msg "Checking ctags' exuberance..."
   local RETCODE
   ctags --version | grep -q Exuberant ; RETCODE=$?
-  [ ${RETCODE} -ne 0 ] && exit_err "Requires exuberant-ctags, not just ctags."
+  [ ${RETCODE} -ne 0 ] && exit_err "Requires exuberant-ctags, not just ctags. Please install and put it in your PATH."
 
   msg "Setting git to use fully-pathed vim for messages..."
   git config --global core.editor $(which vim)

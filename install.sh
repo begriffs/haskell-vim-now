@@ -133,15 +133,29 @@ function usage() {
   exit 1
 }
 
-REPO_PATH=$DEFAULT_REPO
+# $1: envvar
+check_boolean_var() {
+  local var=$(eval "echo \$$1")
+  if test -n "$var" -a "$var" != y
+  then
+    >&2 echo "Error: Boolean envvar [$1] can only be empty or 'y'"
+    exit 1
+  fi
+  echo "ENV: [$1=$var]"
+}
+
+# command line args override env vars
+HVN_REPO=${HVN_REPO:=$DEFAULT_REPO}
+check_boolean_var HVN_INSTALL_BASIC
+
 while test -n "$1"
 do
   case $1 in
-    --basic) shift; BASIC=1; continue;;
-    --repo) shift; REPO_PATH=$1; shift; continue;;
+    --basic) shift; HVN_INSTALL_BASIC=y; continue;;
+    --repo) shift; HVN_REPO=$1; shift; continue;;
     *) usage;;
   esac
 done
 
-test -n "$REPO_PATH" || usage
-main $REPO_PATH $BASIC
+test -n "$HVN_REPO" || usage
+main $HVN_REPO $HVN_INSTALL_BASIC
