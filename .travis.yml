@@ -15,7 +15,7 @@ before_install:
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew update
-      brew install haskell-stack
+      brew install haskell-stack ctags
     fi
   - |
     if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
@@ -23,7 +23,7 @@ before_install:
       sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 575159689BEFB442
       sudo add-apt-repository ppa:nmi/vim-snapshots -y
       sudo apt-get -qq update -y
-      sudo apt-get install vim stack -y
+      sudo apt-get install vim stack ctags -y
     fi
   # emulating upgrade procedure (due to install.sh cloning from begriffs/master)
   - cp -r $TRAVIS_BUILD_DIR $XDG_CONFIG_HOME/
