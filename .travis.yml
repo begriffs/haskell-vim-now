@@ -11,6 +11,8 @@ before_install:
   - mkdir -p $HOME/.local/bin
   - mkdir -p $HOME/.config/haskell-vim-now
   - export PATH=$HOME/.local/bin:$PATH
+  - git config --global user.email "me@test.com"
+  - git config --global user.name "Testy McTesterton"
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew update
