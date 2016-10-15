@@ -57,7 +57,7 @@ setup_haskell() {
 
   msg "Installing helper binaries..."
   local STACK_LIST="ghc-mod hlint hasktags hscope pointfree pointful hoogle hindent apply-refact machines-directory-0.2.0.9 machines-io-0.2.0.13 codex-0.5.0.2"
-  stack --resolver ${STACK_RESOLVER} install ${STACK_LIST} --verbosity info ; RETCODE=$?
+  stack --resolver ${STACK_RESOLVER} install ${STACK_LIST} --verbosity warning ; RETCODE=$?
   [ ${RETCODE} -ne 0 ] && exit_err "Binary installation failed with error ${RETCODE}."
 
   msg "Installing git-hscope..."
@@ -188,7 +188,7 @@ vim_install_plug() {
 
 vim_install_plugins() {
   msg "Installing plugins using vim-plug..."
-  vim -V -E -u ${HVN_DEST}/.vimrc +PlugUpgrade +PlugUpdate +PlugClean! +qall
+  vim -E -u ${HVN_DEST}/.vimrc +PlugUpgrade +PlugUpdate +PlugClean! +qall
 }
 
 setup_vim() {
