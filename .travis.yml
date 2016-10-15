@@ -14,7 +14,7 @@ before_install:
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew update
-      brew install haskell-stack ctags
+      brew install haskell-stack ctags vim
     fi
   - |
     if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
