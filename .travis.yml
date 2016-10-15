@@ -1,11 +1,12 @@
 sudo: required
 language: generic
 
-matrix:
-  include:
-    - os: osx
-      osx_image: xcode8
-    # Travis throws Linux in too without needing it in matrix
+# Vim plugin installation hangs on Travis OS X.
+# Disabling mac builds for now.
+# matrix:
+#   include:
+#     - os: osx
+#       osx_image: xcode8
 
 before_install:
   - mkdir -p $HOME/.local/bin
