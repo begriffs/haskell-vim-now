@@ -3,10 +3,9 @@ language: generic
 
 matrix:
   include:
-    - os: linux
-      dist: xenial
     - os: osx
       osx_image: xcode8
+    # Travis throws Linux in too without needing it in matrix
 
 before_install:
   - mkdir -p $HOME/.local/bin
