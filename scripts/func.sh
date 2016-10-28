@@ -77,6 +77,10 @@ package_manager() {
 # $2-: list of packages
 package_install() {
   local pkgmgr=$1; shift
+  if [ $# -eq 0 ]; then
+    msg "No new packages needed for install..."
+    return
+  fi
   msg "Installing system packages [$*] using [$pkgmgr]..."
   case ${pkgmgr} in
     BREW )
