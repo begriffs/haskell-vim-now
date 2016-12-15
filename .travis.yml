@@ -34,7 +34,7 @@ env:
 - XDG_CONFIG_HOME=$HOME/.config
 
 script:
-- bash install.sh
+- echo y | bash install.sh
 
 # Caching so the next build will be fast too.
 cache:
