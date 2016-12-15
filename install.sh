@@ -38,7 +38,17 @@ config_home() {
 
 update_pull() {
   local repo_path=$1
-  cd ${repo_path} && git pull --rebase
+  cd ${repo_path}
+  if [ "$(git status -s)" ]; then
+    ## Local repo has changes, prompt before overwriting them:
+    read -p "Would you like to force a sync? THIS WILL REMOVE ANY LOCAL CHANGES!  [y/N]: " response
+    case $response in
+      [yY][eE][sS]|[yY])
+        git reset --hard
+      ;;
+    esac
+  fi
+  git pull --rebase
   return $?
 }
 
