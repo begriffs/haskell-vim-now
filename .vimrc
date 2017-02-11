@@ -98,7 +98,7 @@ Plug 'int3/vim-extradite'
 
 " Bars, panels, and files
 Plug 'scrooloose/nerdtree'
-Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'majutsushi/tagbar'
 
