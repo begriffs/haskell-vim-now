@@ -141,7 +141,7 @@ nmap <silent> <leader>ht :GhcModType<CR>
 " Insert type of expression under cursor
 nmap <silent> <leader>hT :GhcModTypeInsert<CR>
 " GHC errors and warnings
-nmap <silent> <leader>hc :Neomake ghcmod<CR>
+nmap <silent> <leader>hc :w<CR>:Neomake ghcmod<CR>
 
 " open the neomake error window automatically when an error is found
 let g:neomake_open_list = 2
@@ -158,7 +158,7 @@ autocmd BufRead *
       \ exec "set path^=".s:default_path
 
 " Haskell Lint
-nmap <silent> <leader>hl :Neomake hlint<CR>
+nmap <silent> <leader>hl :w<CR>:Neomake hlint<CR>
 
 " Options for Haskell Syntax Check
 let g:neomake_haskell_ghc_mod_args = '-g-Wall'
