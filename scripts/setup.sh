@@ -96,7 +96,7 @@ setup_haskell() {
   cp ${HVN_DEST}/git-hscope ${STACK_BIN_PATH}
 
   msg "Building Hoogle database..."
-  ${STACK_BIN_PATH}/hoogle data
+  ${STACK_BIN_PATH}/hoogle generate
 
   msg "Configuring codex to search in stack..."
   cat > $HOME/.codex <<EOF
