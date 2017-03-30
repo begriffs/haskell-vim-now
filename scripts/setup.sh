@@ -82,7 +82,7 @@ setup_haskell() {
 
   # Install all solved dependency versions for the helper binaries, while skipping local dependencies package and GHC.
   # Also skipping bogus 'invalid-cabal-flag-settings' dependency from base: https://github.com/commercialhaskell/stack/issues/2969
-  local HELPER_BINARIES_DEPENDENCY_LIST=$(stack list-dependencies --separator - | grep -vE "^dependencies-|^ghc-[0-9]\.[0-9]\.[0-9]$|^invalid-cabal-flag-settings-")
+  local HELPER_BINARIES_DEPENDENCY_LIST=$(stack list-dependencies --separator - | grep -vE "^dependencies-|^ghc-[0-9]\.[0-9]\.[0-9]$|^invalid-cabal-flag-settings-|^rts-")
   for dep in $HELPER_BINARIES_DEPENDENCY_LIST
   do
     stack install $dep ; RETCODE=$?
