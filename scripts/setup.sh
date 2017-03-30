@@ -81,7 +81,8 @@ setup_haskell() {
   sed -i.bak -e 's/^#.*$//' -e '/^$/d' stack.yaml
 
   # Install all solved dependency versions for the helper binaries, while skipping local dependencies package and GHC.
-  local HELPER_BINARIES_DEPENDENCY_LIST=$(stack list-dependencies --separator - | grep -vE "^dependencies-|^ghc-[0-9]\.[0-9]\.[0-9]$")
+  # Also skipping bogus 'invalid-cabal-flag-settings' dependency from base: https://github.com/commercialhaskell/stack/issues/2969
+  local HELPER_BINARIES_DEPENDENCY_LIST=$(stack list-dependencies --separator - | grep -vE "^dependencies-|^ghc-[0-9]\.[0-9]\.[0-9]$|^invalid-cabal-flag-settings-")
   for dep in $HELPER_BINARIES_DEPENDENCY_LIST
   do
     stack install $dep ; RETCODE=$?
