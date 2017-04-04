@@ -76,7 +76,10 @@ setup_haskell() {
   [ ${RETCODE} -ne 0 ] && exit_err "Solving dependencies for helper binaries failed with error ${RETCODE}."
 
   # Clean up the comments and blank lines from stack.yaml.
-  sed -i.bak -e 's/^#.*$//' -e '/^$/d' stack.yaml
+  sed -i.bak1 -e 's/^#.*$//' -e '/^$/d' stack.yaml
+  
+  # Remove warning message from generated stack.yaml.
+  sed -i.bak2 -e '/user-message/,+3d' stack.yaml
 
   # Install all solved dependency versions for the helper binaries, while skipping local dependencies package and GHC.
   # Also skipping bogus 'invalid-cabal-flag-settings' dependency from base: https://github.com/commercialhaskell/stack/issues/2969
