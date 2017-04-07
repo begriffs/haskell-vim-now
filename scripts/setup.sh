@@ -19,6 +19,7 @@ stack_resolver() {
 
 setup_haskell() {
   local HVN_DEST=$1
+  local GENERATE_HOOGLE_DB=$2
   local RETCODE
 
   if ! check_exist stack >/dev/null ; then
@@ -97,8 +98,11 @@ setup_haskell() {
   msg "Installing git-hscope..."
   cp ${HVN_DEST}/git-hscope ${STACK_BIN_PATH}
 
-  msg "Building Hoogle database..."
-  ${STACK_BIN_PATH}/hoogle generate
+  if test -n "$GENERATE_HOOGLE_DB"
+  then
+    msg "Building Hoogle database..."
+    ${STACK_BIN_PATH}/hoogle generate
+  fi
 
   msg "Configuring codex to search in stack..."
   cat > $HOME/.codex <<EOF
