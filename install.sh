@@ -2,6 +2,7 @@
 
 PROGNAME=$(basename $0)
 DEFAULT_REPO="https://github.com/begriffs/haskell-vim-now.git"
+DEFAULT_GENERATE_HOOGLE_DB="y"
 
 if which tput >/dev/null 2>&1; then
     ncolors=$(tput colors)
@@ -104,6 +105,7 @@ install() {
 do_setup() {
   local HVN_DEST=$1
   local BASIC_ONLY=$2
+  local GENERATE_HOOGLE_DB=$3
   local setup_path=${HVN_DEST}/scripts/setup.sh
 
   . $setup_path || { \
@@ -117,7 +119,7 @@ do_setup() {
 
   if test -z "$BASIC_ONLY"
   then
-    setup_haskell $HVN_DEST
+    setup_haskell $HVN_DEST $GENERATE_HOOGLE_DB
   fi
 
   setup_done $HVN_DEST
@@ -126,20 +128,24 @@ do_setup() {
 main() {
   local REPO_PATH=$1
   local BASIC_ONLY=$2
+  local GENERATE_HOOGLE_DB=$3
   local HVN_DEST="$(config_home)/haskell-vim-now"
+  local HVN_DEPENDENCIES_DEST="$(config_home)/haskell-vim-now"
 
   install $REPO_PATH $HVN_DEST
-  do_setup $HVN_DEST $BASIC_ONLY
+  do_setup $HVN_DEST $BASIC_ONLY $GENERATE_HOOGLE_DB
 }
 
 function usage() {
-  echo "Usage: $PROGNAME [--basic] [--repo <path>]"
+  echo "Usage: $PROGNAME [--basic] [--repo <path>] [--no-hoogle]"
   echo ""
   echo "OPTIONS"
   echo "       --basic"
   echo "           Install only vim and plugins without haskell components."
   echo "       --repo <path>"
   echo "           Git repository to install from. The default is $DEFAULT_REPO."
+  echo "       --no-hoogle"
+  echo "           Disable Hoogle database generation. The default is $DEFAULT_GENERATE_HOOGLE_DB."
   exit 1
 }
 
@@ -156,16 +162,20 @@ check_boolean_var() {
 
 # command line args override env vars
 HVN_REPO=${HVN_REPO:=$DEFAULT_REPO}
+HVN_GENERATE_HOOGLE_DB=${HVN_GENERATE_HOOGLE_DB:=$DEFAULT_GENERATE_HOOGLE_DB}
+
 check_boolean_var HVN_INSTALL_BASIC
+check_boolean_var HVN_GENERATE_HOOGLE_DB
 
 while test -n "$1"
 do
   case $1 in
     --basic) shift; HVN_INSTALL_BASIC=y; continue;;
     --repo) shift; HVN_REPO=$1; shift; continue;;
+    --no-hoogle) shift; HVN_GENERATE_HOOGLE_DB=; continue;;
     *) usage;;
   esac
 done
 
 test -n "$HVN_REPO" || usage
-main $HVN_REPO $HVN_INSTALL_BASIC
+main $HVN_REPO $HVN_INSTALL_BASIC $HVN_GENERATE_HOOGLE_DB

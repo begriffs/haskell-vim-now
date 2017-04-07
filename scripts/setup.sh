@@ -19,6 +19,7 @@ stack_resolver() {
 
 setup_haskell() {
   local HVN_DEST=$1
+  local GENERATE_HOOGLE_DB=$2
   local RETCODE
 
   if ! check_exist stack >/dev/null ; then
@@ -56,19 +57,52 @@ setup_haskell() {
   ln -sf ${STACK_BIN_PATH} ${HVN_DEST}/.stack-bin
 
   msg "Installing helper binaries..."
-  local STACK_LIST="ghc-mod hlint hasktags hscope pointfree pointful hoogle apply-refact machines-directory-0.2.0.9 machines-io-0.2.0.13 codex-0.5.0.2"
-  stack --resolver ${STACK_RESOLVER} install ${STACK_LIST} --verbosity warning ; RETCODE=$?
-  [ ${RETCODE} -ne 0 ] && exit_err "Binary installation failed with error ${RETCODE}."
+  
+  # Install ghc-mod via active stack resolver for maximum out-of-the-box compatibility.
+  # Stack dependency solving requires cabal to be on the PATH.
+  stack --resolver ${STACK_RESOLVER} install ghc-mod cabal-install --verbosity warning ; RETCODE=$?
+  [ ${RETCODE} -ne 0 ] && exit_err "Installing ghc-mod/cabal-install failed with error ${RETCODE}."
 
-  # Install hindent 5 via pinned nightly
-  stack --resolver nightly-2016-12-28 install hindent --verbosity warning ; RETCODE=$?
-  [ ${RETCODE} -ne 0 ] && exit_err "hindent installation failed with error ${RETCODE}."
+  # Install hindent via pinned LTS to ensure we have version 5.
+  stack --resolver lts-8.6 install hindent --install-ghc --verbosity warning ; RETCODE=$?
+  [ ${RETCODE} -ne 0 ] && exit_err "Installing hindent failed with error ${RETCODE}."
+
+  # Create a temporary directory for helper binary dependency solving.
+  local HELPER_BINARIES_TEMP_DIR=$(mktemp -d)
+  cp ${HVN_DEST}/dependencies.cabal $HELPER_BINARIES_TEMP_DIR
+  pushd $HELPER_BINARIES_TEMP_DIR
+
+  # Solve the versions of all helper binaries listed in dependencies.cabal.
+  stack init --solver --install-ghc ; RETCODE=$?
+  [ ${RETCODE} -ne 0 ] && exit_err "Solving dependencies for helper binaries failed with error ${RETCODE}."
+
+  # Clean up the comments and blank lines from stack.yaml.
+  sed -i.bak1 -e 's/^#.*$//' -e '/^$/d' stack.yaml
+  
+  # Remove warning message from generated stack.yaml.
+  sed -i.bak2 -e '/user-message/,+3d' stack.yaml
+
+  # Install all solved dependency versions for the helper binaries, while skipping local dependencies package and GHC.
+  # Also skipping bogus 'invalid-cabal-flag-settings' dependency from base: https://github.com/commercialhaskell/stack/issues/2969
+  local HELPER_BINARIES_DEPENDENCY_LIST=$(stack list-dependencies --separator - | grep -vE "^dependencies-|^ghc-[0-9]\.[0-9]\.[0-9]$|^invalid-cabal-flag-settings-|^rts-")
+  for dep in $HELPER_BINARIES_DEPENDENCY_LIST
+  do
+    stack install $dep ; RETCODE=$?
+    [ ${RETCODE} -ne 0 ] && exit_err "Installing helper binary dependency $dep failed with error ${RETCODE}."
+  done
+
+  # Clean up temporary directory.
+  popd
+  rm -rf $HELPER_BINARIES_TEMP_DIR
 
   msg "Installing git-hscope..."
   cp ${HVN_DEST}/git-hscope ${STACK_BIN_PATH}
 
-  msg "Building Hoogle database..."
-  ${STACK_BIN_PATH}/hoogle data
+  if test -n "$GENERATE_HOOGLE_DB"
+  then
+    msg "Building Hoogle database..."
+    ${STACK_BIN_PATH}/hoogle generate
+  fi
 
   msg "Configuring codex to search in stack..."
   cat > $HOME/.codex <<EOF
