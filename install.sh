@@ -118,7 +118,7 @@ do_setup() {
   setup_tools
   setup_vim $HVN_DEST
 
-  if "$FULL_INSTALL"
+  if [ "$FULL_INSTALL" == true ]
   then
     setup_haskell $HVN_DEST $GENERATE_HOOGLE_DB
   fi
