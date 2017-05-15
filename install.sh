@@ -2,7 +2,8 @@
 
 PROGNAME=$(basename $0)
 DEFAULT_REPO="https://github.com/begriffs/haskell-vim-now.git"
-DEFAULT_GENERATE_HOOGLE_DB="y"
+DEFAULT_GENERATE_HOOGLE_DB=true
+DEFAULT_HVN_BASIC_ONLY=false
 
 if which tput >/dev/null 2>&1; then
     ncolors=$(tput colors)
@@ -117,7 +118,7 @@ do_setup() {
   setup_tools
   setup_vim $HVN_DEST
 
-  if test -z "$BASIC_ONLY"
+  if "$BASIC_ONLY"
   then
     setup_haskell $HVN_DEST $GENERATE_HOOGLE_DB
   fi
@@ -149,30 +150,17 @@ function usage() {
   exit 1
 }
 
-# $1: envvar
-check_boolean_var() {
-  local var=$(eval "echo \$$1")
-  if test -n "$var" -a "$var" != y
-  then
-    >&2 echo "Error: Boolean envvar [$1] can only be empty or 'y'"
-    exit 1
-  fi
-  echo "ENV: [$1=$var]"
-}
-
 # command line args override env vars
 HVN_REPO=${HVN_REPO:=$DEFAULT_REPO}
 HVN_GENERATE_HOOGLE_DB=${HVN_GENERATE_HOOGLE_DB:=$DEFAULT_GENERATE_HOOGLE_DB}
-
-check_boolean_var HVN_INSTALL_BASIC
-check_boolean_var HVN_GENERATE_HOOGLE_DB
+HVN_INSTALL_BASIC=${HVN_INSTALL_BASIC:=$DEFAULT_HVN_INSTALL_BASIC}
 
 while test -n "$1"
 do
   case $1 in
-    --basic) shift; HVN_INSTALL_BASIC=y; continue;;
+    --basic) shift; HVN_INSTALL_BASIC=false; continue;;
     --repo) shift; HVN_REPO=$1; shift; continue;;
-    --no-hoogle) shift; HVN_GENERATE_HOOGLE_DB=; continue;;
+    --no-hoogle) shift; HVN_GENERATE_HOOGLE_DB=false; continue;;
     *) usage;;
   esac
 done
