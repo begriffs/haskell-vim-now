@@ -2,7 +2,8 @@
 
 PROGNAME=$(basename $0)
 DEFAULT_REPO="https://github.com/begriffs/haskell-vim-now.git"
-DEFAULT_GENERATE_HOOGLE_DB="y"
+DEFAULT_GENERATE_HOOGLE_DB=true
+DEFAULT_HVN_FULL_INSTALL=true
 
 if which tput >/dev/null 2>&1; then
     ncolors=$(tput colors)
@@ -104,7 +105,7 @@ install() {
 
 do_setup() {
   local HVN_DEST=$1
-  local BASIC_ONLY=$2
+  local FULL_INSTALL=$2
   local GENERATE_HOOGLE_DB=$3
   local setup_path=${HVN_DEST}/scripts/setup.sh
 
@@ -117,7 +118,7 @@ do_setup() {
   setup_tools
   setup_vim $HVN_DEST
 
-  if test -z "$BASIC_ONLY"
+  if "$FULL_INSTALL"
   then
     setup_haskell $HVN_DEST $GENERATE_HOOGLE_DB
   fi
@@ -127,13 +128,13 @@ do_setup() {
 
 main() {
   local REPO_PATH=$1
-  local BASIC_ONLY=$2
+  local FULL_INSTALL=$2
   local GENERATE_HOOGLE_DB=$3
   local HVN_DEST="$(config_home)/haskell-vim-now"
   local HVN_DEPENDENCIES_DEST="$(config_home)/haskell-vim-now"
 
   install $REPO_PATH $HVN_DEST
-  do_setup $HVN_DEST $BASIC_ONLY $GENERATE_HOOGLE_DB
+  do_setup $HVN_DEST $FULL_INSTALL $GENERATE_HOOGLE_DB
 }
 
 function usage() {
@@ -149,33 +150,20 @@ function usage() {
   exit 1
 }
 
-# $1: envvar
-check_boolean_var() {
-  local var=$(eval "echo \$$1")
-  if test -n "$var" -a "$var" != y
-  then
-    >&2 echo "Error: Boolean envvar [$1] can only be empty or 'y'"
-    exit 1
-  fi
-  echo "ENV: [$1=$var]"
-}
-
 # command line args override env vars
 HVN_REPO=${HVN_REPO:=$DEFAULT_REPO}
 HVN_GENERATE_HOOGLE_DB=${HVN_GENERATE_HOOGLE_DB:=$DEFAULT_GENERATE_HOOGLE_DB}
-
-check_boolean_var HVN_INSTALL_BASIC
-check_boolean_var HVN_GENERATE_HOOGLE_DB
+HVN_FULL_INSTALL=${HVN_FULL_INSTALL:=$DEFAULT_HVN_FULL_INSTALL}
 
 while test -n "$1"
 do
   case $1 in
-    --basic) shift; HVN_INSTALL_BASIC=y; continue;;
+    --basic) shift; HVN_FULL_INSTALL=false; continue;;
     --repo) shift; HVN_REPO=$1; shift; continue;;
-    --no-hoogle) shift; HVN_GENERATE_HOOGLE_DB=; continue;;
+    --no-hoogle) shift; HVN_GENERATE_HOOGLE_DB=false; continue;;
     *) usage;;
   esac
 done
 
 test -n "$HVN_REPO" || usage
-main $HVN_REPO $HVN_INSTALL_BASIC $HVN_GENERATE_HOOGLE_DB
+main $HVN_REPO $HVN_FULL_INSTALL $HVN_GENERATE_HOOGLE_DB

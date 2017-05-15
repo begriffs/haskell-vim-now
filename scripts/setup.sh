@@ -98,7 +98,7 @@ setup_haskell() {
   msg "Installing git-hscope..."
   cp ${HVN_DEST}/git-hscope ${STACK_BIN_PATH}
 
-  if test -n "$GENERATE_HOOGLE_DB"
+  if "$GENERATE_HOOGLE_DB"
   then
     msg "Building Hoogle database..."
     ${STACK_BIN_PATH}/hoogle generate
