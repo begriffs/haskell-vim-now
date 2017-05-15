@@ -61,11 +61,21 @@ setup_haskell() {
   
   # Install ghc-mod via active stack resolver for maximum out-of-the-box compatibility.
   # Stack dependency solving requires cabal to be on the PATH.
-  stack --resolver ${STACK_RESOLVER} install ghc-mod cabal-install --verbosity warning ; RETCODE=$?
+  if [ "$DRY_RUN" == false ]
+  then
+    stack --resolver ${STACK_RESOLVER} install ghc-mod cabal-install --verbosity warning ; RETCODE=$?
+  else
+    stack --resolver ${STACK_RESOLVER} install ghc-mod cabal-install --verbosity warning --dry-run ; RETCODE=$?
+  fi
   [ ${RETCODE} -ne 0 ] && exit_err "Installing ghc-mod/cabal-install failed with error ${RETCODE}."
 
   # Install hindent via pinned LTS to ensure we have version 5.
-  stack --resolver lts-8.6 install hindent --install-ghc --verbosity warning ; RETCODE=$?
+  if [ "$DRY_RUN" == false ]
+  then
+    stack --resolver lts-8.6 install hindent --install-ghc --verbosity warning ; RETCODE=$?
+  else
+    stack --resolver lts-8.6 install hindent --install-ghc --verbosity warning --dry-run ; RETCODE=$?
+  fi
   [ ${RETCODE} -ne 0 ] && exit_err "Installing hindent failed with error ${RETCODE}."
 
   # Create a temporary directory for helper binary dependency solving.
