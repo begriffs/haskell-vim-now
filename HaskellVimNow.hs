@@ -692,9 +692,7 @@ helperDependencies =
   ]
 
 helperDependenciesCabalTemplate :: Template
-helperDependenciesCabalTemplate =
-  [mustache|
-name:                dependencies
+helperDependenciesCabalTemplate = [mustache|name:                dependencies
 version:             0.1.0.0
 synopsis:            helper binaries for vim
 homepage:            https://github.com/begriffs/haskell-vim-now
@@ -714,12 +712,10 @@ library
 |]
 
 codexTemplate :: Template
-codexTemplate =
-  [mustache|
-hackagePath: {{stackHackageIndicesDir}}
+codexTemplate = [mustache|hackagePath: {{stackHackageIndicesDir}}
 tagsFileHeader: false
 tagsFileSorted: false
-tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-absolute --output='$TAGS' '$SOURCES'
+tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-absolute --output="$TAGS" "$SOURCES"
 |]
 
 setupDone :: (MonadIO m, MonadReader HvnConfig m) => m ()
