@@ -204,7 +204,9 @@ if has('win32')
   " Setting term here to get good color support on windows.
   " vim must be launched from cmd/PS and not git bash.
   " git bash does not interpret ANSI color escapes correctly.
-  set term=pcansi
+  if !has('gui_running')
+    set term=pcansi
+  endif
 
   " The following lines avoid a bunch of airline errors when opening vim
   " for git messages.  See:
