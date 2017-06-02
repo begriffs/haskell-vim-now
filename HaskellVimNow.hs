@@ -397,41 +397,41 @@ checkVimVersion = do
           "Detected vim version \"" <> vimVersionPretty <>
           "\", however version 7.4 or later is required."
         Turtle.exit (Turtle.ExitFailure 1)
-      unless vimVersionTooOld $ do
-        hasRuby <-
-          isJust <$>
-          Turtle.fold
-            (Turtle.grep
-               (Turtle.contains "+ruby")
-               (Turtle.inshell "vim --version" empty))
-            Foldl.head
-        unless hasRuby $ do
-          err "Ruby is unavailable in your installation of vim."
-          Turtle.exit (Turtle.ExitFailure 1)
-        when hasRuby $ do
-          msg "Testing for broken Ruby interface in vim..."
-          -- TODO This Ruby check is pretty scary...  Also have no clue why I
-          -- need to triple up the double quotes on the string match for
-          -- "ruby_works". Went the route of forcing Vim to return error
-          -- code if the string match fails because at least on Windows,
-          -- the simpler ":ruby puts RUBY_VERSION" was always returning success.
-          rubyIsWorking <-
-            (== Turtle.ExitSuccess) <$>
-            (nullShell $
-             "vim -T dumb --cmd \"redir @a\" " <>
-             "--cmd \"ruby puts :ruby_works\" " <>
-             "--cmd \"redir END\" " <>
-             "--cmd \"if getreg('a') =~ \"\"\"ruby_works\"\"\" | qall | else | cq | endif\"")
-          unless rubyIsWorking $ do
-            err "The Ruby interface is broken on your installation of vim."
-            err "You may need to reinstall Ruby or reinstall/recompile vim."
-            msg "If you're on OS X, try the following:"
-            detail "rvm use system"
-            detail "brew reinstall vim"
-            warn
-              "If nothing helped, please report at https://github.com/begriffs/haskell-vim-now/issues"
-            Turtle.exit (Turtle.ExitFailure 1)
-          when rubyIsWorking $ msg "Test passed. Ruby interface is OK."
+      --unless vimVersionTooOld $ do
+      --  hasRuby <-
+      --    isJust <$>
+      --    Turtle.fold
+      --      (Turtle.grep
+      --         (Turtle.contains "+ruby")
+      --         (Turtle.inshell "vim --version" empty))
+      --      Foldl.head
+      --  unless hasRuby $ do
+      --    err "Ruby is unavailable in your installation of vim."
+      --    Turtle.exit (Turtle.ExitFailure 1)
+      --  when hasRuby $ do
+      --    msg "Testing for broken Ruby interface in vim..."
+      --    -- TODO This Ruby check is pretty scary...  Also have no clue why I
+      --    -- need to triple up the double quotes on the string match for
+      --    -- "ruby_works". Went the route of forcing Vim to return error
+      --    -- code if the string match fails because at least on Windows,
+      --    -- the simpler ":ruby puts RUBY_VERSION" was always returning success.
+      --    rubyIsWorking <-
+      --      (== Turtle.ExitSuccess) <$>
+      --      (nullShell $
+      --       "vim -T dumb --cmd \"redir @a\" " <>
+      --       "--cmd \"ruby puts :ruby_works\" " <>
+      --       "--cmd \"redir END\" " <>
+      --       "--cmd \"if getreg('a') =~ \"\"\"ruby_works\"\"\" | qall | else | cq | endif\"")
+      --    unless rubyIsWorking $ do
+      --      err "The Ruby interface is broken on your installation of vim."
+      --      err "You may need to reinstall Ruby or reinstall/recompile vim."
+      --      msg "If you're on OS X, try the following:"
+      --      detail "rvm use system"
+      --      detail "brew reinstall vim"
+      --      warn
+      --        "If nothing helped, please report at https://github.com/begriffs/haskell-vim-now/issues"
+      --      Turtle.exit (Turtle.ExitFailure 1)
+      --    when rubyIsWorking $ msg "Test passed. Ruby interface is OK."
 
 vimInstallPlug :: (MonadIO m, MonadReader HvnConfig m) => m ()
 vimInstallPlug = do
