@@ -34,7 +34,7 @@ env:
 - XDG_CONFIG_HOME=$HOME/.config
 
 script:
-- bash install.sh --no-hoogle
+- bash install.sh --no-hoogle --dry-run
 
 # Caching so the next build will be fast too.
 cache:
