@@ -20,6 +20,7 @@ stack_resolver() {
 setup_haskell() {
   local HVN_DEST=$1
   local GENERATE_HOOGLE_DB=$2
+  local DRY_RUN=$3
   local RETCODE
 
   if ! check_exist stack >/dev/null ; then
@@ -85,11 +86,21 @@ setup_haskell() {
   # Install all solved dependency versions for the helper binaries, while skipping local dependencies package and GHC.
   # Also skipping bogus 'invalid-cabal-flag-settings' dependency from base: https://github.com/commercialhaskell/stack/issues/2969
   local HELPER_BINARIES_DEPENDENCY_LIST=$(stack list-dependencies --separator - | grep -vE "^dependencies-|^ghc-[0-9]\.[0-9]\.[0-9]$|^invalid-cabal-flag-settings-|^rts-")
-  for dep in $HELPER_BINARIES_DEPENDENCY_LIST
-  do
-    stack install $dep ; RETCODE=$?
-    [ ${RETCODE} -ne 0 ] && exit_err "Installing helper binary dependency $dep failed with error ${RETCODE}."
-  done
+
+  if [ "$DRY_RUN" == false ]
+  then
+    for dep in $HELPER_BINARIES_DEPENDENCY_LIST
+    do
+      stack install $dep ; RETCODE=$?
+      [ ${RETCODE} -ne 0 ] && exit_err "Installing helper binary dependency $dep failed with error ${RETCODE}."
+    done
+  else
+    for dep in $HELPER_BINARIES_DEPENDENCY_LIST
+    do
+      stack install $dep --dry-run ; RETCODE=$?
+      [ ${RETCODE} -ne 0 ] && exit_err "Installing helper binary dependency $dep failed with error ${RETCODE}."
+    done
+  fi
 
   # Clean up temporary directory.
   popd

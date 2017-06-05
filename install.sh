@@ -4,6 +4,7 @@ PROGNAME=$(basename $0)
 DEFAULT_REPO="https://github.com/begriffs/haskell-vim-now.git"
 DEFAULT_GENERATE_HOOGLE_DB=true
 DEFAULT_HVN_FULL_INSTALL=true
+DEFAULT_DRY_RUN=false
 
 if which tput >/dev/null 2>&1; then
     ncolors=$(tput colors)
@@ -107,6 +108,7 @@ do_setup() {
   local HVN_DEST=$1
   local FULL_INSTALL=$2
   local GENERATE_HOOGLE_DB=$3
+  local DRY_RUN=$4
   local setup_path=${HVN_DEST}/scripts/setup.sh
 
   . $setup_path || { \
@@ -120,7 +122,7 @@ do_setup() {
 
   if [ "$FULL_INSTALL" == true ]
   then
-    setup_haskell $HVN_DEST $GENERATE_HOOGLE_DB
+    setup_haskell $HVN_DEST $GENERATE_HOOGLE_DB $DRY_RUN
   fi
 
   setup_done $HVN_DEST
@@ -130,11 +132,12 @@ main() {
   local REPO_PATH=$1
   local FULL_INSTALL=$2
   local GENERATE_HOOGLE_DB=$3
+  local DRY_RUN=$4
   local HVN_DEST="$(config_home)/haskell-vim-now"
   local HVN_DEPENDENCIES_DEST="$(config_home)/haskell-vim-now"
 
   install $REPO_PATH $HVN_DEST
-  do_setup $HVN_DEST $FULL_INSTALL $GENERATE_HOOGLE_DB
+  do_setup $HVN_DEST $FULL_INSTALL $GENERATE_HOOGLE_DB $DRY_RUN
 }
 
 function usage() {
@@ -147,6 +150,8 @@ function usage() {
   echo "           Git repository to install from. The default is $DEFAULT_REPO."
   echo "       --no-hoogle"
   echo "           Disable Hoogle database generation. The default is $DEFAULT_GENERATE_HOOGLE_DB."
+  echo "       --dry-run"
+  echo "           Perform a dry run for the stack installs.  Primarily intended for testing."
   exit 1
 }
 
@@ -154,6 +159,7 @@ function usage() {
 HVN_REPO=${HVN_REPO:=$DEFAULT_REPO}
 HVN_GENERATE_HOOGLE_DB=${HVN_GENERATE_HOOGLE_DB:=$DEFAULT_GENERATE_HOOGLE_DB}
 HVN_FULL_INSTALL=${HVN_FULL_INSTALL:=$DEFAULT_HVN_FULL_INSTALL}
+HVN_DRY_RUN=${$HVN_DRY_RUN:=$DEFAULT_DRY_RUN}
 
 while test -n "$1"
 do
@@ -161,9 +167,10 @@ do
     --basic) shift; HVN_FULL_INSTALL=false; continue;;
     --repo) shift; HVN_REPO=$1; shift; continue;;
     --no-hoogle) shift; HVN_GENERATE_HOOGLE_DB=false; continue;;
+    --dry-run) shift; DRY_RUN=true; continue;;
     *) usage;;
   esac
 done
 
 test -n "$HVN_REPO" || usage
-main $HVN_REPO $HVN_FULL_INSTALL $HVN_GENERATE_HOOGLE_DB
+main $HVN_REPO $HVN_FULL_INSTALL $HVN_GENERATE_HOOGLE_DB $HVN_DRY_RUN
