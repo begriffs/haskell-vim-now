@@ -20,6 +20,7 @@ stack_resolver() {
 setup_haskell() {
   local HVN_DEST=$1
   local GENERATE_HOOGLE_DB=$2
+  local DRY_RUN=$3
   local RETCODE
 
   if ! check_exist stack >/dev/null ; then
@@ -64,7 +65,12 @@ setup_haskell() {
   [ ${RETCODE} -ne 0 ] && exit_err "Installing ghc-mod/cabal-install failed with error ${RETCODE}."
 
   # Install hindent via pinned LTS to ensure we have version 5.
-  stack --resolver lts-8.6 install hindent --install-ghc --verbosity warning ; RETCODE=$?
+  if [ "$DRY_RUN" == false ]
+  then
+    stack --resolver lts-8.6 install hindent --install-ghc --verbosity warning ; RETCODE=$?
+  else
+    stack --resolver lts-8.6 install hindent --install-ghc --verbosity warning --dry-run ; RETCODE=$?
+  fi
   [ ${RETCODE} -ne 0 ] && exit_err "Installing hindent failed with error ${RETCODE}."
 
   # Create a temporary directory for helper binary dependency solving.
@@ -85,9 +91,15 @@ setup_haskell() {
   # Install all solved dependency versions for the helper binaries, while skipping local dependencies package and GHC.
   # Also skipping bogus 'invalid-cabal-flag-settings' dependency from base: https://github.com/commercialhaskell/stack/issues/2969
   local HELPER_BINARIES_DEPENDENCY_LIST=$(stack list-dependencies --separator - | grep -vE "^dependencies-|^ghc-[0-9]\.[0-9]\.[0-9]$|^invalid-cabal-flag-settings-|^rts-")
+
   for dep in $HELPER_BINARIES_DEPENDENCY_LIST
   do
-    stack install $dep ; RETCODE=$?
+    if [ "$DRY_RUN" == false ]
+    then
+      stack install $dep ; RETCODE=$?
+    else
+      stack install $dep --dry-run ; RETCODE=$?
+    fi
     [ ${RETCODE} -ne 0 ] && exit_err "Installing helper binary dependency $dep failed with error ${RETCODE}."
   done
 
@@ -98,7 +110,7 @@ setup_haskell() {
   msg "Installing git-hscope..."
   cp ${HVN_DEST}/git-hscope ${STACK_BIN_PATH}
 
-  if test -n "$GENERATE_HOOGLE_DB"
+  if [ "$GENERATE_HOOGLE_DB" == true ]
   then
     msg "Building Hoogle database..."
     ${STACK_BIN_PATH}/hoogle generate
