@@ -92,20 +92,16 @@ setup_haskell() {
   # Also skipping bogus 'invalid-cabal-flag-settings' dependency from base: https://github.com/commercialhaskell/stack/issues/2969
   local HELPER_BINARIES_DEPENDENCY_LIST=$(stack list-dependencies --separator - | grep -vE "^dependencies-|^ghc-[0-9]\.[0-9]\.[0-9]$|^invalid-cabal-flag-settings-|^rts-")
 
-  if [ "$DRY_RUN" == false ]
-  then
-    for dep in $HELPER_BINARIES_DEPENDENCY_LIST
-    do
+  for dep in $HELPER_BINARIES_DEPENDENCY_LIST
+  do
+    if [ "$DRY_RUN" == false ]
+    then
       stack install $dep ; RETCODE=$?
-      [ ${RETCODE} -ne 0 ] && exit_err "Installing helper binary dependency $dep failed with error ${RETCODE}."
-    done
-  else
-    for dep in $HELPER_BINARIES_DEPENDENCY_LIST
-    do
+    else
       stack install $dep --dry-run ; RETCODE=$?
-      [ ${RETCODE} -ne 0 ] && exit_err "Installing helper binary dependency $dep failed with error ${RETCODE}."
-    done
-  fi
+    fi
+    [ ${RETCODE} -ne 0 ] && exit_err "Installing helper binary dependency $dep failed with error ${RETCODE}."
+  done
 
   # Clean up temporary directory.
   popd
