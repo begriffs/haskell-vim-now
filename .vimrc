@@ -306,11 +306,10 @@ let g:ctrlp_custom_ignore = { 'dir': '\v[\/](.git|.cabal-sandbox|.stack-work)$' 
 " Use spaces instead of tabs
 set expandtab
 
-" Be smart when using tabs ;)
-set smarttab
-
-" 1 tab == 2 spaces
+" 1 tab == 2 spaces, unless the file is already
+" using tabs, in which case tabs will be inserted.
 set shiftwidth=2
+set softtabstop=2
 set tabstop=2
 
 " Linebreak on 500 characters
