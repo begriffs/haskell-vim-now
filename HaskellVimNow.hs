@@ -463,10 +463,12 @@ vimInstallPlugins = do
       then nullShell
              ("vim -E -u " <> vimRcFilePath <>
               " +PlugUpgrade +PlugUpdate +PlugClean! +qall")
-      else Turtle.shell
+      -- TODO Temporarily trying nullShell on Linux as well due to Travis taking way too long on the plugin install.
+      --else Turtle.shell
+      else nullShell
              ("vim -E -u " <> vimRcFilePath <>
               " +PlugUpgrade +PlugUpdate +PlugClean! +qall")
-             empty
+             --empty
 
 vimBackup :: (MonadIO m, MonadReader HvnConfig m) => m ()
 vimBackup = do
