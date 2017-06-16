@@ -34,7 +34,7 @@ env:
 - XDG_CONFIG_HOME=$HOME/.config
 
 script:
-- stack HaskellVimNow.hs --no-hoogle
+- stack HaskellVimNow.hs --no-hoogle --no-helper-bins
 
 # Caching so the next build will be fast too.
 cache:
