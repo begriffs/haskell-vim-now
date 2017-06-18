@@ -79,12 +79,15 @@ set nocompatible
 
 if has('nvim')
   call plug#begin('~/.config/nvim/bundle')
+elseif has('win32')
+  call plug#begin('~/vimfiles/bundle')
 else
   call plug#begin('~/.vim/bundle')
 endif
 
 " Support bundles
 Plug 'jgdavey/tslime.vim'
+" TODO Need to handle 32-bit vs. 64-bit vimproc DLL build selection.
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'ervandew/supertab'
 Plug 'benekastah/neomake'
@@ -197,6 +200,21 @@ if &term =~ '256color'
   set t_ut=
 endif
 
+if has('win32')
+  " Setting term here to get good color support on windows.
+  " vim must be launched from cmd/PS and not git bash.
+  " git bash does not interpret ANSI color escapes correctly.
+  if !has('gui_running')
+    set term=pcansi
+  endif
+
+  " The following lines avoid a bunch of airline errors when opening vim
+  " for git messages.  See:
+  " https://github.com/mattn/gist-vim/issues/48#issuecomment-12916349
+  set shell=cmd
+  set shellcmdflag=/c
+endif
+
 " Force redraw
 map <silent> <leader>r :redraw!<CR>
 
@@ -258,8 +276,13 @@ endif
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
-" Use large font by default in MacVim
-set gfn=Monaco:h19
+if !has('win32')
+  " Use large font by default in MacVim
+  set gfn=Monaco:h19
+else
+  " TODO Setting this font to speed up some personal Windows testing. Remove later.
+  set gfn=Inconsolata_for_Powerline:h11:cANSI:qDRAFT
+endif
 
 " Use powerline fonts for airline
 if !exists('g:airline_symbols')
