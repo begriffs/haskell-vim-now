@@ -86,7 +86,7 @@ data HvnPackageManager
   deriving (Show)
 
 defaultRepo :: Text
-defaultRepo = "https://github.com/jship/haskell-vim-now.git"
+defaultRepo = "https://github.com/begriffs/haskell-vim-now.git"
 
 defaultBranch :: Text
 defaultBranch = "HASKELLIFY" -- TODO change to master
