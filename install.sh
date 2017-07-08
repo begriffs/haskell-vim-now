@@ -110,6 +110,7 @@ do_setup() {
   local GENERATE_HOOGLE_DB=$3
   local DRY_RUN=$4
   local setup_path=${HVN_DEST}/scripts/setup.sh
+  local setup_haskell_path=${HVN_DEST}/scripts/setup_haskell.hs
 
   . $setup_path || { \
     err "Failed to source ${setup_path}."
@@ -122,7 +123,21 @@ do_setup() {
 
   if [ "$FULL_INSTALL" == true ]
   then
-    setup_haskell $HVN_DEST $GENERATE_HOOGLE_DB $DRY_RUN
+    local ARG_NO_HOOGLE_DB="--no-hoogle"
+    local ARG_NO_HELPER_BINS="--no-helper-bins"
+
+    if [ "$GENERATE_HOOGLE_DB" == true ]
+    then
+      ARG_NO_HOOGLE_DB=
+    fi
+
+    if [ "$DRY_RUN" == false ]
+    then
+      ARG_NO_HELPER_BINS=
+    fi
+
+    stack $setup_haskell_path $ARG_NO_HOOGLE_DB $ARG_NO_HELPER_BINS ; RETCODE=$?
+    [ ${RETCODE} -ne 0 ] && exit_err "setup_haskell.hs failed with error ${RETCODE}."
   fi
 
   setup_done $HVN_DEST
