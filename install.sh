@@ -167,7 +167,7 @@ do
     --basic) shift; HVN_FULL_INSTALL=false; continue;;
     --repo) shift; HVN_REPO=$1; shift; continue;;
     --no-hoogle) shift; HVN_GENERATE_HOOGLE_DB=false; continue;;
-    --dry-run) shift; DRY_RUN=true; continue;;
+    --dry-run) shift; HVN_DRY_RUN=true; continue;;
     *) usage;;
   esac
 done
