@@ -59,7 +59,7 @@ main :: IO ()
 main = do
   HvnArgs {hvnArgsNoHoogleDb, hvnArgsNoHelperBinaries} <-
     Turtle.options "Haskell Vim Now - setup Haskell specifics" cliParser
-  print HvnArgs{hvnArgsNoHoogleDb, hvnArgsNoHelperBinaries}
+  print HvnArgs {hvnArgsNoHoogleDb, hvnArgsNoHelperBinaries}
   hvnCfgHome <- hvnHomeDir
   let hvnCfgDest = hvnCfgHome </> "haskell-vim-now"
       hvnCfgHoogleDb = not hvnArgsNoHoogleDb
@@ -97,112 +97,112 @@ setupHaskell = do
   hasStack <- hasExecutable "stack"
   unless hasStack $ do
     err "Installer requires Stack - installation instructions:"
-    msg "  http://docs.haskellstack.org/en/stable/README/#how-to-install"
-  when hasStack $ do
-    msg "Setting up GHC if needed..."
-    stackSetupResult <- Turtle.shell "stack setup --verbosity warning" empty
-    case stackSetupResult of
-      (Turtle.ExitFailure retCode) -> do
-        err $ "Stack setup failed with error " <> (Text.pack . show $ retCode)
+    err "  http://docs.haskellstack.org/en/stable/README/#how-to-install"
+    Turtle.exit (Turtle.ExitFailure 1)
+  msg "Setting up GHC if needed..."
+  stackSetupResult <- Turtle.shell "stack setup --verbosity warning" empty
+  case stackSetupResult of
+    (Turtle.ExitFailure retCode) -> do
+      err $ "Stack setup failed with error " <> (Text.pack . show $ retCode)
+      Turtle.exit (Turtle.ExitFailure 1)
+    Turtle.ExitSuccess -> do
+      stackBinPath <-
+        commandSubstitution "stack --verbosity 0 path --local-bin"
+      stackGlobalDir <-
+        commandSubstitution "stack --verbosity 0 path --stack-root"
+      stackGlobalConfig <-
+        commandSubstitution "stack --verbosity 0 path --config-location"
+      stackResolver <- stackResolverText . textToFilePath $ stackGlobalConfig
+      detail $ "Stack bin path: " <> stackBinPath
+      detail $ "Stack global path: " <> stackGlobalDir
+      detail $ "Stack global config location: " <> stackGlobalConfig
+      detail $ "Stack resolver: " <> stackResolver
+      let emptyStackPath = any Text.null
+                             [ stackBinPath
+                             , stackGlobalDir
+                             , stackGlobalConfig
+                             ]
+      when emptyStackPath $ do
+        err "Incorrect stack paths."
         Turtle.exit (Turtle.ExitFailure 1)
-      Turtle.ExitSuccess -> do
-        stackBinPath <-
-          commandSubstitution "stack --verbosity 0 path --local-bin"
-        stackGlobalDir <-
-          commandSubstitution "stack --verbosity 0 path --stack-root"
-        stackGlobalConfig <-
-          commandSubstitution "stack --verbosity 0 path --config-location"
-        stackResolver <- stackResolverText . textToFilePath $ stackGlobalConfig
-        detail $ "Stack bin path: " <> stackBinPath
-        detail $ "Stack global path: " <> stackGlobalDir
-        detail $ "Stack global config location: " <> stackGlobalConfig
-        detail $ "Stack resolver: " <> stackResolver
-        let emptyStackPath = any Text.null
-                               [ stackBinPath
-                               , stackGlobalDir
-                               , stackGlobalConfig
-                               ]
-        when emptyStackPath $ do
-          err "Incorrect stack paths."
-          Turtle.exit (Turtle.ExitFailure 1)
-        let stackBinUnderCfgDest = hvnCfgDest </> ".stack-bin"
-        mkDirLink (textToFilePath stackBinPath) stackBinUnderCfgDest
-        when hvnCfgHelperBinaries $ do
-          msg "Installing helper binaries..."
-          let hvnHelperBinDir = hvnCfgDest </> "hvn-helper-binaries"
-          Turtle.mktree hvnHelperBinDir
-          Turtle.cd hvnHelperBinDir
-          stackYamlExists <- Turtle.testfile (hvnHelperBinDir </> "stack.yaml")
-          unless stackYamlExists $ do
-            -- Install ghc-mod via active stack resolver for maximum
-            -- out-of-the-box compatibility.
-            stackInstall stackResolver "ghc-mod"
-            -- Stack dependency solving requires cabal to be on the PATH.
-            stackInstall stackResolver "cabal-install"
-            -- Install hindent via pinned LTS to ensure we have version 5.
-            stackInstall "lts-8.14" "hindent"
-            let helperDependenciesCabalText =
-                  renderMustache helperDependenciesCabalTemplate $
-                  object ["dependencies" .= helperDependencies]
-            liftIO $
-              Turtle.writeTextFile
-                "dependencies.cabal"
-                (toStrict helperDependenciesCabalText)
-            Turtle.stdout (Turtle.input "dependencies.cabal")
-            let solverCommand = "stack init --solver --install-ghc"
-            -- Solve the versions of all helper binaries listed in
-            -- dependencies.cabal.
-            solverResult <- Turtle.shell solverCommand empty
-            case solverResult of
-              (Turtle.ExitFailure retCode) -> do
-                err $
-                  "\"" <> solverCommand <> "\" failed with error " <>
-                  (Text.pack . show $ retCode)
-                Turtle.exit (Turtle.ExitFailure 1)
-              Turtle.ExitSuccess -> do
-                Turtle.cp "stack.yaml" "stack.yaml.bak"
-                Turtle.output
-                  "stack.yaml"
-                  (mfilter
-                     ((> 1) . Text.length . Turtle.lineToText)
-                     (Turtle.sed
-                        (Turtle.begins ("#" <|> "user-message" <|> "  ") *>
-                         pure "")
-                        (Turtle.input "stack.yaml.bak")))
-            versionedHelperDeps <-
-              fmap Turtle.lineToText <$>
-              Turtle.fold
+      let stackBinUnderCfgDest = hvnCfgDest </> ".stack-bin"
+      mkDirLink (textToFilePath stackBinPath) stackBinUnderCfgDest
+      when hvnCfgHelperBinaries $ do
+        msg "Installing helper binaries..."
+        let hvnHelperBinDir = hvnCfgDest </> "hvn-helper-binaries"
+        Turtle.mktree hvnHelperBinDir
+        Turtle.cd hvnHelperBinDir
+        stackYamlExists <- Turtle.testfile (hvnHelperBinDir </> "stack.yaml")
+        unless stackYamlExists $ do
+          -- Install ghc-mod via active stack resolver for maximum
+          -- out-of-the-box compatibility.
+          stackInstall stackResolver "ghc-mod"
+          -- Stack dependency solving requires cabal to be on the PATH.
+          stackInstall stackResolver "cabal-install"
+          -- Install hindent via pinned LTS to ensure we have version 5.
+          stackInstall "lts-8.14" "hindent"
+          let helperDependenciesCabalText =
+                renderMustache helperDependenciesCabalTemplate $
+                object ["dependencies" .= helperDependencies]
+          liftIO $
+            Turtle.writeTextFile
+              "dependencies.cabal"
+              (toStrict helperDependenciesCabalText)
+          Turtle.stdout (Turtle.input "dependencies.cabal")
+          let solverCommand = "stack init --solver --install-ghc"
+          -- Solve the versions of all helper binaries listed in
+          -- dependencies.cabal.
+          solverResult <- Turtle.shell solverCommand empty
+          case solverResult of
+            (Turtle.ExitFailure retCode) -> do
+              err $
+                "\"" <> solverCommand <> "\" failed with error " <>
+                (Text.pack . show $ retCode)
+              Turtle.exit (Turtle.ExitFailure 1)
+            Turtle.ExitSuccess -> do
+              Turtle.cp "stack.yaml" "stack.yaml.bak"
+              Turtle.output
+                "stack.yaml"
                 (mfilter
-                  (filterHelperDeps . Turtle.lineToText)
-                  (Turtle.inshell "stack list-dependencies --separator -"
-                    empty))
-                Foldl.list
-            helperDepStackResolver <- stackResolverText $
-                                        hvnHelperBinDir </> "stack.yaml"
-            forM_ versionedHelperDeps $ \dep ->
-              stackInstall helperDepStackResolver dep
-          msg "Installing git-hscope..."
-          -- TODO: The 'git-hscope' file won't do much good on Windows as it
-          -- is a bash script.
-          Turtle.cp
-            (hvnCfgDest </> "git-hscope")
-            (textToFilePath stackBinPath </> "git-hscope")
-          when hvnCfgHoogleDb $ do
-            msg "Building Hoogle database..."
-            Turtle.sh
-              (Turtle.shell
-                 (filePathToText (textToFilePath stackBinPath </> "hoogle") <>
-                  " generate")
-                 empty)
-          msg "Configuring codex to search in stack..."
-          let codexText =
-                renderMustache codexTemplate $
-                object [ "stackHackageIndicesDir" .=
-                           filePathToText (textToFilePath stackGlobalDir
-                             </> "indices" </> "Hackage") ]
-          homePath <- Turtle.home
-          liftIO
-            (Turtle.writeTextFile (homePath </> ".codex") (toStrict codexText))
+                   ((> 1) . Text.length . Turtle.lineToText)
+                   (Turtle.sed
+                      (Turtle.begins ("#" <|> "user-message" <|> "  ") *>
+                       pure "")
+                      (Turtle.input "stack.yaml.bak")))
+          versionedHelperDeps <-
+            fmap Turtle.lineToText <$>
+            Turtle.fold
+              (mfilter
+                (filterHelperDeps . Turtle.lineToText)
+                (Turtle.inshell "stack list-dependencies --separator -"
+                  empty))
+              Foldl.list
+          helperDepStackResolver <- stackResolverText $
+                                      hvnHelperBinDir </> "stack.yaml"
+          forM_ versionedHelperDeps $ \dep ->
+            stackInstall helperDepStackResolver dep
+        msg "Installing git-hscope..."
+        -- TODO: The 'git-hscope' file won't do much good on Windows as it
+        -- is a bash script.
+        Turtle.cp
+          (hvnCfgDest </> "git-hscope")
+          (textToFilePath stackBinPath </> "git-hscope")
+        when hvnCfgHoogleDb $ do
+          msg "Building Hoogle database..."
+          Turtle.sh
+            (Turtle.shell
+               (filePathToText (textToFilePath stackBinPath </> "hoogle") <>
+                " generate")
+               empty)
+        msg "Configuring codex to search in stack..."
+        let codexText =
+              renderMustache codexTemplate $
+              object [ "stackHackageIndicesDir" .=
+                         filePathToText (textToFilePath stackGlobalDir
+                           </> "indices" </> "Hackage") ]
+        homePath <- Turtle.home
+        liftIO
+          (Turtle.writeTextFile (homePath </> ".codex") (toStrict codexText))
 
 stackResolverText :: (MonadIO m) => FilePath -> m Text
 stackResolverText stackYamlPath = do
