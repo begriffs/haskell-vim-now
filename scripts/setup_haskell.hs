@@ -14,9 +14,9 @@
 -}
 
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
-{-# LANGUAGE RecordWildCards #-}
 
 import Control.Applicative ((<|>), empty)
 import Control.Exception (bracket_)
@@ -57,14 +57,18 @@ data HvnArgs = HvnArgs
 
 main :: IO ()
 main = do
-  HvnArgs{..} <- Turtle.options "Haskell Vim Now - setup Haskell specifics"
-                    cliParser
-  print HvnArgs{..}
+  HvnArgs {hvnArgsNoHoogleDb, hvnArgsNoHelperBinaries} <-
+    Turtle.options "Haskell Vim Now - setup Haskell specifics" cliParser
+  print HvnArgs{hvnArgsNoHoogleDb, hvnArgsNoHelperBinaries}
   hvnCfgHome <- hvnHomeDir
   let hvnCfgDest = hvnCfgHome </> "haskell-vim-now"
       hvnCfgHoogleDb = not hvnArgsNoHoogleDb
       hvnCfgHelperBinaries = not hvnArgsNoHelperBinaries
-  runReaderT setup HvnConfig{..}
+  runReaderT setup HvnConfig { hvnCfgHome
+                             , hvnCfgDest
+                             , hvnCfgHoogleDb
+                             , hvnCfgHelperBinaries
+                             }
   Turtle.exit Turtle.ExitSuccess
 
 cliParser :: Turtle.Parser HvnArgs
@@ -89,7 +93,7 @@ setup = do
 
 setupHaskell :: (MonadIO m, MonadReader HvnConfig m) => m ()
 setupHaskell = do
-  HvnConfig{..} <- ask
+  HvnConfig {hvnCfgDest, hvnCfgHoogleDb, hvnCfgHelperBinaries} <- ask
   hasStack <- hasExecutable "stack"
   unless hasStack $ do
     err "Installer requires Stack - installation instructions:"
