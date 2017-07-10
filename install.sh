@@ -136,6 +136,12 @@ do_setup() {
       ARG_NO_HELPER_BINS=
     fi
 
+    if ! check_exist stack >/dev/null ; then
+      err "Installer requires Stack."
+      msg "Installation instructions: http://docs.haskellstack.org/en/stable/README/#how-to-install"
+      exit 1
+    fi
+
     stack $setup_haskell_path $ARG_NO_HOOGLE_DB $ARG_NO_HELPER_BINS ; RETCODE=$?
     [ ${RETCODE} -ne 0 ] && exit_err "setup_haskell.hs failed with error ${RETCODE}."
   fi
