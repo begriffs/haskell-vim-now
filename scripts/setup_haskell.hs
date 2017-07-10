@@ -94,11 +94,6 @@ setup = do
 setupHaskell :: (MonadIO m, MonadReader HvnConfig m) => m ()
 setupHaskell = do
   HvnConfig {hvnCfgDest, hvnCfgHoogleDb, hvnCfgHelperBinaries} <- ask
-  hasStack <- hasExecutable "stack"
-  unless hasStack $ do
-    err "Installer requires Stack - installation instructions:"
-    err "  http://docs.haskellstack.org/en/stable/README/#how-to-install"
-    Turtle.exit (Turtle.ExitFailure 1)
   msg "Setting up GHC if needed..."
   stackSetupResult <- Turtle.shell "stack setup --verbosity warning" empty
   case stackSetupResult of
@@ -233,6 +228,7 @@ stackInstall resolver package = do
   let installCommand =
         "stack --resolver " <> resolver <> " install " <> package <>
         " --install-ghc --verbosity warning"
+  detail installCommand
   installResult <- Turtle.shell installCommand empty
   case installResult of
     (Turtle.ExitFailure retCode) -> do
@@ -328,12 +324,6 @@ commandSubstitution :: (MonadIO m) => Text -> m Text
 commandSubstitution cmd = do
   mval <- Turtle.fold (Turtle.inshell cmd empty) Foldl.head
   pure $ maybe mempty Turtle.lineToText mval
-
-hasExecutable :: (MonadIO m) => FilePath -> m Bool
-hasExecutable exeName = do
-  path <- runMaybeT $ MaybeT (Turtle.which (FS.addExtension exeName "exe"))
-                  <|> MaybeT (Turtle.which exeName)
-  pure . isJust $ path
 
 -- For Unix, could use System.Posix.Files createSymbolicLink instead of raw
 -- shell.
