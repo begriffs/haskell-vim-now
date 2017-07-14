@@ -142,6 +142,11 @@ do_setup() {
       exit 1
     fi
 
+    local STACK_VER=$(stack --version | sed 's/^Version \([0-9]*\.[0-9]*\.[0-9]*\).*$/\1/')
+    if ! verlte '1.4.0' ${STACK_VER} ; then
+      exit_err "Detected stack version \"${STACK_VER}\", however version 1.4.0 or later is required."
+    fi
+
     stack $setup_haskell_path $ARG_NO_HOOGLE_DB $ARG_NO_HELPER_BINS ; RETCODE=$?
     [ ${RETCODE} -ne 0 ] && exit_err "setup_haskell.hs failed with error ${RETCODE}."
   fi
