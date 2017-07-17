@@ -47,7 +47,7 @@ package_list() {
     YUM|DNF)
       cmdpkg make make
       cmdpkg ctags ctags
-      echo "libcurl-devel zlib-devel powerline" ;;
+      echo "libcurl-devel zlib-devel powerline par" ;;
   esac
 }
 
