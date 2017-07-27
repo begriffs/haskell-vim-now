@@ -28,20 +28,18 @@ cmdpkg() {
 package_list() {
   cmdpkg git git
   cmdpkg vim vim
+  cmdpkg par par
 
   case $1 in
     BREW)
       cmdpkg make homebrew/dupes/make
-      cmdpkg ctags ctags
-      cmdpkg par par ;;
+      cmdpkg ctags ctags ;;
     PORT)
       cmdpkg make gmake
-      cmdpkg ctags ctags
-      cmdpkg par par ;;
+      cmdpkg ctags ctags ;;
     APT)
       cmdpkg make make
       cmdpkg ctags exuberant-ctags
-      cmdpkg par par
       cmdpkg curl curl
       echo libcurl4-openssl-dev ;;
     YUM|DNF)
