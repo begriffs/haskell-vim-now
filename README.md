@@ -388,8 +388,10 @@ bash <(curl -sL INSTALL-SCRIPT-URL) --repo FORK-URL
 For example:
 
 ```sh
-bash <(curl -sL https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh) --repo https://github.com/begriffs/haskell-vim-now
+bash <(curl -sL https://raw.githubusercontent.com/begriffs/haskell-vim-now/master/install.sh) --repo https://github.com/begriffs/haskell-vim-now.git
 ```
+
+Additionally the `--branch` argument can override the default of `master` used when cloning the repo.
 
 If you have a local git clone you can use `install.sh` directly
 to install from your clone:
