@@ -2,6 +2,7 @@
 
 PROGNAME=$(basename $0)
 DEFAULT_REPO="https://github.com/begriffs/haskell-vim-now.git"
+DEFAULT_BRANCH="master"
 DEFAULT_GENERATE_HOOGLE_DB=true
 DEFAULT_HVN_FULL_INSTALL=true
 DEFAULT_DRY_RUN=false
@@ -72,7 +73,8 @@ check_repo_change() {
 
 install() {
   local REPO_PATH=$1
-  local HVN_DEST=$2
+  local REPO_BRANCH=$2
+  local HVN_DEST=$3
 
   if [ -e ${HVN_DEST} ]; then
     warn "Existing Haskell-Vim-Now installation detected at ${HVN_DEST}."
@@ -90,7 +92,7 @@ install() {
     warn "No previous installations detected."
     msg "Installing Haskell-Vim-Now from ${REPO_PATH} ..."
     mkdir -p $(config_home)
-    git clone ${REPO_PATH} ${HVN_DEST} || exit 1
+    git clone -b ${REPO_BRANCH} ${REPO_PATH} ${HVN_DEST} || exit 1
 
     return 0
   fi
@@ -156,13 +158,14 @@ do_setup() {
 
 main() {
   local REPO_PATH=$1
-  local FULL_INSTALL=$2
-  local GENERATE_HOOGLE_DB=$3
-  local DRY_RUN=$4
+  local REPO_BRANCH=$2
+  local FULL_INSTALL=$3
+  local GENERATE_HOOGLE_DB=$4
+  local DRY_RUN=$5
   local HVN_DEST="$(config_home)/haskell-vim-now"
   local HVN_DEPENDENCIES_DEST="$(config_home)/haskell-vim-now"
 
-  install $REPO_PATH $HVN_DEST
+  install $REPO_PATH $REPO_BRANCH $HVN_DEST
   do_setup $HVN_DEST $FULL_INSTALL $GENERATE_HOOGLE_DB $DRY_RUN
 }
 
@@ -183,6 +186,7 @@ function usage() {
 
 # command line args override env vars
 HVN_REPO=${HVN_REPO:=$DEFAULT_REPO}
+HVN_BRANCH=${HVN_BRANCH:=$DEFAULT_BRANCH}
 HVN_GENERATE_HOOGLE_DB=${HVN_GENERATE_HOOGLE_DB:=$DEFAULT_GENERATE_HOOGLE_DB}
 HVN_FULL_INSTALL=${HVN_FULL_INSTALL:=$DEFAULT_HVN_FULL_INSTALL}
 HVN_DRY_RUN=${HVN_DRY_RUN:=$DEFAULT_DRY_RUN}
@@ -192,6 +196,7 @@ do
   case $1 in
     --basic) shift; HVN_FULL_INSTALL=false; continue;;
     --repo) shift; HVN_REPO=$1; shift; continue;;
+    --branch) shift; HVN_BRANCH=$1; shift; continue;;
     --no-hoogle) shift; HVN_GENERATE_HOOGLE_DB=false; continue;;
     --dry-run) shift; HVN_DRY_RUN=true; continue;;
     *) usage;;
@@ -199,4 +204,4 @@ do
 done
 
 test -n "$HVN_REPO" || usage
-main $HVN_REPO $HVN_FULL_INSTALL $HVN_GENERATE_HOOGLE_DB $HVN_DRY_RUN
+main $HVN_REPO $HVN_BRANCH $HVN_FULL_INSTALL $HVN_GENERATE_HOOGLE_DB $HVN_DRY_RUN
