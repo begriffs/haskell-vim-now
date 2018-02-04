@@ -131,11 +131,11 @@ setupHaskell = do
         unless stackYamlExists $ do
           -- Install ghc-mod via active stack resolver for maximum
           -- out-of-the-box compatibility.
-          stackInstall stackResolver "ghc-mod"
+          stackInstall stackResolver "ghc-mod" False
           -- Stack dependency solving requires cabal to be on the PATH.
-          stackInstall stackResolver "cabal-install"
+          stackInstall stackResolver "cabal-install" True
           -- Install hindent via pinned LTS to ensure we have version 5.
-          stackInstall "lts-8.14" "hindent"
+          stackInstall "lts-8.14" "hindent" True
           let helperDependenciesCabalText =
                 renderMustache helperDependenciesCabalTemplate $
                 object ["dependencies" .= helperDependencies]
@@ -175,7 +175,7 @@ setupHaskell = do
           helperDepStackResolver <- stackResolverText $
                                       hvnHelperBinDir </> "stack.yaml"
           forM_ versionedHelperDeps $ \dep ->
-            stackInstall helperDepStackResolver dep
+            stackInstall helperDepStackResolver dep True
         msg "Installing git-hscope..."
         -- TODO: The 'git-hscope' file won't do much good on Windows as it
         -- is a bash script.
@@ -223,8 +223,8 @@ stackResolverPattern = Turtle.prefix
   (Turtle.skip "resolver:" *> Turtle.skip Turtle.spaces *>
    Turtle.plus Turtle.dot)
 
-stackInstall :: (MonadIO m) => Text -> Text -> m ()
-stackInstall resolver package = do
+stackInstall :: (MonadIO m) => Text -> Text -> Bool -> m ()
+stackInstall resolver package exitOnFailure = do
   let installCommand =
         "stack --resolver " <> resolver <> " install " <> package <>
         " --install-ghc --verbosity warning"
@@ -235,7 +235,9 @@ stackInstall resolver package = do
       err $
         "\"" <> installCommand <> "\" failed with error " <>
         (Text.pack . show $ retCode)
-      Turtle.exit (Turtle.ExitFailure 1)
+      if exitOnFailure
+      then Turtle.exit (Turtle.ExitFailure 1)
+      else pure ()
     Turtle.ExitSuccess -> pure ()
 
 helperDependencies :: [Text]
