@@ -272,7 +272,7 @@ cabal-version:       >=1.10
 
 library
 -- hscope 0.4 does not compile with most resolvers so use newer
-  build-depends:       base >=4.9 && <4.10
+  build-depends:       base >=4.9 && <4.11
                      , hscope > 0.4
 {{#dependencies}}
                      , {{.}}
