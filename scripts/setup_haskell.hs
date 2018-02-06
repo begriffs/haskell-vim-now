@@ -133,7 +133,7 @@ setupHaskell = do
           -- out-of-the-box compatibility.
           stackInstall stackResolver "ghc-mod" False
           -- Stack dependency solving requires cabal to be on the PATH.
-          stackInstall stackResolver "cabal-install" True
+          stackInstall "lts-7.24" "cabal-install" True
           -- Install hindent via pinned LTS to ensure we have version 5.
           stackInstall "lts-8.14" "hindent" True
           let helperDependenciesCabalText =
