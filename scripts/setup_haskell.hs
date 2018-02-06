@@ -240,7 +240,7 @@ stackInstall resolver package exitOnFailure = do
       case exitOnFailure of
         True -> Turtle.exit (Turtle.ExitFailure 1)
         False -> handleFailure package where
-          handleFailure :: Text -> m ()
+          handleFailure :: (MonadIO m) => Text -> m ()
           handleFailure "ghc-mod" =
             msg $ "To install \"ghc-mod\" manually, see here: " <>
                   "https://github.com/DanielG/ghc-mod/issues/900"
