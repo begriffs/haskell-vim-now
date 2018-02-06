@@ -238,7 +238,7 @@ stackInstall resolver package exitOnFailure = do
         "\"" <> installCommand <> "\" failed with error " <>
         (Text.pack . show $ retCode)
       case exitOnFailure of
-        True -> Turtle.ext (Turtle.ExitFailure 1)
+        True -> Turtle.exit (Turtle.ExitFailure 1)
         False -> handleFailure package where
           handleFailure :: Text -> m ()
           handleFailure "ghc-mod" =
