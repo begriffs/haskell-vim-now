@@ -144,7 +144,13 @@ setupHaskell = do
               "dependencies.cabal"
               (toStrict helperDependenciesCabalText)
           Turtle.stdout (Turtle.input "dependencies.cabal")
-          let solverCommand = "stack init --solver --install-ghc"
+          let solverCommand = "stack init --solver --resolver "
+                              <> stackResolver
+                              <> " --install-ghc"
+          -- XXX for best results we should solve and install each one of them
+          -- independently rather than solving them together. It becomes more
+          -- difficult for the solver to find a workable build plan when we
+          -- solve them together.
           -- Solve the versions of all helper binaries listed in
           -- dependencies.cabal.
           solverResult <- Turtle.shell solverCommand empty
@@ -164,18 +170,14 @@ setupHaskell = do
                       (Turtle.begins ("#" <|> "user-message" <|> "  ") *>
                        pure "")
                       (Turtle.input "stack.yaml.bak")))
-          versionedHelperDeps <-
-            fmap Turtle.lineToText <$>
-            Turtle.fold
-              (mfilter
-                (filterHelperDeps . Turtle.lineToText)
-                (Turtle.inshell "stack list-dependencies --separator -"
-                  empty))
-              Foldl.list
-          helperDepStackResolver <- stackResolverText $
-                                      hvnHelperBinDir </> "stack.yaml"
-          forM_ versionedHelperDeps $ \dep ->
-            stackInstall helperDepStackResolver dep
+          -- XXX I could not figure out how to keep the ">" sign unescaped in
+          -- mustache, so had to treat this especially. If we can do that then
+          -- we can push this as well in helperDependencies.
+          stackInstall stackResolver "hscope"
+          forM_ (map (head . Text.words) helperDependencies) $
+            \dep -> stackInstall stackResolver dep
+          -- XXX we should remove the temporary dir after installing to reclaim
+          -- unnecessary space.
         msg "Installing git-hscope..."
         -- TODO: The 'git-hscope' file won't do much good on Windows as it
         -- is a bash script.
@@ -245,14 +247,9 @@ helperDependencies =
   , "hasktags"
   , "hlint"
   , "hoogle"
-  , "hscope"
   , "pointfree"
   , "pointful"
   ]
-
-filterHelperDeps :: Text -> Bool
-filterHelperDeps dep =
-  any ($ dep) (fmap Text.isPrefixOf helperDependencies)
 
 helperDependenciesCabalTemplate :: Template
 helperDependenciesCabalTemplate = [mustache|name:                dependencies
@@ -267,7 +264,9 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
+-- hscope 0.4 does not compile with most resolvers so use newer
   build-depends:       base >=4.9 && <4.10
+                     , hscope > 0.4
 {{#dependencies}}
                      , {{.}}
 {{/dependencies}}
