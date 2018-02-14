@@ -131,11 +131,11 @@ setupHaskell = do
         unless stackYamlExists $ do
           -- Install ghc-mod via active stack resolver for maximum
           -- out-of-the-box compatibility.
-          stackInstall stackResolver "ghc-mod"
+          stackInstall stackResolver "ghc-mod" False
           -- Stack dependency solving requires cabal to be on the PATH.
-          stackInstall stackResolver "cabal-install"
+          stackInstall "lts-7.24" "cabal-install" True
           -- Install hindent via pinned LTS to ensure we have version 5.
-          stackInstall "lts-8.14" "hindent"
+          stackInstall "lts-8.14" "hindent" True
           let helperDependenciesCabalText =
                 renderMustache helperDependenciesCabalTemplate $
                 object ["dependencies" .= helperDependencies]
@@ -144,8 +144,7 @@ setupHaskell = do
               "dependencies.cabal"
               (toStrict helperDependenciesCabalText)
           Turtle.stdout (Turtle.input "dependencies.cabal")
-          let solverCommand = "stack init --solver --resolver "
-                              <> stackResolver
+          let solverCommand = "stack init --solver --resolver lts-7.24"
                               <> " --install-ghc"
           -- XXX for best results we should solve and install each one of them
           -- independently rather than solving them together. It becomes more
@@ -173,9 +172,9 @@ setupHaskell = do
           -- XXX I could not figure out how to keep the ">" sign unescaped in
           -- mustache, so had to treat this especially. If we can do that then
           -- we can push this as well in helperDependencies.
-          stackInstall stackResolver "hscope"
+          stackInstall "lts-7.24" "hscope" True
           forM_ (map (head . Text.words) helperDependencies) $
-            \dep -> stackInstall stackResolver dep
+            \dep -> stackInstall "lts-7.24" dep True
           -- XXX we should remove the temporary dir after installing to reclaim
           -- unnecessary space.
         msg "Installing git-hscope..."
@@ -225,8 +224,8 @@ stackResolverPattern = Turtle.prefix
   (Turtle.skip "resolver:" *> Turtle.skip Turtle.spaces *>
    Turtle.plus Turtle.dot)
 
-stackInstall :: (MonadIO m) => Text -> Text -> m ()
-stackInstall resolver package = do
+stackInstall :: (MonadIO m) => Text -> Text -> Bool -> m ()
+stackInstall resolver package exitOnFailure = do
   let installCommand =
         "stack --resolver " <> resolver <> " install " <> package <>
         " --install-ghc --verbosity warning"
@@ -237,7 +236,14 @@ stackInstall resolver package = do
       err $
         "\"" <> installCommand <> "\" failed with error " <>
         (Text.pack . show $ retCode)
-      Turtle.exit (Turtle.ExitFailure 1)
+      case exitOnFailure of
+        True -> Turtle.exit (Turtle.ExitFailure 1)
+        False -> handleFailure package where
+          handleFailure :: (MonadIO m) => Text -> m ()
+          handleFailure "ghc-mod" =
+            msg $ "To install \"ghc-mod\" manually, see here: " <>
+                  "https://github.com/DanielG/ghc-mod/issues/900"
+          handleFailure _         = pure()
     Turtle.ExitSuccess -> pure ()
 
 helperDependencies :: [Text]
@@ -265,7 +271,7 @@ cabal-version:       >=1.10
 
 library
 -- hscope 0.4 does not compile with most resolvers so use newer
-  build-depends:       base >=4.9 && <4.10
+  build-depends:       base >=4.9 && <4.11
                      , hscope > 0.4
 {{#dependencies}}
                      , {{.}}
