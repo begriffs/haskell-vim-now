@@ -144,8 +144,7 @@ setupHaskell = do
               "dependencies.cabal"
               (toStrict helperDependenciesCabalText)
           Turtle.stdout (Turtle.input "dependencies.cabal")
-          let solverCommand = "stack init --solver --resolver "
-                              <> stackResolver
+          let solverCommand = "stack init --solver --resolver lts-7.24"
                               <> " --install-ghc"
           -- XXX for best results we should solve and install each one of them
           -- independently rather than solving them together. It becomes more
@@ -173,9 +172,9 @@ setupHaskell = do
           -- XXX I could not figure out how to keep the ">" sign unescaped in
           -- mustache, so had to treat this especially. If we can do that then
           -- we can push this as well in helperDependencies.
-          stackInstall stackResolver "hscope" True
+          stackInstall "lts-7.24" "hscope" True
           forM_ (map (head . Text.words) helperDependencies) $
-            \dep -> stackInstall stackResolver dep True
+            \dep -> stackInstall "lts-7.24" dep True
           -- XXX we should remove the temporary dir after installing to reclaim
           -- unnecessary space.
         msg "Installing git-hscope..."
