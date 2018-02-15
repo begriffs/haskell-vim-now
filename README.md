@@ -399,6 +399,13 @@ to install from your clone:
 install.sh --repo CLONE-PATH
 ```
 
+### Installing in Nix build environment
+
+Use `--nix` parameter, in case you want to execute [stack installation in nix-shell](https://docs.haskellstack.org/en/stable/nix_integration/#use-stack-as-normal)
+```sh
+bash <(curl -sL https://git.io/haskell-vim-now) --nix
+```
+
 ## Troubleshooting
 
 See this [wiki](https://github.com/begriffs/haskell-vim-now/wiki/Installation-Troubleshooting)
