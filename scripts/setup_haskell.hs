@@ -129,13 +129,6 @@ setupHaskell = do
         Turtle.cd hvnHelperBinDir
         stackYamlExists <- Turtle.testfile (hvnHelperBinDir </> "stack.yaml")
         unless stackYamlExists $ do
-          -- Install ghc-mod via active stack resolver for maximum
-          -- out-of-the-box compatibility.
-          stackInstall stackResolver "ghc-mod" False
-          -- Stack dependency solving requires cabal to be on the PATH.
-          stackInstall "lts-7.24" "cabal-install" True
-          -- Install hindent via pinned LTS to ensure we have version 5.
-          stackInstall "lts-8.14" "hindent" True
           let helperDependenciesCabalText =
                 renderMustache helperDependenciesCabalTemplate $
                 object ["dependencies" .= helperDependencies]
@@ -144,12 +137,7 @@ setupHaskell = do
               "dependencies.cabal"
               (toStrict helperDependenciesCabalText)
           Turtle.stdout (Turtle.input "dependencies.cabal")
-          let solverCommand = "stack init --solver --resolver lts-7.24"
-                              <> " --install-ghc"
-          -- XXX for best results we should solve and install each one of them
-          -- independently rather than solving them together. It becomes more
-          -- difficult for the solver to find a workable build plan when we
-          -- solve them together.
+          let solverCommand = "stack init --solver --resolver lts-11.17 --install-ghc"
           -- Solve the versions of all helper binaries listed in
           -- dependencies.cabal.
           solverResult <- Turtle.shell solverCommand empty
@@ -249,8 +237,10 @@ stackInstall resolver package exitOnFailure = do
 helperDependencies :: [Text]
 helperDependencies =
   [ "apply-refact"
+  , "brittany"
   , "codex"
   , "hasktags"
+  , "hdevtools"
   , "hlint"
   , "hoogle"
   , "pointfree"
