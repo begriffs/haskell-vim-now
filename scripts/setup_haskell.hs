@@ -15,6 +15,7 @@
 -}
 
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
@@ -62,7 +63,7 @@ main = do
     Turtle.options "Haskell Vim Now - setup Haskell specifics" cliParser
   print HvnArgs {hvnArgsNoHoogleDb, hvnArgsNoHelperBinaries}
   hvnCfgHome <- hvnHomeDir
-  let hvnCfgDest = hvnCfgHome </> "haskell-vim-now"
+  let hvnCfgDest = hvnCfgHome </> (textToFilePath hvn)
       hvnCfgHoogleDb = not hvnArgsNoHoogleDb
       hvnCfgHelperBinaries = not hvnArgsNoHelperBinaries
   runReaderT setup HvnConfig { hvnCfgHome
@@ -353,6 +354,37 @@ filePathToText = Turtle.format Turtle.fp
 
 textToFilePath :: Text -> FilePath
 textToFilePath = FS.fromText
+
+hvn :: Text
+hvn = "haskell-vim-now"
+
+type HelperRepository = Text
+type HelperTool = Text
+type Resolver = Text
+
+installGhcide :: MonadIO m => m ()
+installGhcide = gitCloneInstall "https://github.com/digital-asset/ghcide.git" "ghcide" Nothing
+
+gitCloneInstall :: MonadIO m => HelperRepository -> HelperTool -> Maybe Resolver -> m ()
+gitCloneInstall repo tool maybeResolver = Turtle.sh $ do
+  liftIO $ msg (unwords' ["clone", repo, "and install", tool])
+  Turtle.mktempdir "/tmp" hvn >>= Turtle.pushd
+  Turtle.liftIO (Turtle.pwd >>= print)
+  inShell (unwords' ["git clone", repo, tool])
+  Turtle.pushd (textToFilePath tool)
+  inShell (unwords' ["stack", resolver, "install"])
+  where
+    resolver = case maybeResolver of
+      Nothing -> ""
+      Just x -> unwords'["--resolver ", x]
+    unwords' = Text.intercalate " "
+    inShell cmd =
+      Turtle.shell cmd empty
+        >>= \case
+          Turtle.ExitSuccess -> return ()
+          Turtle.ExitFailure n ->
+            err (unwords' [cmd, "failed with exit code:", Turtle.repr n])
+            >> Turtle.exit (Turtle.ExitFailure 1)
 
 cocSettings :: Text
 cocSettings = [r|{
