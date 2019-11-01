@@ -24,10 +24,9 @@ import qualified Control.Foldl as Foldl
 import Control.Monad (mfilter, unless, when)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Reader (MonadReader, ask, runReaderT)
-import Control.Monad.Trans.Maybe (MaybeT(..), runMaybeT)
 import Data.Aeson ((.=), object)
 import Data.Foldable (forM_)
-import Data.Maybe (isJust, listToMaybe)
+import Data.Maybe (listToMaybe)
 import Data.Monoid ((<>))
 import qualified Data.Text as Text
 import Data.Text (Text)
