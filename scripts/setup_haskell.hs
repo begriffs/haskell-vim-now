@@ -205,6 +205,7 @@ setupHaskell = do
         -- homePath <- Turtle.home
         -- liftIO
         --   (Turtle.writeTextFile (homePath </> ".codex") (toStrict codexText))
+        liftIO $ Turtle.writeTextFile (hvnCfgDest </> ".vim/coc-settings.json") cocSettings
 
 stackResolverText :: (MonadIO m) => FilePath -> m Text
 stackResolverText stackYamlPath = do
