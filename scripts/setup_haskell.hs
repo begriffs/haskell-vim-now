@@ -6,6 +6,7 @@
   --package ansi-terminal
   --package foldl
   --package mtl
+  --package raw-strings-qq
   --package stache
   --package system-filepath
   --package text
@@ -40,6 +41,7 @@ import qualified System.IO
 import System.Info (os)
 import Text.Mustache (Template, renderMustache)
 import Text.Mustache.Compile.TH (mustache)
+import Text.RawString.QQ (r)
 import qualified Turtle
 
 data HvnConfig = HvnConfig
@@ -351,3 +353,28 @@ filePathToText = Turtle.format Turtle.fp
 
 textToFilePath :: Text -> FilePath
 textToFilePath = FS.fromText
+
+cocSettings :: Text
+cocSettings = [r|{
+  "languageserver": {
+    "haskell": {
+      "command": "ghcide",
+      "args": [
+        "--lsp"
+      ],
+      "rootPatterns": [
+        ".stack.yaml",
+        ".hie-bios",
+        "BUILD.bazel",
+        "cabal.config",
+        "package.yaml"
+      ],
+      "filetypes": [
+        "hs",
+        "lhs",
+        "haskell"
+      ]
+    }
+  }
+}
+|]
