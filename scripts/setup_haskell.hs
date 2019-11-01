@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack
   script
-  --resolver lts-8.14
+  --resolver lts-14.12
   --package aeson
   --package ansi-terminal
   --package foldl
@@ -63,7 +63,7 @@ main = do
     Turtle.options "Haskell Vim Now - setup Haskell specifics" cliParser
   print HvnArgs {hvnArgsNoHoogleDb, hvnArgsNoHelperBinaries}
   hvnCfgHome <- hvnHomeDir
-  let hvnCfgDest = hvnCfgHome </> (textToFilePath hvn)
+  let hvnCfgDest = hvnCfgHome </> textToFilePath hvn
       hvnCfgHoogleDb = not hvnArgsNoHoogleDb
       hvnCfgHelperBinaries = not hvnArgsNoHelperBinaries
   runReaderT setup HvnConfig { hvnCfgHome
@@ -131,13 +131,17 @@ setupHaskell = do
         Turtle.cd hvnHelperBinDir
         stackYamlExists <- Turtle.testfile (hvnHelperBinDir </> "stack.yaml")
         unless stackYamlExists $ do
-          -- Install ghc-mod via active stack resolver for maximum
+          -- Install ghcide from source for maximum
           -- out-of-the-box compatibility.
-          stackInstall stackResolver "ghc-mod" False
+          installGhcide
+          --FIXME can we use codex, hasktags without hscope,
+          -- which is broken https://github.com/bosu/hscope/issues/11
+          -- installHasktags (Just stackResolver)
+          -- installCodex (Just stackResolver)
           -- Stack dependency solving requires cabal to be on the PATH.
-          stackInstall "lts-7.24" "cabal-install" True
-          -- Install hindent via pinned LTS to ensure we have version 5.
-          stackInstall "lts-8.14" "hindent" True
+          stackInstall stackResolver "cabal-install" True
+          -- Install hindent via default LTS
+          stackInstall stackResolver "hindent" True
           let helperDependenciesCabalText =
                 renderMustache helperDependenciesCabalTemplate $
                 object ["dependencies" .= helperDependencies]
@@ -146,7 +150,7 @@ setupHaskell = do
               "dependencies.cabal"
               (toStrict helperDependenciesCabalText)
           Turtle.stdout (Turtle.input "dependencies.cabal")
-          let solverCommand = "stack init --solver --resolver lts-7.24"
+          let solverCommand = "stack init --resolver " <> stackResolver
                               <> " --install-ghc"
           -- XXX for best results we should solve and install each one of them
           -- independently rather than solving them together. It becomes more
@@ -174,17 +178,17 @@ setupHaskell = do
           -- XXX I could not figure out how to keep the ">" sign unescaped in
           -- mustache, so had to treat this especially. If we can do that then
           -- we can push this as well in helperDependencies.
-          stackInstall "lts-7.24" "hscope" True
+          -- stackInstall "lts-7.24" "hscope" True
           forM_ (map (head . Text.words) helperDependencies) $
-            \dep -> stackInstall "lts-7.24" dep True
+            \dep -> stackInstall stackResolver dep True
           -- XXX we should remove the temporary dir after installing to reclaim
           -- unnecessary space.
-        msg "Installing git-hscope..."
-        -- TODO: The 'git-hscope' file won't do much good on Windows as it
-        -- is a bash script.
-        Turtle.cp
-          (hvnCfgDest </> "git-hscope")
-          (textToFilePath stackBinPath </> "git-hscope")
+        -- msg "Installing git-hscope..."
+        -- -- TODO: The 'git-hscope' file won't do much good on Windows as it
+        -- -- is a bash script.
+        -- Turtle.cp
+        --   (hvnCfgDest </> "git-hscope")
+        --   (textToFilePath stackBinPath </> "git-hscope")
         when hvnCfgHoogleDb $ do
           msg "Building Hoogle database..."
           Turtle.sh
@@ -192,15 +196,15 @@ setupHaskell = do
                (filePathToText (textToFilePath stackBinPath </> "hoogle") <>
                 " generate")
                empty)
-        msg "Configuring codex to search in stack..."
-        let codexText =
-              renderMustache codexTemplate $
-              object [ "stackHackageIndicesDir" .=
-                         filePathToText (textToFilePath stackGlobalDir
-                           </> "indices" </> "Hackage") ]
-        homePath <- Turtle.home
-        liftIO
-          (Turtle.writeTextFile (homePath </> ".codex") (toStrict codexText))
+        -- msg "Configuring codex to search in stack..."
+        -- let codexText =
+        --       renderMustache codexTemplate $
+        --       object [ "stackHackageIndicesDir" .=
+        --                  filePathToText (textToFilePath stackGlobalDir
+        --                    </> "indices" </> "Hackage") ]
+        -- homePath <- Turtle.home
+        -- liftIO
+        --   (Turtle.writeTextFile (homePath </> ".codex") (toStrict codexText))
 
 stackResolverText :: (MonadIO m) => FilePath -> m Text
 stackResolverText stackYamlPath = do
@@ -242,21 +246,19 @@ stackInstall resolver package exitOnFailure = do
         True -> Turtle.exit (Turtle.ExitFailure 1)
         False -> handleFailure package where
           handleFailure :: (MonadIO m) => Text -> m ()
-          handleFailure "ghc-mod" =
-            msg $ "To install \"ghc-mod\" manually, see here: " <>
-                  "https://github.com/DanielG/ghc-mod/issues/900"
           handleFailure _         = pure()
     Turtle.ExitSuccess -> pure ()
 
 helperDependencies :: [Text]
 helperDependencies =
   [ "apply-refact"
-  , "codex"
-  , "hasktags"
+  -- stack can't resolve dependency http-client for codex
+  -- , "codex"
+  -- , "hasktags"
   , "hlint"
   , "hoogle"
-  , "pointfree"
-  , "pointful"
+  -- , "pointfree"
+  -- , "pointful"
   ]
 
 helperDependenciesCabalTemplate :: Template
@@ -273,8 +275,8 @@ cabal-version:       >=1.10
 
 library
 -- hscope 0.4 does not compile with most resolvers so use newer
-  build-depends:       base >=4.9 && <4.11
-                     , hscope > 0.4
+  build-depends:       base >=4.9 && < 5
+                     -- , hscope > 0.4
 {{#dependencies}}
                      , {{.}}
 {{/dependencies}}
@@ -361,6 +363,13 @@ hvn = "haskell-vim-now"
 type HelperRepository = Text
 type HelperTool = Text
 type Resolver = Text
+
+installCodex :: MonadIO m => Maybe Resolver -> m ()
+-- https://github.com/aloiscochard/codex.git doesn't support lts-14.X yet
+installCodex = gitCloneInstall "--branch=stack-lts-14.12 git@github.com:p-alik/codex.git" "codex"
+
+installHasktags :: MonadIO m =>  Maybe Resolver -> m ()
+installHasktags = gitCloneInstall "https://github.com/MarcWeber/hasktags.git" "hasktags"
 
 installGhcide :: MonadIO m => m ()
 installGhcide = gitCloneInstall "https://github.com/digital-asset/ghcide.git" "ghcide" Nothing
