@@ -6,14 +6,6 @@
 
 <br />
 
-### Notice: this project is broken
-
-Due to the fragile Haskell ecosystem, most notably ghc-mod, this vim configuration no longer works. You'll just spend lots of time waiting for its helper binaries to build, and be left with used disk space and regret.
-
-<hr />
-
-### Original readme:
-
 In less than **ten minutes** your Vim will transform into a beautiful
 Haskell paradise.  (Don't worry, it backs up your original
 configuration to `~/.config/haskell-vim-now/backup/.vimrc.yearmonthdate_time`.) It also builds all necessary support binaries
