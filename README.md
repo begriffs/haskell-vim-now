@@ -53,12 +53,6 @@ them.
     <td>&lt;C-space&gt;</td><td>Autocomplete with symbols in your Cabal sandbox</td>
   </tr>
   <tr>
-    <td>,ht</td><td>Show type of expression under cursor</td>
-  </tr>
-  <tr>
-    <td>,hT</td><td>Insert type of expression into previous line</td>
-  </tr>
-  <tr>
     <td>,hr</td><td>Apply one refactoring hint at cursor position</td>
   </tr>
   <tr>
