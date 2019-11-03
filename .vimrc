@@ -509,16 +509,6 @@ map <Leader>a<bar> :Align <bar><CR>
 map <leader>ap :Align
 " }}}
 
-" Tags {{{
-
-map <leader>tt :TagbarToggle<CR>
-
-set tags=tags;/
-set cst
-set csverb
-
-" }}}
-
 " Git {{{
 
 let g:extradite_width = 60
