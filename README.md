@@ -209,19 +209,6 @@ selections to it. This works well for evaluating things in GHCI.
 </tbody>
 </table>
 
-### Conversions
-
-<table>
-<tbody>
-  <tr>
-    <td>,h.</td><td>Transform visual selection to pointfree style</td>
-  </tr>
-  <tr>
-    <td>,h&gt;</td><td>Transform visual selection to pointed style</td>
-  </tr>
-</tbody>
-</table>
-
 ### Buffers
 
 <table>
