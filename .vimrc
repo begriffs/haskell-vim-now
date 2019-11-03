@@ -119,9 +119,7 @@ Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
 Plug 'neoclide/coc.nvim', { 'do': { -> coc#util#install() } }
 Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
-" http://marco-lopes.com/articles/Vim-and-Haskell-in-2019/
-" Turns out you can get coc.vim to do refactoring for you without the need for an extra plugin.
-" Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }
+Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }
 
 " Colorscheme
 Plug 'vim-scripts/wombat256.vim'
