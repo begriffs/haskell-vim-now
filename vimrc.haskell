@@ -109,38 +109,12 @@ augroup END
 
 "Completion, Syntax check, Lint & Refactor {{{
 
-augroup haskell
-  autocmd!
-  autocmd FileType haskell map <silent> <leader><cr> :noh<cr>:GhcModTypeClear<cr>
-  autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-augroup END
-
-" Provide (neco-ghc) omnicompletion
-if has("gui_running")
-  imap <c-space> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
-else " no gui
-  if has("unix")
-    inoremap <Nul> <c-r>=SuperTabAlternateCompletion("\<lt>c-x>\<lt>c-o>")<cr>
-  endif
-endif
-
 " Disable hlint-refactor-vim's default keybindings
 let g:hlintRefactor#disableDefaultKeybindings = 1
 
 " hlint-refactor-vim keybindings
 map <silent> <leader>hr :call ApplyOneSuggestion()<CR>
 map <silent> <leader>hR :call ApplyAllSuggestions()<CR>
-
-" Show types in completion suggestions
-let g:necoghc_enable_detailed_browse = 1
-" Resolve ghcmod base directory
-au FileType haskell let g:ghcmod_use_basedir = getcwd()
-
-" GHC errors and warnings
-nmap <silent> <leader>hc :Neomake ghcmod<CR>
-
-" open the neomake error window automatically when an error is found
-let g:neomake_open_list = 2
 
 " Fix path issues from vim.wikia.com/wiki/Set_working_directory_to_the_current_file
 let s:default_path = escape(&path, '\ ') " store default value of 'path'
@@ -156,8 +130,27 @@ autocmd BufRead *
 " Haskell Lint
 nmap <silent> <leader>hl :Neomake hlint<CR>
 
-" Options for Haskell Syntax Check
-let g:neomake_haskell_ghc_mod_args = '-g-Wall'
+" " GHC errors and warnings
+nnoremap <silent> <leader>hc :call GhcideCompile()<cr>
+if !exists("g:ghcide_command")
+    let g:ghcide_command = "ghcide"
+endif
+
+function! GhcideCompile()
+  " silent !clear
+  " execute "!" . g:ghcide_command . " " . bufname("%")
+  " Get the bytecode.
+  let bytecode = system(g:ghcide_command . " " . bufname("%") . " 2>&1")
+
+  " Open a new split and set it up.
+  vsplit __Ghcide_Bytecode__
+  normal! ggdG
+  setlocal filetype=potionbytecode
+  setlocal buftype=nofile
+
+  " Insert the bytecode.
+  call append(0, split(bytecode, '\v\n'))
+endfunction
 
 " }}}
 
