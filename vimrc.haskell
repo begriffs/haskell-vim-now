@@ -73,26 +73,7 @@ autocmd BufRead *
 " Haskell Lint
 nmap <silent> <leader>hl :Neomake hlint<CR>
 
-" " GHC errors and warnings
-nnoremap <silent> <leader>hc :call GhcideCompile()<cr>
-if !exists("g:ghcide_command")
-    let g:ghcide_command = "ghcide"
-endif
-
-function! GhcideCompile()
-  " silent !clear
-  " execute "!" . g:ghcide_command . " " . bufname("%")
-  " Get the bytecode.
-  let bytecode = system(g:ghcide_command . " " . bufname("%") . " 2>&1")
-
-  " Open a new split and set it up.
-  vsplit __Ghcide_Bytecode__
-  normal! ggdG
-  setlocal filetype=potionbytecode
-  setlocal buftype=nofile
-
-  " Insert the bytecode.
-  call append(0, split(bytecode, '\v\n'))
-endfunction
+" GHC errors and warnings
+noremap <silent> <leader>hc :make<CR><CR>:copen<CR>
 
 " }}}
