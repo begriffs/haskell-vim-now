@@ -25,7 +25,7 @@ import Control.Exception (bracket_)
 import qualified Control.Foldl as Foldl
 import Control.Monad (mfilter, unless, when)
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import Control.Monad.Reader (MonadReader, ask, runReaderT)
+import Control.Monad.Reader (MonadReader, ask, asks, runReaderT)
 import Data.Aeson ((.=), object)
 import Data.Foldable (forM_)
 import Data.Maybe (listToMaybe)
@@ -185,7 +185,7 @@ setupHaskell = do
                (filePathToText (textToFilePath stackBinPath </> "hoogle") <>
                 " generate")
                empty)
-        liftIO $ Turtle.writeTextFile (hvnCfgDest </> ".vim/coc-settings.json") cocSettings
+        liftIO $ Turtle.writeTextFile (hvnCfgDest </> ".vim" </> "coc-settings.json") cocSettings
 
 stackResolverText :: (MonadIO m) => FilePath -> m Text
 stackResolverText stackYamlPath = do
@@ -340,14 +340,33 @@ type HelperRepository = Text
 type HelperTool = Text
 type Resolver = Text
 
-installGhcide :: MonadIO m => m ()
-installGhcide = gitCloneInstall "https://github.com/digital-asset/ghcide.git" "ghcide" Nothing
+-- install ghcide, write compiler and file type plugin files
+installGhcide :: (MonadIO m, MonadReader HvnConfig m) => m ()
+installGhcide = do
+  hvnCfgDest' <- asks hvnCfgDest
+  gitCloneInstall "https://github.com/digital-asset/ghcide.git" "ghcide" Nothing
+  let vimDir = hvnCfgDest' <> ".vim"
+  writeCompilerFile vimDir
+  writeaFtPluginFile vimDir
+  where
+    mkdir' d = Turtle.testpath d >>= \exists -> unless exists (Turtle.mktree d)
+    toFile f c = liftIO $ Turtle.writeTextFile f c
+    writeaFtPluginFile d = do
+      let d' = d </> "after" </> "ftplugin"
+      mkdir' d'
+      toFile (d' </> "haskell.vim") "compiler ghcide"
+    writeCompilerFile d = do
+      let d' = d <> "compiler"
+      mkdir' d'
+      toFile (d' </> "ghcide.vim") [r|
+setlocal errorformat=%f:%l:%c:\ %t%*[a-zA-Z]:\ %m
+setlocal makeprg=ghcide\ %
+|]
 
 gitCloneInstall :: MonadIO m => HelperRepository -> HelperTool -> Maybe Resolver -> m ()
 gitCloneInstall repo tool maybeResolver = Turtle.sh $ do
   liftIO $ msg (unwords' ["clone", repo, "and install", tool])
   Turtle.mktempdir "/tmp" hvn >>= Turtle.pushd
-  Turtle.liftIO (Turtle.pwd >>= print)
   inShell (unwords' ["git clone", repo, tool])
   Turtle.pushd (textToFilePath tool)
   inShell (unwords' ["stack", resolver, "install"])
