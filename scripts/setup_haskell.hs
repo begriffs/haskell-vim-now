@@ -359,7 +359,23 @@ installGhcide = do
       let d' = d <> "compiler"
       mkdir' d'
       toFile (d' </> "ghcide.vim") [r|
-setlocal errorformat=%f:%l:%c:\ %t%*[a-zA-Z]:\ %m
+CompilerSet errorformat=%-Gghcide\ %s
+CompilerSet errorformat+=%-GReport\ bugs\ at\ %s
+CompilerSet errorformat+=%-GStep\ %s
+CompilerSet errorformat+=%-GFound\ %s
+CompilerSet errorformat+=%-GCradle\ %s
+CompilerSet errorformat+=%-GRange:\ %s
+CompilerSet errorformat+=%-GFile:\ %s
+CompilerSet errorformat+=%-GSource:\ %s
+CompilerSet errorformat+=%-GSeverity:\ %s
+CompilerSet errorformat+=%-GCompleted\ %s
+" exclude empty or whitespace-only lines
+CompilerSet errorformat+=%-G\\s%#
+CompilerSet errorformat+=%EMessage:%\\s%#%>
+CompilerSet errorformat+=%C%\\s%#ESC[%\\d%#;%\\d%#m%f:%l:%c:%m
+CompilerSet errorformat+=%C%m
+CompilerSet errorformat+=%ZCompleted%m
+
 setlocal makeprg=ghcide\ %
 |]
 
