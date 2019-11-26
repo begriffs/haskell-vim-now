@@ -4,6 +4,7 @@
   --resolver lts-14.12
   --package aeson
   --package ansi-terminal
+  --package directory
   --package foldl
   --package mtl
   --package raw-strings-qq
@@ -34,12 +35,13 @@ import qualified Data.Text as Text
 import Data.Text (Text)
 import qualified Data.Text.IO as Text.IO
 import Data.Text.Lazy (toStrict)
-import Filesystem.Path.CurrentOS (FilePath, (</>))
+import Filesystem.Path.CurrentOS (FilePath, (</>), decodeString)
 import qualified Filesystem.Path.CurrentOS as FS
 import Prelude hiding (FilePath)
 import qualified System.Console.ANSI as ANSI
 import qualified System.IO
 import System.Info (os)
+import System.Directory (getTemporaryDirectory)
 import Text.Mustache (Template, renderMustache)
 import Text.Mustache.Compile.TH (mustache)
 import Text.RawString.QQ (r)
@@ -250,9 +252,7 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
--- hscope 0.4 does not compile with most resolvers so use newer
   build-depends:       base >=4.9 && < 5
-                     -- , hscope > 0.4
 {{#dependencies}}
                      , {{.}}
 {{/dependencies}}
@@ -382,7 +382,8 @@ setlocal makeprg=ghcide\ %\ 2>&1\ \\\|\ sed\ 's/\\x1B\\[[0-9;]*m//g'
 gitCloneInstall :: MonadIO m => HelperRepository -> HelperTool -> Maybe Resolver -> m ()
 gitCloneInstall repo tool maybeResolver = Turtle.sh $ do
   liftIO $ msg (unwords' ["clone", repo, "and install", tool])
-  Turtle.mktempdir "/tmp" hvn >>= Turtle.pushd
+  tmp <- liftIO getTemporaryDirectory >>= return . decodeString
+  Turtle.mktempdir tmp hvn >>= Turtle.pushd
   inShell (unwords' ["git clone", repo, tool])
   Turtle.pushd (textToFilePath tool)
   inShell (unwords' ["stack", resolver, "install"])
