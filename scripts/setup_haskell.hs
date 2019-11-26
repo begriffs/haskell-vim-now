@@ -259,13 +259,6 @@ library
   default-language:    Haskell2010
 |]
 
-codexTemplate :: Template
-codexTemplate = [mustache|hackagePath: {{stackHackageIndicesDir}}
-tagsFileHeader: false
-tagsFileSorted: false
-tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-absolute --output="$TAGS" "$SOURCES"
-|]
-
 msg :: (MonadIO m) => Text -> m ()
 msg =
   consoleLog
