@@ -372,11 +372,11 @@ CompilerSet errorformat+=%-GCompleted\ %s
 " exclude empty or whitespace-only lines
 CompilerSet errorformat+=%-G\\s%#
 CompilerSet errorformat+=%EMessage:%\\s%#%>
-CompilerSet errorformat+=%C%\\s%#ESC[%\\d%#;%\\d%#m%f:%l:%c:%m
+CompilerSet errorformat+=%C%\\s%#%f:%l:%c:%\\s%#error:%\\s%#%>
 CompilerSet errorformat+=%C%m
 CompilerSet errorformat+=%ZCompleted%m
 
-setlocal makeprg=ghcide\ %
+setlocal makeprg=ghcide\ %\ 2>&1\ \\\|\ sed\ 's/\\x1B\\[[0-9;]*m//g'
 |]
 
 gitCloneInstall :: MonadIO m => HelperRepository -> HelperTool -> Maybe Resolver -> m ()
