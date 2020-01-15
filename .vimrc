@@ -117,8 +117,7 @@ Plug 'christoomey/vim-tmux-navigator'
 " Haskell
 Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
-Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
-Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
+Plug 'neoclide/coc.nvim', { 'do': { -> coc#util#install() } }
 Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
 Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }
 
@@ -508,16 +507,6 @@ map <Leader>a, :Align ,<CR>
 map <Leader>a<bar> :Align <bar><CR>
 " Prompt for align character
 map <leader>ap :Align
-" }}}
-
-" Tags {{{
-
-map <leader>tt :TagbarToggle<CR>
-
-set tags=tags;/
-set cst
-set csverb
-
 " }}}
 
 " Git {{{

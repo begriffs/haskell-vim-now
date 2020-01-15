@@ -6,18 +6,10 @@
 
 <br />
 
-### Notice: this project is broken
-
-Due to the fragile Haskell ecosystem, most notably ghc-mod, this vim configuration no longer works. You'll just spend lots of time waiting for its helper binaries to build, and be left with used disk space and regret.
-
-<hr />
-
-### Original readme:
-
 In less than **ten minutes** your Vim will transform into a beautiful
 Haskell paradise.  (Don't worry, it backs up your original
 configuration to `~/.config/haskell-vim-now/backup/.vimrc.yearmonthdate_time`.) It also builds all necessary support binaries
-including `codex`, `hscope`, `ghc-mod`, `hasktags`, `hoogle` and more.
+including `ghcide`, `hlint`, `hoogle` and more.
 
 No more wading through plugins trying to make them all work together.
 In ten minutes you will have a fully functional Vim that looks great
@@ -59,12 +51,6 @@ them.
   </tr>
   <tr>
     <td>&lt;C-space&gt;</td><td>Autocomplete with symbols in your Cabal sandbox</td>
-  </tr>
-  <tr>
-    <td>,ht</td><td>Show type of expression under cursor</td>
-  </tr>
-  <tr>
-    <td>,hT</td><td>Insert type of expression into previous line</td>
   </tr>
   <tr>
     <td>,hr</td><td>Apply one refactoring hint at cursor position</td>
@@ -200,38 +186,6 @@ selections to it. This works well for evaluating things in GHCI.
   </tr>
   <tr>
     <td>,sl</td><td>Open split rightward</td>
-  </tr>
-</tbody>
-</table>
-
-### Tags
-
-<table>
-<tbody>
-  <tr>
-    <td>,tg</td><td>Generate tags with codex</td>
-  </tr>
-  <tr>
-    <td>,tt</td><td>Open/close the tag bar</td>
-  </tr>
-  <tr>
-    <td>C-]</td><td>Jump to definition of symbol (codex + hasktags)</td><td>Note: You must generate the tags for your project (with <code>,tg</code>) prior to using the jump command.</td> 
-  </tr>
-  <tr>
-    <td>C-\</td><td>Show uses of symbol (hscope)</td>
-  </tr>
-</tbody>
-</table>
-
-### Conversions
-
-<table>
-<tbody>
-  <tr>
-    <td>,h.</td><td>Transform visual selection to pointfree style</td>
-  </tr>
-  <tr>
-    <td>,h&gt;</td><td>Transform visual selection to pointed style</td>
   </tr>
 </tbody>
 </table>

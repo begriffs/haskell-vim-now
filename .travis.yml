@@ -21,11 +21,12 @@ before_install:
     fi
   - |
     if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      echo 'deb http://download.fpcomplete.com/ubuntu xenial main'|sudo tee /etc/apt/sources.list.d/fpco.list
+      curl -sSL https://get.haskellstack.org/ | sh
+      stack --version
       sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 575159689BEFB442
       sudo add-apt-repository ppa:nmi/vim-snapshots -y
       sudo apt-get -qq update -y
-      sudo apt-get install vim stack ctags -y
+      sudo apt-get install vim ctags -y
     fi
   # emulating upgrade procedure (due to install.sh cloning from begriffs/master)
   - cp -r $TRAVIS_BUILD_DIR $XDG_CONFIG_HOME/

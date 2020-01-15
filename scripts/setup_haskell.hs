@@ -1,11 +1,13 @@
 #!/usr/bin/env stack
 {- stack
   script
-  --resolver lts-8.14
+  --resolver lts-14.12
   --package aeson
   --package ansi-terminal
+  --package directory
   --package foldl
   --package mtl
+  --package raw-strings-qq
   --package stache
   --package system-filepath
   --package text
@@ -14,6 +16,7 @@
 -}
 
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
@@ -23,24 +26,25 @@ import Control.Exception (bracket_)
 import qualified Control.Foldl as Foldl
 import Control.Monad (mfilter, unless, when)
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import Control.Monad.Reader (MonadReader, ask, runReaderT)
-import Control.Monad.Trans.Maybe (MaybeT(..), runMaybeT)
+import Control.Monad.Reader (MonadReader, ask, asks, runReaderT)
 import Data.Aeson ((.=), object)
 import Data.Foldable (forM_)
-import Data.Maybe (isJust, listToMaybe)
+import Data.Maybe (listToMaybe)
 import Data.Monoid ((<>))
 import qualified Data.Text as Text
 import Data.Text (Text)
 import qualified Data.Text.IO as Text.IO
 import Data.Text.Lazy (toStrict)
-import Filesystem.Path.CurrentOS (FilePath, (</>))
+import Filesystem.Path.CurrentOS (FilePath, (</>), decodeString)
 import qualified Filesystem.Path.CurrentOS as FS
 import Prelude hiding (FilePath)
 import qualified System.Console.ANSI as ANSI
 import qualified System.IO
 import System.Info (os)
+import System.Directory (getTemporaryDirectory)
 import Text.Mustache (Template, renderMustache)
 import Text.Mustache.Compile.TH (mustache)
+import Text.RawString.QQ (r)
 import qualified Turtle
 
 data HvnConfig = HvnConfig
@@ -61,7 +65,7 @@ main = do
     Turtle.options "Haskell Vim Now - setup Haskell specifics" cliParser
   print HvnArgs {hvnArgsNoHoogleDb, hvnArgsNoHelperBinaries}
   hvnCfgHome <- hvnHomeDir
-  let hvnCfgDest = hvnCfgHome </> "haskell-vim-now"
+  let hvnCfgDest = hvnCfgHome </> textToFilePath hvn
       hvnCfgHoogleDb = not hvnArgsNoHoogleDb
       hvnCfgHelperBinaries = not hvnArgsNoHelperBinaries
   runReaderT setup HvnConfig { hvnCfgHome
@@ -129,13 +133,13 @@ setupHaskell = do
         Turtle.cd hvnHelperBinDir
         stackYamlExists <- Turtle.testfile (hvnHelperBinDir </> "stack.yaml")
         unless stackYamlExists $ do
-          -- Install ghc-mod via active stack resolver for maximum
+          -- Install ghcide from source for maximum
           -- out-of-the-box compatibility.
-          stackInstall stackResolver "ghc-mod" False
+          installGhcide
           -- Stack dependency solving requires cabal to be on the PATH.
-          stackInstall "lts-7.24" "cabal-install" True
-          -- Install hindent via pinned LTS to ensure we have version 5.
-          stackInstall "lts-8.14" "hindent" True
+          stackInstall stackResolver "cabal-install" True
+          -- Install hindent via default LTS
+          stackInstall stackResolver "hindent" True
           let helperDependenciesCabalText =
                 renderMustache helperDependenciesCabalTemplate $
                 object ["dependencies" .= helperDependencies]
@@ -144,7 +148,7 @@ setupHaskell = do
               "dependencies.cabal"
               (toStrict helperDependenciesCabalText)
           Turtle.stdout (Turtle.input "dependencies.cabal")
-          let solverCommand = "stack init --solver --resolver lts-7.24"
+          let solverCommand = "stack init --resolver " <> stackResolver
                               <> " --install-ghc"
           -- XXX for best results we should solve and install each one of them
           -- independently rather than solving them together. It becomes more
@@ -172,17 +176,10 @@ setupHaskell = do
           -- XXX I could not figure out how to keep the ">" sign unescaped in
           -- mustache, so had to treat this especially. If we can do that then
           -- we can push this as well in helperDependencies.
-          stackInstall "lts-7.24" "hscope" True
           forM_ (map (head . Text.words) helperDependencies) $
-            \dep -> stackInstall "lts-7.24" dep True
+            \dep -> stackInstall stackResolver dep True
           -- XXX we should remove the temporary dir after installing to reclaim
           -- unnecessary space.
-        msg "Installing git-hscope..."
-        -- TODO: The 'git-hscope' file won't do much good on Windows as it
-        -- is a bash script.
-        Turtle.cp
-          (hvnCfgDest </> "git-hscope")
-          (textToFilePath stackBinPath </> "git-hscope")
         when hvnCfgHoogleDb $ do
           msg "Building Hoogle database..."
           Turtle.sh
@@ -190,15 +187,7 @@ setupHaskell = do
                (filePathToText (textToFilePath stackBinPath </> "hoogle") <>
                 " generate")
                empty)
-        msg "Configuring codex to search in stack..."
-        let codexText =
-              renderMustache codexTemplate $
-              object [ "stackHackageIndicesDir" .=
-                         filePathToText (textToFilePath stackGlobalDir
-                           </> "indices" </> "Hackage") ]
-        homePath <- Turtle.home
-        liftIO
-          (Turtle.writeTextFile (homePath </> ".codex") (toStrict codexText))
+        liftIO $ Turtle.writeTextFile (hvnCfgDest </> ".vim" </> "coc-settings.json") cocSettings
 
 stackResolverText :: (MonadIO m) => FilePath -> m Text
 stackResolverText stackYamlPath = do
@@ -240,21 +229,14 @@ stackInstall resolver package exitOnFailure = do
         True -> Turtle.exit (Turtle.ExitFailure 1)
         False -> handleFailure package where
           handleFailure :: (MonadIO m) => Text -> m ()
-          handleFailure "ghc-mod" =
-            msg $ "To install \"ghc-mod\" manually, see here: " <>
-                  "https://github.com/DanielG/ghc-mod/issues/900"
           handleFailure _         = pure()
     Turtle.ExitSuccess -> pure ()
 
 helperDependencies :: [Text]
 helperDependencies =
   [ "apply-refact"
-  , "codex"
-  , "hasktags"
   , "hlint"
   , "hoogle"
-  , "pointfree"
-  , "pointful"
   ]
 
 helperDependenciesCabalTemplate :: Template
@@ -270,20 +252,11 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
--- hscope 0.4 does not compile with most resolvers so use newer
-  build-depends:       base >=4.9 && <4.11
-                     , hscope > 0.4
+  build-depends:       base >=4.9 && < 5
 {{#dependencies}}
                      , {{.}}
 {{/dependencies}}
   default-language:    Haskell2010
-|]
-
-codexTemplate :: Template
-codexTemplate = [mustache|hackagePath: {{stackHackageIndicesDir}}
-tagsFileHeader: false
-tagsFileSorted: false
-tagsCmd: hasktags --extendedctag --ignore-close-implementation --ctags --tags-absolute --output="$TAGS" "$SOURCES"
 |]
 
 msg :: (MonadIO m) => Text -> m ()
@@ -352,3 +325,95 @@ filePathToText = Turtle.format Turtle.fp
 
 textToFilePath :: Text -> FilePath
 textToFilePath = FS.fromText
+
+hvn :: Text
+hvn = "haskell-vim-now"
+
+type HelperRepository = Text
+type HelperTool = Text
+type Resolver = Text
+
+-- install ghcide, write compiler and file type plugin files
+installGhcide :: (MonadIO m, MonadReader HvnConfig m) => m ()
+installGhcide = do
+  hvnCfgDest' <- asks hvnCfgDest
+  gitCloneInstall "https://github.com/digital-asset/ghcide.git" "ghcide" Nothing
+  let vimDir = hvnCfgDest' <> ".vim"
+  writeCompilerFile vimDir
+  writeaFtPluginFile vimDir
+  where
+    mkdir' d = Turtle.testpath d >>= \exists -> unless exists (Turtle.mktree d)
+    toFile f c = liftIO $ Turtle.writeTextFile f c
+    writeaFtPluginFile d = do
+      let d' = d </> "after" </> "ftplugin"
+      mkdir' d'
+      toFile (d' </> "haskell.vim") "compiler ghcide"
+    writeCompilerFile d = do
+      let d' = d <> "compiler"
+      mkdir' d'
+      toFile (d' </> "ghcide.vim") [r|
+CompilerSet errorformat=%-Gghcide\ %s
+CompilerSet errorformat+=%-GReport\ bugs\ at\ %s
+CompilerSet errorformat+=%-GStep\ %s
+CompilerSet errorformat+=%-GFound\ %s
+CompilerSet errorformat+=%-GCradle\ %s
+CompilerSet errorformat+=%-GRange:\ %s
+CompilerSet errorformat+=%-GFile:\ %s
+CompilerSet errorformat+=%-GSource:\ %s
+CompilerSet errorformat+=%-GSeverity:\ %s
+CompilerSet errorformat+=%-GCompleted\ %s
+" exclude empty or whitespace-only lines
+CompilerSet errorformat+=%-G\\s%#
+CompilerSet errorformat+=%EMessage:%\\s%#%>
+CompilerSet errorformat+=%C%\\s%#%f:%l:%c:%\\s%#error:%\\s%#%>
+CompilerSet errorformat+=%C%m
+CompilerSet errorformat+=%ZCompleted%m
+
+setlocal makeprg=ghcide\ %\ 2>&1\ \\\|\ sed\ 's/\\x1B\\[[0-9;]*m//g'
+|]
+
+gitCloneInstall :: MonadIO m => HelperRepository -> HelperTool -> Maybe Resolver -> m ()
+gitCloneInstall repo tool maybeResolver = Turtle.sh $ do
+  liftIO $ msg (unwords' ["clone", repo, "and install", tool])
+  tmp <- liftIO getTemporaryDirectory >>= return . decodeString
+  Turtle.mktempdir tmp hvn >>= Turtle.pushd
+  inShell (unwords' ["git clone", repo, tool])
+  Turtle.pushd (textToFilePath tool)
+  inShell (unwords' ["stack", resolver, "install"])
+  where
+    resolver = case maybeResolver of
+      Nothing -> ""
+      Just x -> unwords'["--resolver ", x]
+    unwords' = Text.intercalate " "
+    inShell cmd =
+      Turtle.shell cmd empty
+        >>= \case
+          Turtle.ExitSuccess -> return ()
+          Turtle.ExitFailure n ->
+            err (unwords' [cmd, "failed with exit code:", Turtle.repr n])
+            >> Turtle.exit (Turtle.ExitFailure 1)
+
+cocSettings :: Text
+cocSettings = [r|{
+  "languageserver": {
+    "haskell": {
+      "command": "ghcide",
+      "args": [
+        "--lsp"
+      ],
+      "rootPatterns": [
+        ".stack.yaml",
+        ".hie-bios",
+        "BUILD.bazel",
+        "cabal.config",
+        "package.yaml"
+      ],
+      "filetypes": [
+        "hs",
+        "lhs",
+        "haskell"
+      ]
+    }
+  }
+}
+|]
