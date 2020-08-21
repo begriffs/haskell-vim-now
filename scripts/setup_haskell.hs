@@ -99,10 +99,12 @@ setupHaskell :: (MonadIO m, MonadReader HvnConfig m) => m ()
 setupHaskell = do
   HvnConfig {hvnCfgDest, hvnCfgHoogleDb, hvnCfgHelperBinaries} <- ask
   msg "Setting up GHC if needed..."
-  stackSetupResult <- Turtle.shell "stack setup --verbosity warning" empty
-  case stackSetupResult of
+  (exitCode, stdout, stderr) <- Turtle.procStrictWithErr "stack" ["setup", "--verbosity", "warning"] empty
+  case exitCode of
     (Turtle.ExitFailure retCode) -> do
-      err $ "Stack setup failed with error " <> (Text.pack . show $ retCode)
+      err $ "Stack setup failed with exit code: " <> (Text.pack . show $ retCode)
+      err $ "stderr: " <> stderr
+      err $ "stdout: " <> stdout
       Turtle.exit (Turtle.ExitFailure 1)
     Turtle.ExitSuccess -> do
       stackBinPath <-
